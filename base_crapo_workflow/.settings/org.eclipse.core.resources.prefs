@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//models/__init__.py=utf-8
+encoding//models/activity.py=utf-8
+encoding//models/business_object.py=utf-8
+encoding//models/state.py=utf-8
+encoding//models/state_automata.py=utf-8
+encoding//models/transition.py=utf-8
+encoding//models/workflow.py=utf-8
+encoding/__manifest__.py=utf-8
