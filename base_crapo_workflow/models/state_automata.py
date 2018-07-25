@@ -7,5 +7,6 @@ from odoo import models
 
 class WorkflowStateAutomata(models.Model):
     """
-A state automata describes and automates the various transitions between states of a given business object class
+    A state automata describes and automates the various transitions between states of a given business object class
     """
+    _name = 'crapo.automata'

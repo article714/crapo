@@ -7,7 +7,12 @@ from odoo import fields, models, _, api, exceptions
 
 
 class WorkflowBusinessObject(models.Model):
-    _name = 'workflow.object'
+    """
+    Base class to define a Business Object.
+
+    Should be use as a mixin class in existing objects
+    """
+    _name = 'crapo.business.object'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = u"An object on which to  in a workflow, specific to a given model"
 

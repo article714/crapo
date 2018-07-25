@@ -6,7 +6,9 @@ from odoo import fields, models, _, api, exceptions
 
 
 class WorkflowState(models.Model):
-    _name = 'workflow.state'
+    """
+    """
+    _name = 'crapo.state'
     _description = u"State in a workflow, specific to a given model"
     _order = "sequence, name, id"
 

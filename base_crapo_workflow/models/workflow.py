@@ -7,5 +7,6 @@ from odoo import models
 
 class WorkflowWorkflow(models.Model):
     """
-A workflow coordinates and automates a set of workflow activities that can apply to a whole set of business objects
+    A workflow coordinates and automates a set of workflow activities that can apply to a whole set of business objects
     """
+    _name = 'crapo.workflow'

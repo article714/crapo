@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <!-- Les affaires  -->
+
+        <menuitem
+            id="dynalec_base_affaires_menu"
+            name="Affaires"
+            parent="dynalec_base.dynalec_base_menu"
+            groups="dynalec_base.group_dynalec_user"
+            sequence="10"/>
+        	
+            
+        <menuitem
+            id="dynalec_affaires_menu"
+            name="Dossiers d'affaires"
+            parent="dynalec_base_affaires_menu"
+            sequence="20"
+            action="dynalec_affaires_pipeline" />
+            
+
+        <!-- Dynalec Project menu -->
+        
+        <menuitem
+            id="dynalec_project_menu"
+            parent="dynalec_base.dynalec_base_menu"
+            name="Projets"
+            groups="dynalec_base.group_dynalec_user"
+            sequence="17"
+            action="dynalec_view_action_generic_projects" />
+            
+            
+        <menuitem
+            id="dynalec_generic_project_menu"
+            parent="dynalec_project_menu"
+            name="Projets"
+            groups="dynalec_base.group_dynalec_user"
+            sequence="2"
+            action="dynalec_view_action_generic_projects" />
+            
+        <menuitem
+            id="dynalec_affaire_project_menu"
+            parent="dynalec_project_menu"
+            name="Projets/Affaire"
+            groups="dynalec_base.group_dynalec_user"
+            sequence="4"
+            action="dynalec_view_action_affaire_projects" />
+            
+            
+        <!-- configuration menu -->
+                
+        <menuitem
+            id="dynalec_affaires_etapes_menu"
+            name="Etapes des dossiers d'affaires"
+            parent="dynalec_base.dynalec_base_config_menu"
+            sequence="10"
+            action="dynalec_affaires_etapes_config_action" />
+            
+            
+        <menuitem
+            id="dynalec_lots_etapes_menu"
+            name="Etapes des lots"
+            parent="dynalec_base.dynalec_base_config_menu"
+            sequence="12"
+            action="dynalec_lots_etapes_config_action" />
+            
+   
+        <menuitem
+            id="dynalec_types_taches_menu"
+            name="Types de tâche"
+            parent="dynalec_base.dynalec_base_config_menu"
+            sequence="30"
+            action="dynalec_type_taches_config_action" />
+        	    
+</odoo>
+

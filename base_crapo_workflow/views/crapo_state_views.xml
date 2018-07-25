@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record model="ir.ui.view" id="view_crapo_state_tree">
+		<field name="name">Workflow states</field>
+		<field name="model">crapo.state</field>
+		<field name="priority" eval="16" />
+		<field name="mode">primary</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Etapes des lots" default_order="sequence asc">
+				<field name="sequence" widget="handle" />
+				<field name="model_id" />
+				<field name="name" />
+			</tree>
+		</field>
+	</record>
+
+</odoo>

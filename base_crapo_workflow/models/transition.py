@@ -6,7 +6,9 @@ from odoo import fields, models, _, api, exceptions
 
 
 class WorkflowTransition(models.Model):
-    _name = 'workflow.transition'
+    """
+    """
+    _name = 'crapo.transition'
 
     name = fields.Char(string=_(u'Name'),
                        help=_(u"Transition's name"), required=True, translate=True)

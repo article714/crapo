@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+       
+		
+        <!-- List of states -->
+                
+        <record id="dynalec_affaires_pipeline" model="ir.actions.act_window">
+            <field name="name">Workflow states</field>
+            <field name="target">current</field>
+            <field name="res_model">crapo.state</field>
+            <field name="limit">100</field>
+            <field name="auto_search" eval="True" />
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>      
+        
+        
+        
+</odoo>
+
