@@ -8,4 +8,4 @@ from odoo import models
 class WorkflowActivity(models.Model):
     """
     """
-    _name=u'crapo.workflow.activity'
+    _name='crapo.workflow.activity'
