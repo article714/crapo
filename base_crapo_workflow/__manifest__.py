@@ -19,7 +19,7 @@ TODO
 
 **Credits:** .
 """,
-    'depends': ['queue'],
+    'depends': ['queue_job'],
     'data': ['security/access_model.xml',
              'actions/window_actions.xml'],
     'installable': True,
