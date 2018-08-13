@@ -21,7 +21,7 @@ TODO
 """,
     'depends': ['base_crapo_workflow'],
     'data': ['security/access_model.xml',
-             'view/menus_and_views.xml'],
+             'views/menus_and_views.xml'],
     'installable': True,
     'images': [],
     'application': True,
