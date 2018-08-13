@@ -22,5 +22,5 @@ class WorkflowState(models.Model):
     sequence = fields.Integer(string=_(u'Sequence'), default=1, help=_(
         u"Sequence gives the order in which states are displayed"))
 
-    fold = fields.Boolean(string=_(u'Folded in kanban view'),
+    fold = fields.Boolean(string=_(u'Folded in kanban'),
                           help=_(u'This stage is folded in the kanban view when there are no records in that stage to display.'), default=False)

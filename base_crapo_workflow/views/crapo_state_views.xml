@@ -17,15 +17,23 @@
 	</record>
 
 	<record model="ir.ui.view" id="view_crapo_state_form">
-		<field name="name">Workflow/Automata  states</field>
+		<field name="name">Workflow/Automata states</field>
 		<field name="model">crapo.state</field>
 		<field name="priority" eval="16" />
 		<field name="mode">primary</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="States definitions" default_order="sequence asc">
-				<field name="model_id" />
-				<field name="name" />
+				<group name="object" string="Business Object">
+					<field name="model_id" />
+				</group>
+				<group name="state" string="State definition">
+					<field name="name" />
+				</group>
+				<group name="ordering" string="State ordering">
+					<field name="sequence" />
+					<field name="fold" />
+				</group>
 			</form>
 		</field>
 	</record>

@@ -4,14 +4,14 @@
 # @license: AGPL v3
 
 {
-    'name': u'Crapo: Base classes for workflow management',
+    'name': u'Crapo: Base Module for workflow management',
     'version': u'10.0.1.0.0',
     'category': u'Crapo Workflows',
     'author': u'Article714',
     'license': u'AGPL-3',
     'website': u'https://www.article714.org',
     'description': u"""
-Crapo: Base classes for workflow management
+Crapo: Base Module for workflow management
 ===========================================
 
 TODO
