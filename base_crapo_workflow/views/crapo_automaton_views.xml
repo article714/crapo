@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-	<record model="ir.ui.view" id="view_crapo_state_tree">
-		<field name="name">Automaton states</field>
-		<field name="model">crapo.state</field>
+	<record model="ir.ui.view" id="view_crapo_automata_tree">
+		<field name="name">Automata</field>
+		<field name="model">crapo.automaton</field>
 		<field name="priority" eval="16" />
 		<field name="mode">primary</field>
 		<field name="type">tree</field>
@@ -16,25 +16,28 @@
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="view_crapo_state_form">
-		<field name="name">Automaton states</field>
-		<field name="model">crapo.state</field>
+	<record model="ir.ui.view" id="view_crapo_automaton_form">
+		<field name="name">Automaton</field>
+		<field name="model">crapo.automaton</field>
 		<field name="priority" eval="16" />
 		<field name="mode">primary</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="States definitions" default_order="sequence asc">
+			<form string="Automaton" >
 				<group name="object" string="Business Object">
 					<field name="model_id" />
 				</group>
 				<group name="state" string="State definition">
 					<field name="name" />
-					<field name="automaton" />
 				</group>
-				<group name="ordering" string="State ordering">
-					<field name="sequence" />
-					<field name="fold" />
-				</group>
+				<notebook>
+				<page string="States">
+					<field name="states" context="{'current_automaton':active_id}" />
+				</page>
+				<page string="Transitions">
+					<field name="transitions" context="{'current_automaton':active_id}"/>
+				</page>
+				</notebook>
 			</form>
 		</field>
 	</record>

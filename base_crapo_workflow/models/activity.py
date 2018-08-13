@@ -7,5 +7,6 @@ from odoo import models
 
 class WorkflowActivity(models.Model):
     """
+    A step in a Workflow
     """
-    _name='crapo.workflow.activity'
+    _name = 'crapo.workflow.activity'

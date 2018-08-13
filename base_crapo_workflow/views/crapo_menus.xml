@@ -6,11 +6,17 @@
 		name="Workflows and State-machines" 
 		groups="group_crapo_admin" sequence="10" />
 
-	<!-- Liste states menu -->
+	<!-- List states menu -->
 
 	<menuitem id="crapo_list_states_menu" parent="crapo_base_menu"
 		name="States definitions" groups="group_crapo_admin"
 		sequence="20" action="crapo_list_states_action" />
+
+	<!-- Liste automata menu -->
+
+	<menuitem id="crapo_list_automata_menu" parent="crapo_base_menu"
+		name="Automata definitions" groups="group_crapo_admin"
+		sequence="20" action="crapo_list_automata_action" />
 
 </odoo>
 

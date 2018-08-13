@@ -37,13 +37,8 @@ class WorkflowBusinessObject(models.Model):
     # Reference to My Model:
     def _get_my_model_ref(self, domain=False):
         my_model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
-
-        logging.error("looking MODEL REF FOR [%s] %s --> %s", str(self), self._name, str(my_model))
-
         for record in self:
             record.my_model_ref = my_model
-
-        logging.error("RETURNING DOMAIN (%s) MODEL REF FOR %s --> %s  ", str(domain), self._name, str(my_model.id))
         if domain:
             return [('model_id', '=', my_model.id)]
         else:
@@ -53,15 +48,9 @@ class WorkflowBusinessObject(models.Model):
     def _get_state_domain(self, domain=None):
 
         if self.my_model_ref:
-            logging.error("looking [0] STATE DOMAIN FOR %s --> %s ,(%d)", self._name,
-                          str(self.my_model_ref), self.my_model_ref.id)
-
             return [('model_id', '=', self.my_model_ref.id)]
         else:
             my_model = self._get_my_model_ref()
-            logging.error("looking [1] STATE DOMAIN FOR %s --> %s ,(%d)", self._name,
-                          str(my_model), my_model.id)
-
             return [('model_id', '=', my_model.id)]
 
     def _default_state(self):

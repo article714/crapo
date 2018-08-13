@@ -5,7 +5,7 @@
 from odoo import fields, models, _, api, exceptions
 
 
-class WorkflowTransition(models.Model):
+class StateMachineTransition(models.Model):
     """
     A transition between two states
     """
@@ -20,13 +20,36 @@ class WorkflowTransition(models.Model):
     postconditions = fields.Char(string=_(u"Post-conditions"), help=_(u"Conditions to be checked before ending this transition"),
                                  required=False)
 
-    def _get_action_domain(self):
-        lot_model = self.env['ir.model'].search([('model', '=', 'dynalec.lot')])
-        if lot_model != None and lot_model:
-            model_id = lot_model.id
-            if model_id:
-                return [('model_id', '=', model_id)]
-        return []
+    automaton = fields.Many2one(string="Automaton",
+                                comodel_name='crapo.automaton',
+                                default=lambda self: self._get_default_automaton(),
+                                store=True, required=True, index=True)
+
+    model_id = fields.Many2one(string=_(u'Model'),
+                               comodel_name="ir.model",
+                               related='automaton.model_id'
+                               )
+
+    from_state = fields.Many2one(string='From state',
+                                 comodel_name='crapo.state')
+
+    to_state = fields.Many2one(string='To state',
+                               comodel_name='crapo.state')
 
     action = fields.Many2one(string=_(u'Action to be executed when transitioning'),
-                             comodel_name='ir.actions.server', domain=_get_action_domain, required=False)
+                             comodel_name='ir.actions.server',  domain=lambda self: self._get_action_domain(), required=False)
+
+    def _get_action_domain(self):
+        if self.model_id:
+            return [('model_id', '=', self.model_id.id)]
+        return []
+
+    def _get_default_automaton(self):
+        default_value = 0
+        if 'current_automaton' in self.env.context:
+            try:
+                default_value = int(self.env.context.get('current_automaton'))
+            except:
+                default_value = 0
+
+        return self.env['crapo.automaton'].browse(default_value)
