@@ -4,7 +4,8 @@
 
 from odoo import models
 
+
 class AnObject(models.Model):
-    _name = 'crapo.business.object'
-    _inherit = ''
+    _name = 'crapo.test.object'
+    _inherit = 'crapo.business.object'
     _description = u"A sample business Object"
