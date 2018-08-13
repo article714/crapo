@@ -20,8 +20,11 @@ TODO
 **Credits:** .
 """,
     'depends': ['queue_job'],
-    'data': ['security/access_model.xml',
-             'actions/window_actions.xml'],
+    'data': ['security/crapo_security',
+             'security/base_access_model.xml',
+             'actions/window_actions.xml',
+             'views/crapo_menus.xml',
+             'crapo_state_views.xml'],
     'installable': True,
     'images': [],
     'application': True,
