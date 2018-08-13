@@ -45,14 +45,13 @@
       <field name="model">crapo.automaton</field>
       <field name="arch" type="xml">
         <diagram string="Automaton Editor">
-          <node object="crapo.state" shape="rectangle">
+          <node object="crapo.state" shape="rectangle:True">
             <field name="name"/>
           </node>
-          <arrow object="crapo.transition" source="from_state" destination="to_state" label="['name',]">
-            <field name="from_state"/>
-            <field name="to_state"/>
-            <field name="name"/>
-            <field name="action"/>
+          <arrow object="crapo.transition" source="from_state" destination="to_state" label="['name']">
+            <field name="from_state" />
+            <field name="to_state" />
+            <field name="action" />
           </arrow>
         </diagram>
       </field>
