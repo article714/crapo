@@ -16,7 +16,7 @@
         </record>      
         
 
-        <!-- List of states -->
+        <!-- List of automata -->
                 
         <record id="crapo_list_automata_action" model="ir.actions.act_window">
             <field name="name">Automata</field>
