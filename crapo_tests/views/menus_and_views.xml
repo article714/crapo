@@ -18,7 +18,7 @@
           <field name="view_mode">tree,form</field>
       </record>      
       
-	<menuitem id="crapo_test_base_menu" parent="crapo_test_sample_menu"
+	<menuitem id="crapo_list_test_objects_menu" parent="crapo_test_sample_menu"
 		name="Object View"  sequence="10" 
 		action="crapo_list_test_objects_action" />
 		
