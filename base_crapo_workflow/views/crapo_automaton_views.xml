@@ -8,8 +8,7 @@
 		<field name="mode">primary</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="States definitions" default_order="sequence asc">
-				<field name="sequence" widget="handle" />
+			<tree string="Automata" default_order=" asc">
 				<field name="model_id" />
 				<field name="name" />
 			</tree>
