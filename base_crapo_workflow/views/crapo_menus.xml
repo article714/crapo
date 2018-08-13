@@ -4,12 +4,12 @@
 	<!-- Base menu -->
 	<menuitem id="crapo_base_menu" parent="base.menu_administration"
 		name="Workflows and Automatas (Crapo)" 
-		groups="crapo.group_crapo_admin" sequence="10" />
+		groups="group_crapo_admin" sequence="10" />
 
 	<!-- Liste states menu -->
 
 	<menuitem id="crapo_list_states_menu" parent="crapo_base_menu"
-		name="States definitions" groups="crapo.group_crapo_admin"
+		name="States definitions" groups="group_crapo_admin"
 		sequence="20" action="crapo_list_states_action" />
 
 </odoo>

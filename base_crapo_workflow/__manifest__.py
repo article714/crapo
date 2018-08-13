@@ -6,7 +6,7 @@
 {
     'name': u'Crapo: Base classes for workflow management',
     'version': u'10.0.1.0.0',
-    'category': u'Applications',
+    'category': u'Crapo Workflows',
     'author': u'Article714',
     'license': u'AGPL-3',
     'website': u'https://www.article714.org',
