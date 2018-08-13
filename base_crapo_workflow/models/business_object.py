@@ -2,8 +2,10 @@
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import logging
+
 from odoo import SUPERUSER_ID
-from odoo import fields, models, _, api, exceptions
+from odoo import fields, models, _, exceptions
 
 
 class WorkflowBusinessObject(models.Model):
@@ -16,7 +18,7 @@ class WorkflowBusinessObject(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = u"An object on which to  in a workflow, specific to a given model"
 
-    state = fields.Many2one(comodel_name='workflow.state',
+    state = fields.Many2one(comodel_name='crapo.state',
                             string=_(u'State'),
                             help=(u"""State in which this object is"""),
                             track_visibility='onchange',
@@ -24,13 +26,46 @@ class WorkflowBusinessObject(models.Model):
                             group_expand='_read_group_states',
                             default=lambda self: self._default_state(),  store=True, index=True, required=True)
 
+    my_model_ref = fields.Many2one(comodel_name='ir.model',
+                                   string=_("My model"),
+                                   help=_("A reference to current object's Model, used to help retrieve dynamic states"),
+                                   compute="_get_my_model_ref",
+                                   domain=lambda self: self._get_my_model_ref(True),
+                                   default=lambda self: self._get_my_model_ref(),
+                                   store=True, index=True, required=True)
+
+    # Reference to My Model:
+    def _get_my_model_ref(self, domain=False):
+        my_model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
+
+        logging.error("looking MODEL REF FOR [%s] %s --> %s", str(self), self._name, str(my_model))
+
+        for record in self:
+            record.my_model_ref = my_model
+
+        logging.error("RETURNING DOMAIN (%s) MODEL REF FOR %s --> %s  ", str(domain), self._name, str(my_model.id))
+        if domain:
+            return [('model_id', '=', my_model.id)]
+        else:
+            return my_model
+
     # State Management
     def _get_state_domain(self, domain=None):
-        return [('model_id', '=', self.model.id)]
 
-    @api.model
+        if self.my_model_ref:
+            logging.error("looking [0] STATE DOMAIN FOR %s --> %s ,(%d)", self._name,
+                          str(self.my_model_ref), self.my_model_ref.id)
+
+            return [('model_id', '=', self.my_model_ref.id)]
+        else:
+            my_model = self._get_my_model_ref()
+            logging.error("looking [1] STATE DOMAIN FOR %s --> %s ,(%d)", self._name,
+                          str(my_model), my_model.id)
+
+            return [('model_id', '=', my_model.id)]
+
     def _default_state(self):
-        return self.env['workglow.state'].search(self._get_state_domain(), limit=1)
+        return self.env['crapo.state'].search(self._get_state_domain(), limit=1)
 
     def _next_state_id(self):
         self.ensure_one()
@@ -44,13 +79,12 @@ class WorkflowBusinessObject(models.Model):
         self.ensure_one()
         domain = self._get_state_domain()
         domain.append(('sequence', '>', self.state.sequence))
-        next_state = self.env['workflow.state'].search(domain, limit=1)
+        next_state = self.env['crapo.state'].search(domain, limit=1)
         if next_state:
             return next_state[0]
         else:
             return None
 
-    @api.model
     def _read_group_states(self, states, domain, order):
         search_domain = self._get_state_domain(domain=domain)
         state_ids = states._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)

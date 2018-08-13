@@ -10,7 +10,7 @@ Created on 16 july 2018
 from . import activity
 from . import business_object
 from . import crapo_config
-from models import state_machine
 from . import state
+from . import state_machine
 from . import transition
 from . import workflow

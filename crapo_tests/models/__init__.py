@@ -8,3 +8,4 @@ Created on 25 july 2018
 '''
 
 from . import an_object
+from . import another_object

@@ -7,6 +7,7 @@ from odoo import fields, models, _, api, exceptions
 
 class WorkflowTransition(models.Model):
     """
+    A transition between two states
     """
     _name = 'crapo.transition'
 

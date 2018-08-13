@@ -6,10 +6,10 @@ from odoo import models, fields
 
 
 class AnObject(models.Model):
-    _name = 'crapo.test.object'
-    _inherit = ['crapo.business.object']
-    _description = u"A sample business Object"
+    _name = 'crapo.test.another'
+    _inherit = 'crapo.business.object'
+    _description = u"Another sample business Object"
 
     name = fields.Char(string="A Name")
 
-    some_objects = fields.One2many(comodel_name='crapo.test.another', inverse_name='to_object')
+    to_object = fields.Many2one(comodel_name='crapo.test.object')
