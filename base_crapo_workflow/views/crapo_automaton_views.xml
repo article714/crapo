@@ -49,7 +49,6 @@
         <diagram string="Automaton Editor">
           <node object="crapo.state" shape="rectangle">
             <field name="name"/>
-            <field name="action"/>
           </node>
           <arrow object="crapo.transition" source="from_state" destination="to_state" label="['name',]">
             <field name="from_state"/>
