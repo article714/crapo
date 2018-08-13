@@ -2,7 +2,7 @@
 <odoo>
 
 	<record model="ir.ui.view" id="view_crapo_state_tree">
-		<field name="name">Workflow/Automata states</field>
+		<field name="name">Workflow/Automaton states</field>
 		<field name="model">crapo.state</field>
 		<field name="priority" eval="16" />
 		<field name="mode">primary</field>
@@ -17,7 +17,7 @@
 	</record>
 
 	<record model="ir.ui.view" id="view_crapo_state_form">
-		<field name="name">Workflow/Automata states</field>
+		<field name="name">Workflow/Automaton states</field>
 		<field name="model">crapo.state</field>
 		<field name="priority" eval="16" />
 		<field name="mode">primary</field>

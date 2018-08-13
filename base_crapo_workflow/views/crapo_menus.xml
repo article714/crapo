@@ -3,7 +3,7 @@
 
 	<!-- Base menu -->
 	<menuitem id="crapo_base_menu" parent="base.menu_custom"
-		name="Workflows and Automatas (Crapo)" 
+		name="Workflows and State-machines" 
 		groups="group_crapo_admin" sequence="10" />
 
 	<!-- Liste states menu -->
