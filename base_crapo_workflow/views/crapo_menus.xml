@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+	<!-- Base menu -->
+	<menuitem id="crapo_base_menu" parent="base.menu_administration"
+		name="Workflows and Automatas (Crapo)" 
+		groups="crapo.group_crapo_admin" sequence="10" />
 
-   <!-- Base menu  -->
+	<!-- Liste states menu -->
 
-        <menuitem
-            id="crapo_base_menu"
-            name="Workflows & Automatas (Crapo)"
-            parent="base.menu_administration"
-            groups="crapo.group_crapo_admin"
-            sequence="10"/>
+	<menuitem id="crapo_list_states_menu" parent="crapo_base_menu"
+		name="States definitions" groups="crapo.group_crapo_admin"
+		sequence="20" action="crapo_list_states_action" />
 
-        <!-- Liste states menu -->
-        
-        <menuitem
-            id="crapo_list_states_menu"
-            parent="crapo_base_menu"
-            name="States definitions"
-            groups="crapo.group_crapo_admin"
-            sequence="17"
-            action=""crapo_list_states_action"" />
-            
-            
-        
-        	    
 </odoo>
 
