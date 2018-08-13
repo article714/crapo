@@ -24,12 +24,10 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="States definitions" default_order="sequence asc">
-				<group name="object" string="Business Object">
-					<field name="model_id" />
-				</group>
 				<group name="state" string="State definition">
 					<field name="name" />
 					<field name="automaton" />
+					<field name="model_id" />
 				</group>
 				<group name="ordering" string="State ordering">
 					<field name="sequence" />
