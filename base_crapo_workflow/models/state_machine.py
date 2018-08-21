@@ -30,12 +30,6 @@ class WorkflowStateMachine(models.Model):
                                comodel_name="ir.model",
                                )
 
-    start_state = fields.Many2one(string=_(u'Start State'),
-                                  comodel_name='crapo.state')
-
-    end_state = fields.Many2one(string=_(u'End State'),
-                                comodel_name='crapo.state')
-
     transitions = fields.One2many(string=(u'Transitions'),
                                   comodel_name='crapo.transition',
                                   inverse_name='automaton',

@@ -42,6 +42,27 @@ class State(models.Model):
                                        comodel_name='crapo.transition',
                                        inverse_name='from_state'
                                        )
+    # computed field to identify start and end states
+
+    is_start_state = fields.Boolean("Start State", compute="_is_start_state", store=True, index=True)
+
+    is_end_state = fields.Boolean("End State", compute="_is_end_state", store=True, index=True)
+
+    @api.depends('transitions_to', 'automaton', 'model_id')
+    def _is_start_state(self):
+        for record in self:
+            if len(record.transitions_to) == 0 or record.transitions_to == False:
+                record.is_start_state = True
+            else:
+                record.is_start_state = False
+
+    @api.depends('transitions_from', 'automaton', 'model_id')
+    def _is_end_state(self):
+        for record in self:
+            if len(record.transitions_to) == 0 or record.transitions_to == False:
+                record.is_end_state = True
+            else:
+                record.is_end_state = False
 
     def _get_default_automaton(self):
         default_value = 0
