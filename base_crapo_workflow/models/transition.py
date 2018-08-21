@@ -31,10 +31,12 @@ class StateMachineTransition(models.Model):
                                )
 
     from_state = fields.Many2one(string='From state',
-                                 comodel_name='crapo.state')
+                                 comodel_name='crapo.state',
+                                 ondelete='cascade', required=True, index=True)
 
     to_state = fields.Many2one(string='To state',
-                               comodel_name='crapo.state')
+                               comodel_name='crapo.state',
+                               ondelete='cascade', required=True, index=True)
 
     action = fields.Many2one(string=_(u'Action to be executed when transitioning'),
                              comodel_name='ir.actions.server',  domain=lambda self: self._get_action_domain(), required=False)

@@ -32,6 +32,17 @@ class State(models.Model):
     fold = fields.Boolean(string=_(u'Folded in kanban'),
                           help=_(u'This stage is folded in the kanban view when there are no records in that stage to display.'), default=False)
 
+    # Transitions (inverse relations)
+
+    transitions_to = fields.One2many(string='Incomint transitions',
+                                     comodel_name='crapo.transition',
+                                     inverse_name='to_state')
+
+    transitions_from = fields.One2many(string='Outgoing transitions',
+                                       comodel_name='crapo.transition',
+                                       inverse_name='from_state'
+                                       )
+
     def _get_default_automaton(self):
         default_value = 0
         if 'current_automaton' in self.env.context:
