@@ -2,7 +2,6 @@
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import logging
 
 from odoo import SUPERUSER_ID
 from odoo import fields, models, _, exceptions
