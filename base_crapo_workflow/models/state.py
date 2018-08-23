@@ -29,6 +29,9 @@ class State(models.Model):
     sequence = fields.Integer(string=_(u'Sequence'), default=1, help=_(
         u"Sequence gives the order in which states are displayed"))
 
+    default_state = fields.Boolean(string=_(u'Default state'),
+                                   help=_(u'Might be use as default stage.'), default=False, store=True)
+
     fold = fields.Boolean(string=_(u'Folded in kanban'),
                           help=_(u'This stage is folded in the kanban view when there are no records in that stage to display.'), default=False)
 
@@ -73,3 +76,17 @@ class State(models.Model):
                 default_value = 0
 
         return self.env['crapo.automaton'].browse(default_value)
+
+    def write(self, values):
+
+        if "default_state" in values:
+            if values["default_state"]:
+                if len(self) > 1:
+                    raise exceptions.ValidationError(_(u"There should only one default state per model"))
+                else:
+                    found = self.search([('default_state', '=', True), ('model_id',
+                                                                        '=', self.model_id.id), ('id', '!=', self.id)])
+                    for s in found:
+                        s.write({'default_state': False})
+
+        return super(State, self).write(values)

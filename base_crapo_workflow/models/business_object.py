@@ -25,6 +25,12 @@ class WorkflowBusinessObject(models.Model):
                             group_expand='_read_group_states',
                             default=lambda self: self._default_state(),  store=True, index=True, required=True)
 
+    automaton = fields.Many2one(comodel_name='crapo.automaton',
+                                string=_(u'Related automaton'),
+                                help=(u"""The automaton describes the various transition an object can go through between states"""),
+                                related='state.automaton',
+                                store=True, index=True, required=False)
+
     my_model_ref = fields.Many2one(comodel_name='ir.model',
                                    string=_("My model"),
                                    help=_("A reference to current object's Model, used to help retrieve dynamic states"),
@@ -47,33 +53,63 @@ class WorkflowBusinessObject(models.Model):
     def _get_state_domain(self, domain=None):
 
         if self.my_model_ref:
-            return [('model_id', '=', self.my_model_ref.id)]
+            result = [('model_id', '=', self.my_model_ref.id)]
         else:
             my_model = self._get_my_model_ref()
-            return [('model_id', '=', my_model.id)]
+            result = [('model_id', '=', my_model.id)]
+
+        if self.automaton:
+            result.append(('automaton', '=', self.automaton.id))
+
+        return result
 
     def _default_state(self):
-        return self.env['crapo.state'].search(self._get_state_domain(), limit=1)
+        domain = self._get_state_domain()
 
-    def _next_state_id(self):
-        self.ensure_one()
-        next_state = self._next_state()
-        if next_state:
-            return next_state.id
-        else:
-            return -1
+        if self.automaton:
+            domain.append('|', ('is_start_state', '=', True), ('default_state', '=', 1))
 
-    def _next_state(self):
+        return self.env['crapo.state'].search(domain, limit=1)
+
+    def _next_states(self):
         self.ensure_one()
         domain = self._get_state_domain()
-        domain.append(('sequence', '>', self.state.sequence))
-        next_state = self.env['crapo.state'].search(domain, limit=1)
-        if next_state:
-            return next_state[0]
+        next_states = False
+        if self.automaton:
+            eligible_transitions = self.env['crapo.transition'].search(
+                [('automaton', '=', self.automaton.id), ('from_state', '=', self.state.id)])
+            target_ids = eligible_transitions.mapped(lambda x: x.to_state.id)
+
+            if target_ids:
+                domain.append(('id', 'in', target_ids))
+
+                next_states = self.env['crapo.state'].search(domain)
+
         else:
-            return None
+            domain.append(('sequence', '>', self.state.sequence))
+            next_states = self.env['crapo.state'].search(domain, limit=1)
+
+        return next_states
 
     def _read_group_states(self, states, domain, order):
         search_domain = self._get_state_domain(domain=domain)
         state_ids = states._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return states.browse(state_ids)
+
+    def write(self, values):
+        """
+        we override write method in order to preventing transitioning to a non eligible state
+        """
+        target_state_id = False
+        if "state" in values:
+            target_state_id = values["state"]
+
+        for record in self:
+            if record.state and target_state_id:
+                next_states = record._next_states()
+                if not next_states:
+                    raise exceptions.ValidationError(_(u"No target state is elegible for transitionning"))
+                if not target_state_id in next_states.ids:
+                    raise exceptions.ValidationError(_(u"State is not in eligible target states"))
+
+        return super(WorkflowBusinessObject, self).write(values)

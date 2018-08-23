@@ -2,7 +2,7 @@
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, exceptions
 
 
 class WorkflowStateMachine(models.Model):
@@ -28,6 +28,7 @@ class WorkflowStateMachine(models.Model):
 
     model_id = fields.Many2one(string=_(u'Model'), help=_(u"Business Model for which this state is relevant"),
                                comodel_name="ir.model",
+                               required=True
                                )
 
     transitions = fields.One2many(string=(u'Transitions'),
@@ -51,3 +52,12 @@ class WorkflowStateMachine(models.Model):
     def _reset_domains_and_contents(self):
         # TODO
         return
+
+    @api.model
+    def create(self, values):
+        if "model_id" in values and values["model_id"]:
+            found = self.search([('model_id', '=', values["model_id"])])
+            if found:
+                raise exceptions.ValidationError(_(u"There should be a single autmaton per model"))
+        else:
+            raise exceptions.ValidationError(_(u"A target model is mandatory"))
