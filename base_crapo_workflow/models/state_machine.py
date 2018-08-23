@@ -61,3 +61,5 @@ class WorkflowStateMachine(models.Model):
                 raise exceptions.ValidationError(_(u"There should be a single autmaton per model"))
         else:
             raise exceptions.ValidationError(_(u"A target model is mandatory"))
+
+        return super(WorkflowStateMachine, self).create(values)
