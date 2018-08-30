@@ -14,10 +14,15 @@ class StateMachineTransition(models.Model):
     name = fields.Char(string=_(u'Name'),
                        help=_(u"Transition's name"), required=True, translate=True)
 
-    preconditions = fields.Char(string=_(u"Pre-conditions"), help=_(u"Conditions to be checked before initiating this transition"),
+    preconditions = fields.Char(string=_(u"Pre-conditions"), help=_(u"""Conditions to be checked before initiating this transition.
+    
+Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment"""),
                                 required=False)
 
-    postconditions = fields.Char(string=_(u"Post-conditions"), help=_(u"Conditions to be checked before ending this transition"),
+    postconditions = fields.Char(string=_(u"Post-conditions"), help=_(u"""Conditions to be checked before ending this transition.
+
+Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment
+    """),
                                  required=False)
 
     automaton = fields.Many2one(string="Automaton",
@@ -40,6 +45,23 @@ class StateMachineTransition(models.Model):
 
     action = fields.Many2one(string=_(u'Action to be executed when transitioning'),
                              comodel_name='ir.actions.server',  domain=lambda self: self._get_action_domain(), required=False)
+
+    async_action = fields.Boolean(string=_(u"Async action"),
+                                  help=_(u"Action will be run asynchronously, after transition is completed"),
+                                  default=False
+                                  )
+
+    write_before = fields.Boolean(string=_(u"Write Object before"),
+                                  help=_(u"""All updates to object will be commited before transitioning
+
+This is useful for transitions where preconditions needs to be tested with values that might have either changed together with the state change
+or during the write process (computed fields) """),
+                                  default=False
+                                  )
+
+    @api.onchange('model_id')
+    def _changed_model(self):
+        self.action = False
 
     def _get_action_domain(self):
         if self.model_id:

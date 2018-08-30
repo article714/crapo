@@ -14,8 +14,7 @@
 Crapo: Base Module for workflow management
 ===========================================
 
-TODO
-
+Crapo is a flexilble tool to manage states for your odoo models 
 
 **Credits:** .
 """,

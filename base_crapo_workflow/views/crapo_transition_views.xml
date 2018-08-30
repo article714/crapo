@@ -36,9 +36,11 @@
 					<field name="to_state" />
 				</group>
 				<group name="action" string="Action">
+					<field name="write_before" />
 					<field name="preconditions" />
 					<field name="action" />
-					<field name="postconditions" />
+					<field name="async_action" />
+					<field name="postconditions" attrs="{'invisible':[('async_action','=',True)]}" />
 				</group>
 			</form>
 		</field>

@@ -3,8 +3,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
+import logging
+
 from odoo import SUPERUSER_ID
-from odoo import fields, models, _, exceptions
+from odoo import fields, models, _, exceptions, api
+from odoo.tools.safe_eval import safe_eval
 
 
 class WorkflowBusinessObject(models.Model):
@@ -96,20 +99,99 @@ class WorkflowBusinessObject(models.Model):
         state_ids = states._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return states.browse(state_ids)
 
+    @api.multi
     def write(self, values):
         """
         we override write method in order to preventing transitioning to a non eligible state
         """
-        target_state_id = False
+        # Look for a change of state
+        target_state_id = None
+        result = True
+
         if "state" in values:
             target_state_id = values["state"]
 
-        for record in self:
-            if record.state and target_state_id:
-                next_states = record._next_states()
-                if not next_states:
-                    raise exceptions.ValidationError(_(u"No target state is elegible for transitionning"))
-                if not target_state_id in next_states.ids:
-                    raise exceptions.ValidationError(_(u"State is not in eligible target states"))
+        # check if there is a change state needed
+        if target_state_id != None:
 
-        return super(WorkflowBusinessObject, self).write(values)
+            # Check if next state is valid
+            for record in self:
+                if record.state and target_state_id:
+                    next_states = record._next_states()
+                    if not next_states:
+                        raise exceptions.ValidationError(_(u"No target state is elegible for transitionning"))
+                    if not target_state_id in next_states.ids:
+                        raise exceptions.ValidationError(_(u"State is not in eligible target states"))
+
+            # Search for elected transition
+            transition_elected = self.env['crapo.transition'].search(
+                [('from_state', '=', self.state.id), ('to_state', '=', target_state_id)], limit=1)
+
+            if transition_elected:
+                logging.warning(u"DEBUG: going for transition: %s ", transition_elected.name)
+                is_valid = False
+                result = True
+
+                if transition_elected.write_before:
+                    logging.warning(u"DEBUG: write before for transition: %s ", transition_elected.name)
+                    result = super(WorkflowBusinessObject, self).write(values)
+
+                # Test preconditions
+                if transition_elected.preconditions:
+                    logging.warning("DEBUG: we have preconditions for transition: %s ",
+                                    str(transition_elected.preconditions))
+                    for obj in self:
+                        try:
+                            logging.warning("DEBUG: Testing preconditions for: %s ",
+                                            str(obj))
+                            is_valid = safe_eval(transition_elected.preconditions, {'object': obj, 'env': self.env})
+                        except Exception as e:
+                            logging.error(u"CRAPO: Failed to validate transition preconditions: %s", str(e))
+                            is_valid = False
+
+                        logging.warning("DEBUG: Testing preconditions for: %s ",
+                                        str(is_valid))
+
+                        # Raise an error if not valid
+                        if not is_valid:
+                            raise exceptions.ValidationError(
+                                u"Invalid Pre-conditions for Object: %s" % obj.display_name)
+
+                # Should we go for it?
+                if is_valid and transition_elected.action:
+                    # does action needs to be taken asynchronously?
+                    if transition_elected.async_action:
+                        # TODO
+                        logging.error("CRAPO: TODO")
+                    else:
+                        logging.error("CRAPO: Should execute %s with model %s and ids %s",
+                                      str(transition_elected.action), str(self._name), str(self))
+
+                        action = self.env['ir.actions.server'].browse(transition_elected.action.id)
+                        action.with_context({
+                            'active_model': self._name,
+                            'active_id': self.id,
+                            'active_ids': self.ids
+                        }).run()
+
+                # Test postconditions
+                if transition_elected.postconditions:
+                    for obj in self:
+                        try:
+                            is_valid = safe_eval(transition_elected.postconditions, {'object': obj, 'env': self.env})
+                        except Exception as e:
+                            logging.error(u"CRAPO: Failed to validate transition postconditions: %s", str(e))
+                            is_valid = False
+                        # Raise an error if not valid
+                        if not is_valid:
+                            raise exceptions.ValidationError(
+                                u"Invalid Post-conditions for Object: %s" % obj.display_name)
+                # writing after id needed
+                if not transition_elected.write_before:
+                    logging.warning(u"DEBUG: write after for transition: %s ", transition_elected.name)
+                    result = super(WorkflowBusinessObject, self).write(values)
+
+                return result
+
+        else:
+            return super(WorkflowBusinessObject, self).write(values)

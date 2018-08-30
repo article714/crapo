@@ -12,4 +12,6 @@ class AnObject(models.Model):
 
     name = fields.Char(string="A Name")
 
+    some_value = fields.Boolean('Some Value')
+
     some_objects = fields.One2many(comodel_name='crapo.test.another', inverse_name='to_object')

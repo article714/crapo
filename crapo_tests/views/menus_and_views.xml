@@ -56,6 +56,7 @@
 					<field name="name"/>
 				</h1>
 				<group>
+					<field name="some_value" />
 					<field name="some_objects" />
 				</group>
 
