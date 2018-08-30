@@ -9,6 +9,7 @@ Created on 16 july 2018
 
 from . import activity
 from . import business_object
+from . import crapo_action
 from . import crapo_config
 from . import state
 from . import state_machine
