@@ -14,7 +14,10 @@ class State(models.Model):
     _order = "model_id,sequence, name, id"
 
     name = fields.Char(string=_(u'Name'),
-                       help=_(u"State's name"), required=True, translate=True)
+                       help=_(u"State's name"), required=True, translate=True, size=32)
+
+    description = fields.Char(string=_(u'Description'),
+                              required=False, translate=True, size=256)
 
     automaton = fields.Many2one(string="Automaton",
                                 comodel_name='crapo.automaton',

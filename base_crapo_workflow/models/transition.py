@@ -12,18 +12,10 @@ class StateMachineTransition(models.Model):
     _name = 'crapo.transition'
 
     name = fields.Char(string=_(u'Name'),
-                       help=_(u"Transition's name"), required=True, translate=True)
+                       help=_(u"Transition's name"), required=True, translate=True, size=32)
 
-    preconditions = fields.Char(string=_(u"Pre-conditions"), help=_(u"""Conditions to be checked before initiating this transition.
-    
-Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment"""),
-                                required=False)
-
-    postconditions = fields.Char(string=_(u"Post-conditions"), help=_(u"""Conditions to be checked before ending this transition.
-
-Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment
-    """),
-                                 required=False)
+    description = fields.Text(string=_(u'Description'),
+                              required=False, translate=True, size=256)
 
     automaton = fields.Many2one(string="Automaton",
                                 comodel_name='crapo.automaton',
@@ -43,8 +35,19 @@ Evaluation environment contains 'object' which is a reference to the object to b
                                comodel_name='crapo.state',
                                ondelete='cascade', required=True, index=True)
 
+    preconditions = fields.Char(string=_(u"Pre-conditions"), help=_(u"""Conditions to be checked before initiating this transition.
+    
+Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment"""),
+                                required=False)
+
+    postconditions = fields.Char(string=_(u"Post-conditions"), help=_(u"""Conditions to be checked before ending this transition.
+
+Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment
+    """),
+                                 required=False)
+
     action = fields.Many2one(string=_(u'Action to be executed when transitioning'),
-                             comodel_name='ir.actions.server',  domain=lambda self: self._get_action_domain(), required=False)
+                             comodel_name='crapo.action',  domain=lambda self: self._get_action_domain(), required=False)
 
     async_action = fields.Boolean(string=_(u"Async action"),
                                   help=_(u"Action will be run asynchronously, after transition is completed"),

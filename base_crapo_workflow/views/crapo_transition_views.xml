@@ -9,11 +9,11 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Transitions" default_order="sequence asc">
-				<field name="model_id" />
 				<field name="automaton" />
 				<field name="name" />
 				<field name="from_state" />
 				<field name="to_state" />
+				<field name="action" />
 			</tree>
 		</field>
 	</record>
@@ -25,11 +25,13 @@
 		<field name="mode">primary</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Transitions definitions" default_order="sequence asc">
+			<form string="Transitions definitions"
+				default_order="sequence asc">
 				<group name="transition" string="transition definition">
 					<field name="name" />
 					<field name="automaton" />
 					<field name="model_id" />
+					<field name="description" />
 				</group>
 				<group name="states" string="States">
 					<field name="from_state" />
@@ -40,7 +42,8 @@
 					<field name="preconditions" />
 					<field name="action" />
 					<field name="async_action" />
-					<field name="postconditions" attrs="{'invisible':[('async_action','=',True)]}" />
+					<field name="postconditions"
+						attrs="{'invisible':[('async_action','=',True)]}" />
 				</group>
 			</form>
 		</field>

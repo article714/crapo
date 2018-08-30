@@ -16,5 +16,5 @@ class CrapoAction(models.Model):
 
     """
     _name = 'crapo.action'
-    _inherits = ['ir.actions.server']
+    _inherit = 'ir.actions.server'
     _description = u"A specialization of server actions for Crapol"

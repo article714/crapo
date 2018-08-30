@@ -25,6 +25,7 @@ Crapo is a flexilble tool to manage states for your odoo models
              'views/crapo_menus.xml',
              'views/crapo_state_views.xml',
              'views/crapo_transition_views.xml',
+             'views/crapo_action_views.xml',
              'views/crapo_automaton_views.xml'],
     'installable': True,
     'images': [],
