@@ -2,6 +2,8 @@
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import logging
+
 from odoo import fields, models, _, api, exceptions
 
 
@@ -67,6 +69,8 @@ or during the write process (computed fields) """),
         self.action = False
 
     def _get_action_domain(self):
+        logging.warning("DANS LE DOMAINE: %s ", str(self))
+        logging.warning("DANS LE DOMAINE: %s ", str(self.model_id))
         if self.model_id:
             return [('model_id', '=', self.model_id.id)]
         return []
