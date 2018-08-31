@@ -9,7 +9,6 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Transitions" default_order="sequence asc">
-				<field name="automaton" />
 				<field name="name" />
 				<field name="from_state" />
 				<field name="to_state" />
