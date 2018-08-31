@@ -26,7 +26,8 @@ class StateMachineTransition(models.Model):
 
     model_id = fields.Many2one(string=_(u'Model'),
                                comodel_name="ir.model",
-                               related='automaton.model_id'
+                               related='automaton.model_id',
+                               default=lambda self: self._get_default_model_id(),
                                )
 
     from_state = fields.Many2one(string='From state',
@@ -67,6 +68,8 @@ or during the write process (computed fields) """),
     @api.onchange('model_id')
     def _changed_model(self):
         self.action = False
+        self.from_state = False
+        self.to_state = False
 
     def _get_default_automaton(self):
         default_value = 0
@@ -76,4 +79,9 @@ or during the write process (computed fields) """),
             except:
                 default_value = 0
 
-        return self.env['crapo.automaton'].browse(default_value)
+    def _get_default_model_id(self):
+        automaton = self._get_default_automaton()
+        if automaton:
+            return automaton.model_id
+        else:
+            return False
