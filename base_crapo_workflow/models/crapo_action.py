@@ -22,5 +22,5 @@ class CrapoAction(models.Model):
 
     @api.multi
     @job
-    def run(self):
-        super(CrapoAction, self).run()
+    def run_async(self, context={}):
+        self.with_context(context).run()

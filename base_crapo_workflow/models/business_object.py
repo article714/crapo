@@ -152,16 +152,16 @@ class WorkflowBusinessObject(models.Model):
                 if is_valid and transition_elected.action:
                     # does action needs to be taken asynchronously?
                     action = self.env['crapo.action'].browse(transition_elected.action.id)
-                    action_in_context = action.with_context({
+                    context = {
                         'active_model': self._name,
                         'active_id': self.id,
                         'active_ids': self.ids
-                    })
+                    }
                     if action:
                         if transition_elected.async_action:
-                            action_in_context.with_delay().run()
+                            action.with_delay().run_async(context)
                         else:
-                            action_in_context.run()
+                            action.with_context(context).run()
 
                 # Test postconditions if action is not asynchronous
                 if transition_elected.postconditions and not transition_elected.async_action:
