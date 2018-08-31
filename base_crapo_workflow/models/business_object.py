@@ -177,7 +177,6 @@ class WorkflowBusinessObject(models.Model):
                                 u"Invalid Post-conditions for Object: %s" % obj.display_name)
                 # writing after id needed
                 if not transition_elected.write_before:
-                    logging.warning(u"DEBUG: write after for transition: %s ", transition_elected.name)
                     result = super(WorkflowBusinessObject, self).write(values)
 
                 return result
