@@ -49,7 +49,7 @@ Evaluation environment contains 'object' which is a reference to the object to b
                                  required=False)
 
     action = fields.Many2one(string=_(u'Action to be executed when transitioning'),
-                             comodel_name='crapo.action',  domain=lambda self: self._get_action_domain(), required=False)
+                             comodel_name='crapo.action',  required=False)
 
     async_action = fields.Boolean(string=_(u"Async action"),
                                   help=_(u"Action will be run asynchronously, after transition is completed"),
@@ -67,13 +67,6 @@ or during the write process (computed fields) """),
     @api.onchange('model_id')
     def _changed_model(self):
         self.action = False
-
-    def _get_action_domain(self):
-        logging.warning("DANS LE DOMAINE: %s ", str(self))
-        logging.warning("DANS LE DOMAINE: %s ", str(self.model_id))
-        if self.model_id:
-            return [('model_id', '=', self.model_id.id)]
-        return []
 
     def _get_default_automaton(self):
         default_value = 0
