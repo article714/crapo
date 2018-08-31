@@ -13,7 +13,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class CrapoAction(models.Model):
     """
-    Crapo Action is a specialisation of Server Actions
+    Crapo Action is a specialisation of Server Actions in order to be able to use them in actions/activities and run them asynchronously
 
     """
     _name = 'crapo.action'
