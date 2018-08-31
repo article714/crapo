@@ -128,7 +128,7 @@ class WorkflowBusinessObject(models.Model):
                 [('from_state', '=', self.state.id), ('to_state', '=', target_state_id)], limit=1)
 
             if transition_elected:
-                is_valid = False
+                is_valid = True
                 result = True
 
                 if transition_elected.write_before:
