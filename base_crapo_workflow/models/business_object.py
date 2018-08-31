@@ -128,29 +128,20 @@ class WorkflowBusinessObject(models.Model):
                 [('from_state', '=', self.state.id), ('to_state', '=', target_state_id)], limit=1)
 
             if transition_elected:
-                logging.warning(u"DEBUG: going for transition: %s ", transition_elected.name)
                 is_valid = False
                 result = True
 
                 if transition_elected.write_before:
-                    logging.warning(u"DEBUG: write before for transition: %s ", transition_elected.name)
                     result = super(WorkflowBusinessObject, self).write(values)
 
                 # Test preconditions
                 if transition_elected.preconditions:
-                    logging.warning("DEBUG: we have preconditions for transition: %s ",
-                                    str(transition_elected.preconditions))
                     for obj in self:
                         try:
-                            logging.warning("DEBUG: Testing preconditions for: %s ",
-                                            str(obj))
                             is_valid = safe_eval(transition_elected.preconditions, {'object': obj, 'env': self.env})
                         except Exception as e:
                             logging.error(u"CRAPO: Failed to validate transition preconditions: %s", str(e))
                             is_valid = False
-
-                        logging.warning("DEBUG: Testing preconditions for: %s ",
-                                        str(is_valid))
 
                         # Raise an error if not valid
                         if not is_valid:
@@ -160,22 +151,20 @@ class WorkflowBusinessObject(models.Model):
                 # Should we go for it?
                 if is_valid and transition_elected.action:
                     # does action needs to be taken asynchronously?
-                    if transition_elected.async_action:
-                        # TODO
-                        logging.error("CRAPO: TODO")
-                    else:
-                        logging.error("CRAPO: Should execute %s with model %s and ids %s",
-                                      str(transition_elected.action), str(self._name), str(self))
+                    action = self.env['crapo.action'].browse(transition_elected.action.id)
+                    action_in_context = action.with_context({
+                        'active_model': self._name,
+                        'active_id': self.id,
+                        'active_ids': self.ids
+                    })
+                    if action:
+                        if transition_elected.async_action:
+                            action_in_context.with_delay().run()
+                        else:
+                            action_in_context.run()
 
-                        action = self.env['ir.actions.server'].browse(transition_elected.action.id)
-                        action.with_context({
-                            'active_model': self._name,
-                            'active_id': self.id,
-                            'active_ids': self.ids
-                        }).run()
-
-                # Test postconditions
-                if transition_elected.postconditions:
+                # Test postconditions if action is not asynchronous
+                if transition_elected.postconditions and not transition_elected.async_action:
                     for obj in self:
                         try:
                             is_valid = safe_eval(transition_elected.postconditions, {'object': obj, 'env': self.env})
