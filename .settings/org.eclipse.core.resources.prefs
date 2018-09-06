@@ -1,2 +1,10 @@
 eclipse.preferences.version=1
+encoding//base_crapo_workflow/__init__.py=utf-8
 encoding//base_crapo_workflow/__manifest__.py=utf-8
+encoding//base_crapo_workflow/models/__init__.py=utf-8
+encoding//base_crapo_workflow/models/activity.py=utf-8
+encoding//base_crapo_workflow/models/business_object.py=utf-8
+encoding//base_crapo_workflow/models/crapo_config.py=utf-8
+encoding//base_crapo_workflow/models/state.py=utf-8
+encoding//base_crapo_workflow/models/transition.py=utf-8
+encoding//crapo_tests/models/__init__.py=utf-8
