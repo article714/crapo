@@ -5,7 +5,7 @@
 from odoo import models, fields, api, _, exceptions
 
 
-class WorkflowStateMachine(models.Model):
+class Automaton(models.Model):
     """
     A state-machine (automaton) describes and automates the various transitions between states of a given business object class
 
@@ -62,4 +62,4 @@ class WorkflowStateMachine(models.Model):
         else:
             raise exceptions.ValidationError(_(u"A target model is mandatory"))
 
-        return super(WorkflowStateMachine, self).create(values)
+        return super(Automaton, self).create(values)

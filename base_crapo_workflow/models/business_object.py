@@ -2,7 +2,6 @@
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-
 import logging
 
 from odoo import SUPERUSER_ID
@@ -17,7 +16,7 @@ class WorkflowBusinessObject(models.Model):
     Should be use as a mixin class in existing objects
     """
     _name = 'crapo.business.object'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = u"An object on which to  in a workflow, specific to a given model"
 
     state = fields.Many2one(comodel_name='crapo.state',
@@ -26,7 +25,7 @@ class WorkflowBusinessObject(models.Model):
                             track_visibility='onchange',
                             domain=lambda self: self._get_state_domain(),
                             group_expand='_read_group_states',
-                            default=lambda self: self._default_state(),  store=True, index=True, required=True)
+                            default=lambda self: self._default_state(), store=True, index=True, required=True)
 
     automaton = fields.Many2one(comodel_name='crapo.automaton',
                                 string=_(u'Related automaton'),

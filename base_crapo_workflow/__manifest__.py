@@ -5,7 +5,7 @@
 
 {
     'name': u'Crapo: Base Module for workflow management',
-    'version': u'10.0.1.0.0',
+    'version': u'12.0.1.0.0',
     'category': u'Crapo Workflows',
     'author': u'Article714',
     'license': u'AGPL-3',
@@ -15,18 +15,25 @@
 Crapo: Base Module for workflow management
 ===========================================
 
-Crapo is a flexible tool to manage states for your odoo models, and also provide a workflow engine. 
+Crapo is a flexible tool to manage states for your odoo models, and also provide a workflow engine.
 
 
 **Credits:** .
 Article714
 
-This module include customized source code and resources from odoo source code (https://github.com/odoo/odoo) 
+This module include customized source code and resources from odoo source code (https://github.com/odoo/odoo)
 
 """,
     'depends': ['queue_job'],
     'data': ['security/crapo_security.xml',
-             'security/base_access_model.xml',
+             'security/activity.xml',
+             'security/crapo_action.xml',
+             'security/crapo_business_object.xml',
+             'security/crapo_config.xml',
+             'security/automaton.xml',
+             'security/state.xml',
+             'security/transition.xml',
+             'security/workflow.xml',
              'actions/window_actions.xml',
              'views/crapo_menus.xml',
              'views/crapo_state_views.xml',
