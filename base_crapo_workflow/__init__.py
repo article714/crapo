@@ -4,3 +4,4 @@
 # @license: AGPL v3
 
 from . import models
+from . import mixins

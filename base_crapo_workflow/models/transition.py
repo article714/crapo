@@ -12,6 +12,7 @@ class StateMachineTransition(models.Model):
     A transition between two states
     """
     _name = 'crapo.transition'
+    _description = 'Transition between two states'
 
     name = fields.Char(string=_(u'Name'),
                        help=_(u"Transition's name"), required=True, translate=True, size=32)

@@ -29,7 +29,6 @@ This module include customized source code and resources from odoo source code (
              'security/activity.xml',
              'security/crapo_action.xml',
              'security/crapo_business_object.xml',
-             'security/crapo_config.xml',
              'security/automaton.xml',
              'security/state.xml',
              'security/transition.xml',
@@ -42,5 +41,5 @@ This module include customized source code and resources from odoo source code (
              'views/crapo_automaton_views.xml'],
     'installable': True,
     'images': [],
-    'application': True,
+    'application': False,
 }

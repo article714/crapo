@@ -10,16 +10,8 @@
     'author': u'Article714',
     'license': u'AGPL-3',
     'website': u'https://www.article714.org',
-    'description': u"""
-Crapo: Test module for workflow management
-===========================================
-
-TODO
-
-
-**Credits:** .
-""",
-    'depends': ['base_crapo_workflow'],
+    'summary': "Crapo: Test module for workflow management",
+    'depends': ['base_crapo_workflow','crm'],
     'data': ['security/access_model.xml',
              'views/menus_and_views.xml'],
     'installable': True,

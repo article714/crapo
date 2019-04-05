@@ -9,5 +9,4 @@ class CrapoConfigSettings(models.TransientModel):
     """
     Crapo configuration
     """
-    _name = 'crapo.config.settings'
     _inherit = 'res.config.settings'
