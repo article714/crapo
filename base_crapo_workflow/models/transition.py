@@ -73,11 +73,20 @@ or during the write process (computed fields) """),
 
     def _get_default_automaton(self):
         default_value = 0
+        logging.error("JE TE PROUT: %s ",str(self.env.context.keys()))
+        logging.error("JE TE COUINE: %s ",str(self.env.context.get('params')))
         if 'current_automaton' in self.env.context:
             try:
                 default_value = int(self.env.context.get('current_automaton'))
             except:
                 default_value = 0
+        elif 'params' in self.env.context:
+            params = self.env.context.get('params')
+            if 'model' in params and params['model']=='crapo.automaton' and 'id' in params:
+                try:
+                    default_value = int(params['id'])
+                except:
+                    default_value = 0
                 
         return self.env['crapo.automaton'].browse(default_value)
                 

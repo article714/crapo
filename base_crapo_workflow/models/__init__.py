@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
 Created on 16 july 2018
 
@@ -6,6 +5,7 @@ Created on 16 july 2018
 @copyright: ©2018-2019 Article 714
 @license: AGPL v3
 '''
+
 
 from . import activity
 from . import automaton
@@ -15,4 +15,3 @@ from . import crapo_config
 from . import state
 from . import transition
 from . import workflow
-

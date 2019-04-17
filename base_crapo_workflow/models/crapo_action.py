@@ -9,7 +9,8 @@ from odoo.addons.queue_job.job import job
 
 class CrapoAction(models.Model):
     """
-    Crapo Action is a specialisation of Server Actions in order to be able to use them in actions/activities and run them asynchronously
+    Crapo Action is a specialisation of Server Actions in order to be 
+    able to use them in actions/activities and run them asynchronously
 
     """
     _name = 'crapo.action'

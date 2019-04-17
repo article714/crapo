@@ -2,11 +2,19 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-======
-Crapo
-======
+===========================================
+Crapo: Base Module for workflow management
+===========================================
 
-TODO   => récupérer le contenu du module workflow d'odoo abandonné sur la V11
+Crapo is a flexible tool to manage states for your odoo models, and also provide a workflow engine.
+
+
+**Credits:** .
+Article714
+
+This module include customized source code and resources from odoo 
+source code (https://github.com/odoo/odoo)
+
 
 Installation
 ============

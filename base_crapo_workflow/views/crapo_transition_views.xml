@@ -28,8 +28,8 @@
 				default_order="sequence asc">
 				<group name="transition" string="transition definition">
 					<field name="name" />
-					<field name="automaton" />
-					<field name="model_id" readonly="1"/>
+					<field name="automaton" invisible="1"/>
+					<field name="model_id" invisible="1" />
 					<field name="description" />
 				</group>
 				<group name="states" string="States">

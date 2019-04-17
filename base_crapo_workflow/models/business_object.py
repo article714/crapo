@@ -19,6 +19,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,models.Mode
     _name = 'crapo.business.object'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = u"An object on which to  in a workflow, specific to a given model"
+    _sync_state_field = ""
 
     @api.multi
     def write(self, values):

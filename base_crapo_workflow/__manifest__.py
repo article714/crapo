@@ -10,20 +10,8 @@
     'author': u'Article714',
     'license': u'AGPL-3',
     'website': u'https://www.article714.org',
-    'summary': u' Fexible tool to manage states, transitions for your odoo objects',
-    'description': u"""
-Crapo: Base Module for workflow management
-===========================================
-
-Crapo is a flexible tool to manage states for your odoo models, and also provide a workflow engine.
-
-
-**Credits:** .
-Article714
-
-This module include customized source code and resources from odoo source code (https://github.com/odoo/odoo)
-
-""",
+    'summary': u""" Fexible tool to manage automata & workflows
+     for your odoo objects""",
     'depends': ['queue_job'],
     'data': ['security/crapo_security.xml',
              'security/activity.xml',

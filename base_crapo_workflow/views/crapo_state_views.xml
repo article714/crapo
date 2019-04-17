@@ -26,7 +26,7 @@
 			<form string="States definitions" default_order="sequence asc">
 				<group name="state" string="State definition">
 					<field name="name" />
-					<field name="automaton" />
+					<field name="automaton" invisible="1" />
 					<field name="description" />
 				</group>
 				<group name="ordering" string="State ordering">

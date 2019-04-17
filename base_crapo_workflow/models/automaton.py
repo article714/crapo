@@ -7,7 +7,8 @@ from odoo import models, fields, api, _, exceptions
 import logging
 class Automaton(models.Model):
     """
-    A state-machine (automaton) describes and automates the various transitions between states of a given business object class
+    A state-machine (automaton) describes and automates the various 
+    transitions between states of a given business object class
 
     There can be a single state machine per Odoo Model Object
 
@@ -26,10 +27,11 @@ class Automaton(models.Model):
     name = fields.Char(string=_(u'Name'),
                        help=_(u"State's name"), required=True, translate=True)
 
-    model_id = fields.Many2one(string=_(u'Model'), help=_(u"Business Model for which this state is relevant"),
-                               comodel_name="ir.model",
-                               required=True
-                               )
+    model_id = fields.Many2one(string=_(u'Model'), 
+                    help=_(u"Model for which this state is relevant"),
+                    comodel_name="ir.model",
+                    required=True
+                    )
 
     transitions = fields.One2many(string=(u'Transitions'),
                                   comodel_name='crapo.transition',
