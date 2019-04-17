@@ -27,7 +27,6 @@
 				<group name="state" string="State definition">
 					<field name="name" />
 					<field name="automaton" />
-					<field name="model_id" readonly="1" />
 					<field name="description" />
 				</group>
 				<group name="ordering" string="State ordering">

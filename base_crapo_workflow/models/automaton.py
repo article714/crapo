@@ -4,7 +4,7 @@
 
 from odoo import models, fields, api, _, exceptions
 
-
+import logging
 class Automaton(models.Model):
     """
     A state-machine (automaton) describes and automates the various transitions between states of a given business object class
@@ -33,25 +33,21 @@ class Automaton(models.Model):
 
     transitions = fields.One2many(string=(u'Transitions'),
                                   comodel_name='crapo.transition',
-                                  inverse_name='automaton',
-                                  domain=lambda self: self._get_statetransition_domain())
+                                  inverse_name='automaton')
 
     states = fields.One2many(string=(u'States'),
                              comodel_name='crapo.state',
-                             inverse_name='automaton',
-                             domain=lambda self: self._get_statetransition_domain())
+                             inverse_name='automaton')
 
     # State Management
-    def _get_statetransition_domain(self):
-        if self.model_id:
-            return [('model_id', '=', self.model_id.id)]
-        else:
-            return []
-
-    @api.onchange('model_id')
-    def _reset_domains_and_contents(self):
-        # TODO
-        return
+  
+    def get_default_state(self):
+        self.ensure_one()
+        for s in self.states:
+            if s.default_state:
+                return s
+        return False
+                
 
     @api.model
     def create(self, values):
@@ -61,5 +57,7 @@ class Automaton(models.Model):
                 raise exceptions.ValidationError(_(u"There should be a single autmaton per model"))
         else:
             raise exceptions.ValidationError(_(u"A target model is mandatory"))
+
+        logging.error("CREATING AUTOMATON WITH: %s",str(values))
 
         return super(Automaton, self).create(values)

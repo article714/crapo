@@ -12,7 +12,7 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     """
     _name = 'crapo.state'
     _description = u"State in a workflow, specific to a given model"
-    _order = "model_id,sequence, name, id"
+    _order = "sequence, name, id"
 
     name = fields.Char(string=_(u'Name'),
                        help=_(u"State's name"), required=True, translate=True, size=32)
@@ -38,8 +38,7 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
                 if len(self) > 1:
                     raise exceptions.ValidationError(_(u"There should only one default state per model"))
                 else:
-                    found = self.search([('default_state', '=', True), ('model_id',
-                                                                        '=', self.model_id.id), ('id', '!=', self.id)])
+                    found = self.search([('default_state', '=', True), ('automaton','=',self.automaton.id),('id', '!=', self.id)])
                     for s in found:
                         s.write({'default_state': False})
 
