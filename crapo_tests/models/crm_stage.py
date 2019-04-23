@@ -58,8 +58,7 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
             stages = self.env.cr.fetchall()
 
             for stage in stages:
-                default_value = default_compute(
-                    self, values={'name': stage[1]})
+                default_value = default_compute(values={'name': stage[1]})
 
                 query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (  # pylint: disable=sql-injection
                     self._table, column_name, stage[0])
