@@ -1,99 +1,91 @@
 <odoo>
 
 
-	<!-- Base menu -->
-	<menuitem id="crapo_test_base_menu" name="Test Workflow"
-		sequence="10" />
+  <!-- Base menu -->
+  <menuitem id="crapo_test_base_menu" name="Test Workflow" sequence="10" />
 
-	<menuitem id="crapo_test_sample_menu"
-		parent="crapo_test_base_menu" name="Samples" sequence="10" />
+  <menuitem id="crapo_test_sample_menu" parent="crapo_test_base_menu" name="Samples" sequence="10" />
 
-	<record id="crapo_list_test_objects_action"
-		model="ir.actions.act_window">
-		<field name="name">List Test Objects</field>
-		<field name="target">current</field>
-		<field name="res_model">crapo.test.object</field>
-		<field name="limit">100</field>
-		<field name="auto_search" eval="True" />
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	
-	<record id="crapo_list_test_other_objects_action"
-		model="ir.actions.act_window">
-		<field name="name">List Other Objects</field>
-		<field name="target">current</field>
-		<field name="res_model">crapo.test.another</field>
-		<field name="limit">100</field>
-		<field name="auto_search" eval="True" />
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	
+  <record id="crapo_list_test_objects_action" model="ir.actions.act_window">
+    <field name="name">List Test Objects</field>
+    <field name="target">current</field>
+    <field name="res_model">crapo.test.object</field>
+    <field name="limit">100</field>
+    <field name="auto_search" eval="True" />
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+  </record>
 
-	<menuitem id="crapo_list_test_objects_menu"
-		parent="crapo_test_sample_menu" name="Objects View" sequence="10"
-		action="crapo_list_test_objects_action" />
+  <record id="crapo_list_test_other_objects_action" model="ir.actions.act_window">
+    <field name="name">List Other Objects</field>
+    <field name="target">current</field>
+    <field name="res_model">crapo.test.another</field>
+    <field name="limit">100</field>
+    <field name="auto_search" eval="True" />
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+  </record>
 
-	<menuitem id="crapo_list_other_objects_menu"
-		parent="crapo_test_sample_menu" name="Other Objects" sequence="11"
-		action="crapo_list_test_other_objects_action" />
+
+  <menuitem id="crapo_list_test_objects_menu" parent="crapo_test_sample_menu" name="Objects View" sequence="10" action="crapo_list_test_objects_action" />
+
+  <menuitem id="crapo_list_other_objects_menu" parent="crapo_test_sample_menu" name="Other Objects" sequence="11" action="crapo_list_test_other_objects_action" />
 
 
 
-	<record model="ir.ui.view" id="view_test_object_basic_form">
-		<field name="name">view_test_object_basic_form</field>
-		<field name="model">crapo.test.object</field>
-		<field name="priority" eval="16" />
-		<field name="mode">primary</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form>
-				<header>
-					<field name="state" widget="statusbar" clickable="True" />
-				</header>
-				<h1>
-					<field name="name"/>
-				</h1>
-				<group>
-					<field name="some_value" />
-					<field name="some_objects" />
-				</group>
+  <record model="ir.ui.view" id="view_test_object_basic_form">
+    <field name="name">view_test_object_basic_form</field>
+    <field name="model">crapo.test.object</field>
+    <field name="priority" eval="16" />
+    <field name="mode">primary</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <field name="state" widget="statusbar" clickable="True" />
+        </header>
+        <h1>
+          <field name="name"/>
+        </h1>
+        <group>
+          <field name="some_value" />
+          <field name="some_objects" />
+        </group>
 
-				<div class="oe_chatter">
-					<field name="message_follower_ids" widget="mail_followers" />
-					<field name="message_ids" widget="mail_thread" />
-				</div>
-			</form>
-		</field>
-	</record>
-	
-	
+        <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers" />
+          <field name="message_ids" widget="mail_thread" />
+        </div>
+      </form>
+    </field>
+  </record>
 
-	<record model="ir.ui.view" id="view_another_object_basic_form">
-		<field name="name">view_another_object_basic_form</field>
-		<field name="model">crapo.test.another</field>
-		<field name="priority" eval="16" />
-		<field name="mode">primary</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form>
-				<header>
-					<field name="state" widget="statusbar" clickable="True" />
-				</header>
-				<h1>
-					<field name="name"/>
-				</h1>
-				<group>
-					<field name="to_object" />
-				</group>
 
-				<div class="oe_chatter">
-					<field name="message_follower_ids" widget="mail_followers" />
-					<field name="message_ids" widget="mail_thread" />
-				</div>
-			</form>
-		</field>
-	</record>
+
+  <record model="ir.ui.view" id="view_another_object_basic_form">
+    <field name="name">view_another_object_basic_form</field>
+    <field name="model">crapo.test.another</field>
+    <field name="priority" eval="16" />
+    <field name="mode">primary</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <field name="state" widget="statusbar" clickable="True" />
+        </header>
+        <h1>
+          <field name="name"/>
+        </h1>
+        <group>
+          <field name="to_object" />
+        </group>
+
+        <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers" />
+          <field name="message_ids" widget="mail_thread" />
+        </div>
+      </form>
+    </field>
+  </record>
 
 </odoo>

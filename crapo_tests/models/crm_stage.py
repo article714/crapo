@@ -52,7 +52,7 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
         else:
             default_compute = self._compute_related_state
 
-            query = 'SELECT id, name FROM "%s" WHERE "%s" is NULL' % (
+            query = 'SELECT id, name FROM "%s" WHERE "%s" is NULL' % (  # pylint: disable=sql-injection
                 self._table, column_name)
             self.env.cr.execute(query)
             stages = self.env.cr.fetchall()
@@ -61,7 +61,7 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
                 default_value = default_compute(
                     self, values={'name': stage[1]})
 
-                query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (
+                query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (  # pylint: disable=sql-injection
                     self._table, column_name, stage[0])
                 logging.error("TADAAA: %s" % query)
                 self.env.cr.execute(query, (default_value,))
