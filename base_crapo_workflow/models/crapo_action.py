@@ -3,15 +3,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from odoo import fields, models, api
+from odoo import models, api
 from odoo.addons.queue_job.job import job
 
 
 class CrapoAction(models.Model):
     """
-    Crapo Action is a specialisation of Server Actions in order to be 
+    Crapo Action is a specialisation of Server Actions in order to be
     able to use them in actions/activities and run them asynchronously
-
     """
     _name = 'crapo.action'
     _inherit = 'ir.actions.server'

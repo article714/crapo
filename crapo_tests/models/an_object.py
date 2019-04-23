@@ -14,4 +14,5 @@ class AnObject(models.Model):
 
     some_value = fields.Boolean('Some Value')
 
-    some_objects = fields.One2many(comodel_name='crapo.test.another', inverse_name='to_object')
+    some_objects = fields.One2many(
+        comodel_name='crapo.test.another', inverse_name='to_object')

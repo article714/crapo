@@ -16,7 +16,8 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     _order = "sequence, name, id"
 
     name = fields.Char(string=_(u'Name'),
-                       help=_(u"State's name"), required=True, translate=True, size=32)
+                       help=_(u"State's name"), required=True,
+                       translate=True, size=32)
 
     description = fields.Char(string=_(u'Description'),
                               required=False, translate=True, size=256)
@@ -25,7 +26,8 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
         u"Sequence gives the order in which states are displayed"))
 
     fold = fields.Boolean(string='Folded in kanban',
-                          help='This stage is folded in the kanban view when there are no records in that stage to display.', default=False)
+                          help="""This stage is folded in the kanban view when
+                          there are no records in that stage to display.""", default=False)
 
     @api.multi
     def write(self, values):

@@ -15,7 +15,8 @@ from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
 import logging
 
 
-class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin, models.Model):
+class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin,
+                       models.Model):
     _inherit = "crm.lead"
     _sync_state_field = "stage_id"
 

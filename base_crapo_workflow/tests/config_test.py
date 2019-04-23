@@ -4,7 +4,6 @@
 
 
 from odoo.tests import common
-import logging
 
 
 class ConfigTestSuite(common.TransactionCase):

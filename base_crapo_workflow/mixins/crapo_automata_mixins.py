@@ -231,7 +231,7 @@ class StateObjectMixin(object):
     @api.depends('transitions_to', 'automaton')
     def _is_start_state(self):
         for record in self:
-            if len(record.transitions_to) == 0 or record.transitions_to == False:
+            if len(record.transitions_to) == 0 or record.transitions_to is False:
                 record.is_start_state = True
             else:
                 record.is_start_state = False
@@ -239,7 +239,7 @@ class StateObjectMixin(object):
     @api.depends('transitions_from', 'automaton')
     def _is_end_state(self):
         for record in self:
-            if len(record.transitions_to) == 0 or record.transitions_to == False:
+            if len(record.transitions_to) == 0 or record.transitions_to is False:
                 record.is_end_state = True
             else:
                 record.is_end_state = False
@@ -301,7 +301,7 @@ class WrappedStateMixin(StateObjectMixin):
             if not my_automaton:
                 return False
             else:
-                if not 'name' in values:
+                if 'name' not in values:
                     values['name'] = 'Default State for %s' % self.id
                 values['automaton'] = my_automaton.id
                 return self.env['crapo.state'].create(values)

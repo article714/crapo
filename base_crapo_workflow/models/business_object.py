@@ -4,7 +4,7 @@
 
 import logging
 
-from odoo import fields, models, _, exceptions, api
+from odoo import models, _, exceptions, api
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
@@ -72,7 +72,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Mod
                         # Raise an error if not valid
                         if not is_valid:
                             raise exceptions.ValidationError(
-                                u"Invalid Pre-conditions for Object: %s" % obj.display_name)
+                                _("Invalid Pre-conditions for Object: %s") % obj.display_name)
 
                 # Should we go for it?
                 if is_valid and transition_elected.action:
@@ -103,7 +103,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Mod
                         # Raise an error if not valid
                         if not is_valid:
                             raise exceptions.ValidationError(
-                                u"Invalid Post-conditions for Object: %s" % obj.display_name)
+                                _(u"Invalid Post-conditions for Object: %s") % obj.display_name)
                 # writing after id needed
                 if not transition_elected.write_before:
                     result = super(CrapoBusinessObject, self).write(values)
