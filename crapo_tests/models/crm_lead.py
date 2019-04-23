@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
 ©2019
 License: AGPL-3
@@ -20,11 +18,10 @@ class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin,
     _inherit = "crm.lead"
     _sync_state_field = "stage_id"
 
-    state = fields.Many2one(compute="_synchronize_state", store=True)
+    state = fields.Many2one(compute="_compute_synchronize_state", store=True)
 
     @api.depends("stage_id")
-    def _synchronize_state(self):
-        logging.error("PROUT PROUT PROUT de SYNC-STATE !! :%s", str(self))
+    def _compute_synchronize_state(self):
 
         for record in self:
             record.state = record.stage_id.crapo_state
@@ -47,3 +44,4 @@ class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin,
     @api.multi
     def write(self, values):
         self.pre_write_checks(values)
+        super(CrmLeadWithMixin, self).write(values)

@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-	<record model="ir.ui.view" id="view_crapo_transition_tree">
-		<field name="name">Automaton transitions</field>
-		<field name="model">crapo.transition</field>
-		<field name="priority" eval="16" />
-		<field name="mode">primary</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Transitions" default_order="sequence asc">
-				<field name="name" />
-				<field name="from_state" />
-				<field name="to_state" />
-				<field name="action" />
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_crapo_transition_tree">
+        <field name="name">Automaton transitions</field>
+        <field name="model">crapo.transition</field>
+        <field name="priority" eval="16" />
+        <field name="mode">primary</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Transitions" default_order="sequence asc">
+                <field name="name" />
+                <field name="from_state" />
+                <field name="to_state" />
+                <field name="action" />
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_crapo_transition_form">
-		<field name="name">Automaton transitions</field>
-		<field name="model">crapo.transition</field>
-		<field name="priority" eval="16" />
-		<field name="mode">primary</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Transitions definitions"
-				default_order="sequence asc">
-				<group name="transition" string="transition definition">
-					<field name="name" />
-					<field name="automaton" invisible="1"/>
-					<field name="model_id" invisible="1" />
-					<field name="description" />
-				</group>
-				<group name="states" string="States">
-					<field name="from_state"  domain="[('automaton', '=', automaton)]"/>
-					<field name="to_state"  domain="[('automaton', '=', automaton)]"/>
-				</group>
-				<group name="action" string="Action">
-					<field name="write_before" />
-					<field name="preconditions" />
-					<field name="action"  domain="[('model_id', '=', model_id)]" />
-					<field name="async_action" />
-					<field name="postconditions"
-						attrs="{'invisible':[('async_action','=',True)]}" />
-				</group>
-			</form>
-		</field>
-	</record>
-
-
+    <record model="ir.ui.view" id="view_crapo_transition_form">
+        <field name="name">Automaton transitions</field>
+        <field name="model">crapo.transition</field>
+        <field name="priority" eval="16" />
+        <field name="mode">primary</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Transitions definitions" default_order="sequence asc">
+                <group name="transition" string="transition definition">
+                    <field name="name" />
+                    <field name="automaton" invisible="1"/>
+                    <field name="model_id" invisible="1" />
+                    <field name="description" />
+                </group>
+                <group name="states" string="States">
+                    <field name="from_state" domain="[('automaton', '=', automaton)]"/>
+                    <field name="to_state" domain="[('automaton', '=', automaton)]"/>
+                </group>
+                <group name="action" string="Action">
+                    <field name="write_before" />
+                    <field name="preconditions" />
+                    <field name="action" domain="[('model_id', '=', model_id)]" />
+                    <field name="async_action" />
+                    <field name="postconditions" attrs="{'invisible':[('async_action','=',True)]}" />
+                </group>
+            </form>
+        </field>
+    </record>
 </odoo>

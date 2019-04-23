@@ -23,7 +23,8 @@ class ObjectWithStateMixin(object):
                         The automaton describes the various transitions
                         an object can go through between states.
                         """,
-                                default=lambda self: self._get_model_automaton(),
+                                default=lambda self:
+                                self._get_model_automaton(),
                                 store=True, index=True, required=True)
 
     state = fields.Many2one(comodel_name='crapo.state',
@@ -48,7 +49,9 @@ class ObjectWithStateMixin(object):
         if my_automaton:
             return my_automaton
         else:
-            return automaton_model.create({'name': 'Automaton for {}'.format(self._name),
+            return automaton_model.create({'name':
+                                           'Automaton for {}'.format(
+                                               self._name),
                                            'model_id': my_model.id})
 
     # State Management
