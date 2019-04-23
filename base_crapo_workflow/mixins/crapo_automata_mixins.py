@@ -11,7 +11,7 @@ import logging
 
 class ObjectWithStateMixin(object):
     """
-    Mixin class that can be used to define an Odoo Model eligible 
+    Mixin class that can be used to define an Odoo Model eligible
     to be managed by a Crapo Automaton
 
     Should be use as a mixin class in existing objects
@@ -46,7 +46,7 @@ class ObjectWithStateMixin(object):
             [('model_id', '=', my_model.id)], limit=1)
 
         if my_automaton:
-           return my_automaton
+            return my_automaton
         else:
             return automaton_model.create({'name': 'Automaton for {}'.format(self._name),
                                            'model_id': my_model.id})
@@ -263,7 +263,7 @@ class StateObjectMixin(object):
 
 class WrappedStateMixin(StateObjectMixin):
     """
-    Mixin class that can be used to define a state object that wraps an existing 
+    Mixin class that can be used to define a state object that wraps an existing
     model defining a state for another model
 
     The wrapped object can be used as a crapo_state
@@ -279,7 +279,9 @@ class WrappedStateMixin(StateObjectMixin):
                                   ondelete='cascade')
 
     def _do_search_default_automaton(self):
-        logging.error("PATA PROUT SEARCH DE WrappedStateMixin")
+        """
+        finds or creates the default automaton (one per model)
+        """
         automaton_model = self.env['crapo.automaton']
         my_model = self.env['ir.model'].search(
             [('model', '=', self._state_for_model)], limit=1)
@@ -290,6 +292,9 @@ class WrappedStateMixin(StateObjectMixin):
         return my_automaton
 
     def _compute_related_state(self, values={}):
+        """
+        Create a new crapo_state for an existing record of the WrappedState
+        """
         my_automaton = self._do_search_default_automaton()
 
         if not self.crapo_state:
