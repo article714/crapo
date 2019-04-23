@@ -8,7 +8,7 @@
 		<field name="mode">primary</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Automata" default_order="name asc" create="false" >
+			<tree string="Automata" default_order="name asc" create="false">
 				<field name="model_id" />
 				<field name="name" />
 			</tree>
@@ -22,40 +22,40 @@
 		<field name="mode">primary</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Automaton" >
+			<form string="Automaton">
 				<group name="automaton" string="Automaton definition">
 					<field name="name" />
-					<field name="model_id" attrs="{'readonly':True}"  readonly="1" />
+					<field name="model_id" attrs="{'readonly':True}" readonly="1" />
 				</group>
 				<notebook>
-				<page string="States">
-					<field name="states" context="{'current_automaton':active_id}" />
-				</page>
-				<page string="Transitions">
-					<field name="transitions" context="{'current_automaton':active_id}"/>
-				</page>
+					<page string="States">
+						<field name="states" context="{'current_automaton':active_id}" />
+					</page>
+					<page string="Transitions">
+						<field name="transitions" context="{'current_automaton':active_id}"/>
+					</page>
 				</notebook>
 			</form>
 		</field>
 	</record>
-	
-	
-    <record id="view_automaton_diagram" model="ir.ui.view">
-      <field name="name">automaton.diagram</field>
-      <field name="model">crapo.automaton</field>
-      <field name="arch" type="xml">
-        <diagram string="Automaton Editor">
-          <node object="crapo.state" shape="rectangle:is_start_state or is_end_state" >
-            <field name="name"/>
-          </node>
-          <arrow object="crapo.transition" source="from_state" destination="to_state" label="['name']" >
-            <field name="from_state" />
-            <field name="to_state" />
-            <field name="action" />
-          </arrow>
-        </diagram>
-      </field>
-    </record>
+
+
+	<record id="view_automaton_diagram" model="ir.ui.view">
+		<field name="name">automaton.diagram</field>
+		<field name="model">crapo.automaton</field>
+		<field name="arch" type="xml">
+			<diagram string="Automaton Editor">
+				<node object="crapo.state" shape="rectangle:is_start_state or is_end_state">
+					<field name="name"/>
+				</node>
+				<arrow object="crapo.transition" source="from_state" destination="to_state" label="['name']">
+					<field name="from_state" />
+					<field name="to_state" />
+					<field name="action" />
+				</arrow>
+			</diagram>
+		</field>
+	</record>
 
 
 </odoo>

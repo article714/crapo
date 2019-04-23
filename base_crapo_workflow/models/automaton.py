@@ -5,9 +5,11 @@
 from odoo import models, fields, api, _, exceptions
 
 import logging
+
+
 class Automaton(models.Model):
     """
-    A state-machine (automaton) describes and automates the various 
+    A state-machine (automaton) describes and automates the various
     transitions between states of a given business object class
 
     There can be a single state machine per Odoo Model Object
@@ -27,11 +29,12 @@ class Automaton(models.Model):
     name = fields.Char(string=_(u'Name'),
                        help=_(u"State's name"), required=True, translate=True)
 
-    model_id = fields.Many2one(string=_(u'Model'), 
-                    help=_(u"Model for which this state is relevant"),
-                    comodel_name="ir.model",
-                    required=True
-                    )
+    model_id = fields.Many2one(string=_(u'Model'),
+                               help=_(u""""
+                               Model for which this state is relevant"""),
+                               comodel_name="ir.model",
+                               required=True
+                               )
 
     transitions = fields.One2many(string=(u'Transitions'),
                                   comodel_name='crapo.transition',
@@ -42,24 +45,24 @@ class Automaton(models.Model):
                              inverse_name='automaton')
 
     # State Management
-  
+
     def get_default_state(self):
         self.ensure_one()
         for s in self.states:
             if s.default_state:
                 return s
         return False
-                
 
     @api.model
     def create(self, values):
         if "model_id" in values and values["model_id"]:
             found = self.search([('model_id', '=', values["model_id"])])
             if found:
-                raise exceptions.ValidationError(_(u"There should be a single autmaton per model"))
+                raise exceptions.ValidationError(_(u"""
+                There should be a single autmaton per model"""))
         else:
             raise exceptions.ValidationError(_(u"A target model is mandatory"))
 
-        logging.error("CREATING AUTOMATON WITH: %s",str(values))
+        logging.error("CREATING AUTOMATON WITH: %s", str(values))
 
         return super(Automaton, self).create(values)

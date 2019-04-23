@@ -6,6 +6,7 @@ from odoo import fields, models, _, api, exceptions
 
 from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
 
+
 class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     """
     A state used in the context of an automaton
@@ -23,10 +24,8 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     sequence = fields.Integer(string=_(u'Sequence'), default=1, help=_(
         u"Sequence gives the order in which states are displayed"))
 
-
     fold = fields.Boolean(string='Folded in kanban',
                           help='This stage is folded in the kanban view when there are no records in that stage to display.', default=False)
-
 
     @api.multi
     def write(self, values):
@@ -36,11 +35,12 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
         if "default_state" in values:
             if values["default_state"]:
                 if len(self) > 1:
-                    raise exceptions.ValidationError(_(u"There should only one default state per model"))
+                    raise exceptions.ValidationError(
+                        _(u"There should only one default state per model"))
                 else:
-                    found = self.search([('default_state', '=', True), ('automaton','=',self.automaton.id),('id', '!=', self.id)])
+                    found = self.search(
+                        [('default_state', '=', True), ('automaton', '=', self.automaton.id), ('id', '!=', self.id)])
                     for s in found:
                         s.write({'default_state': False})
 
         return super(State, self).write(values)
-

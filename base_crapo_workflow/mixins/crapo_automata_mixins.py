@@ -8,6 +8,7 @@ from odoo.tools.safe_eval import safe_eval
 
 import logging
 
+
 class ObjectWithStateMixin(object):
     """
     Mixin class that can be used to define an Odoo Model eligible 
@@ -22,7 +23,7 @@ class ObjectWithStateMixin(object):
                         The automaton describes the various transitions
                         an object can go through between states.
                         """,
-                                default= lambda self: self._get_model_automaton(),
+                                default=lambda self: self._get_model_automaton(),
                                 store=True, index=True, required=True)
 
     state = fields.Many2one(comodel_name='crapo.state',
@@ -31,28 +32,24 @@ class ObjectWithStateMixin(object):
                             track_visibility='onchange',
                             domain=lambda self: self._get_state_domain(),
                             group_expand='_read_group_states',
-                            default=lambda self: self._get_default_state(), 
+                            default=lambda self: self._get_default_state(),
                             store=True, index=True, required=True)
 
     # Computes automaton for current model
     @api.model
     def _get_model_automaton(self):
-        logging.error("DEFAULT AUTOMATON %s => %s ",str(self),str(self.env.context))
         automaton_model = self.env['crapo.automaton']
-        
-        logging.error("RESEARCHING DEFAULT AUTOMATON %s => %s ",str(self),str(self.env.context))
-        my_model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
-        my_automaton = automaton_model.search([('model_id','=',my_model.id)], limit=1)
 
-        logging.error("RESEARCHING DEFAULT AUTOMATON %s => %s ",str(my_model),str(my_automaton))
+        my_model = self.env['ir.model'].search(
+            [('model', '=', self._name)], limit=1)
+        my_automaton = automaton_model.search(
+            [('model_id', '=', my_model.id)], limit=1)
 
-        if my_automaton:       
-            logging.error("RETURNING DEFAULT AUTOMATON %s => %s ",str(my_model),str(my_automaton))
-            return my_automaton
-        else:            
-            logging.error("CREATING DEFAULT AUTOMATON %s => %s  ",str(self),str(my_model.name))
+        if my_automaton:
+           return my_automaton
+        else:
             return automaton_model.create({'name': 'Automaton for {}'.format(self._name),
-                                                'model_id': my_model.id})
+                                           'model_id': my_model.id})
 
     # State Management
     def _get_state_domain(self, domain=None):
@@ -61,7 +58,7 @@ class ObjectWithStateMixin(object):
         if self.automaton:
             result.append(('automaton', '=', self.automaton.id))
         else:
-            result.append(('automaton','=',self._get_model_automaton().id))
+            result.append(('automaton', '=', self._get_model_automaton().id))
 
         return result
 
@@ -75,26 +72,23 @@ class ObjectWithStateMixin(object):
             domain.append(('is_start_state', '=', True))
             domain.append(('default_state', '=', 1))
 
-        default_state =  state_model.search(domain, limit=1)
+        default_state = state_model.search(domain, limit=1)
 
         if default_state:
             return default_state
         elif automaton:
-            return state_model.create({'name':"New",'automaton':automaton.id})
+            return state_model.create({'name': "New", 'automaton': automaton.id})
         else:
             return False
 
     def _next_states(self):
         self.ensure_one()
         domain = self._get_state_domain()
-        logging.error("ET DOMAINE POUR LES AUTRES STEPS EST: %s -> %s",str(domain),str(self.automaton))
 
         next_states = False
         if self.automaton:
             eligible_transitions = self.env['crapo.transition'].search(
                 [('automaton', '=', self.automaton.id), ('from_state', '=', self.state.id)])
-
-            logging.error("ET DOMAINE POUR LES TRANSITIONS EST: %s -> %s",str(eligible_transitions),str(self.state.id))
 
             target_ids = eligible_transitions.mapped(lambda x: x.to_state.id)
 
@@ -107,14 +101,12 @@ class ObjectWithStateMixin(object):
             domain.append(('sequence', '>', self.state.sequence))
             next_states = self.env['crapo.state'].search(domain, limit=1)
 
-        logging.error("ET LES AUTRES STEPS SONT: %s",str(next_states))
-
         return next_states
 
     def _read_group_states(self, states, domain, order):
         search_domain = self._get_state_domain(domain=domain)
-        state_ids = states._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
-        logging.warning("MES ETATS: %s => %s",str(search_domain),str(state_ids))
+        state_ids = states._search(
+            search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return states.browse(state_ids)
 
     @api.multi
@@ -126,10 +118,9 @@ class ObjectWithStateMixin(object):
         # Look for a change of state
         target_state_id = None
 
-        logging.error("PROUT PROUT PROUT de PRE-WRITE !! :%s",str(values))
-
         if self._sync_state_field in values and not "state" in values:
-            values["state"]=self._get_sync_state(values[self._sync_state_field])
+            values["state"] = self._get_sync_state(
+                values[self._sync_state_field])
 
         if "state" in values:
             target_state_id = values["state"]
@@ -142,9 +133,11 @@ class ObjectWithStateMixin(object):
                 if record.state and target_state_id:
                     next_states = record._next_states()
                     if not next_states:
-                        raise exceptions.ValidationError(_(u"No target state is elegible for transitionning"))
+                        raise exceptions.ValidationError(
+                            _(u"No target state is elegible for transitionning"))
                     if not target_state_id in next_states.ids:
-                        raise exceptions.ValidationError(_(u"State is not in eligible target states"))
+                        raise exceptions.ValidationError(
+                            _(u"State is not in eligible target states"))
 
             # Search for elected transition
             transition_elected = self.env['crapo.transition'].search(
@@ -157,9 +150,11 @@ class ObjectWithStateMixin(object):
                 if transition_elected.preconditions:
                     for obj in self:
                         try:
-                            is_valid = safe_eval(transition_elected.preconditions, {'object': obj, 'env': self.env})
+                            is_valid = safe_eval(transition_elected.preconditions, {
+                                                 'object': obj, 'env': self.env})
                         except Exception as e:
-                            logging.error(u"CRAPO: Failed to validate transition preconditions: %s", str(e))
+                            logging.error(
+                                u"CRAPO: Failed to validate transition preconditions: %s", str(e))
                             is_valid = False
 
                         # Raise an error if not valid
@@ -170,7 +165,8 @@ class ObjectWithStateMixin(object):
                 # Should we go for it?
                 if is_valid and transition_elected.action:
                     # does action needs to be taken asynchronously?
-                    action = self.env['crapo.action'].browse(transition_elected.action.id)
+                    action = self.env['crapo.action'].browse(
+                        transition_elected.action.id)
                     context = {
                         'active_model': self._name,
                         'active_id': self.id,
@@ -186,15 +182,17 @@ class ObjectWithStateMixin(object):
                 if transition_elected.postconditions and not transition_elected.async_action:
                     for obj in self:
                         try:
-                            is_valid = safe_eval(transition_elected.postconditions, {'object': obj, 'env': self.env})
+                            is_valid = safe_eval(transition_elected.postconditions, {
+                                                 'object': obj, 'env': self.env})
                         except Exception as e:
-                            logging.error(u"CRAPO: Failed to validate transition postconditions: %s", str(e))
+                            logging.error(
+                                u"CRAPO: Failed to validate transition postconditions: %s", str(e))
                             is_valid = False
                         # Raise an error if not valid
                         if not is_valid:
                             raise exceptions.ValidationError(
                                 u"Invalid Post-conditions for Object: %s" % obj.display_name)
-               
+
 
 class StateObjectMixin(object):
     """
@@ -209,7 +207,7 @@ class StateObjectMixin(object):
                                 store=True, required=True, index=True)
 
     default_state = fields.Boolean(string='Default state',
-                                   help='Might be use as default stage.', default=False, 
+                                   help='Might be use as default stage.', default=False,
                                    store=True)
 
     # Transitions (inverse relations)
@@ -224,9 +222,11 @@ class StateObjectMixin(object):
                                        )
     # computed field to identify start and end states
 
-    is_start_state = fields.Boolean("Start State", compute="_is_start_state", store=True, index=True)
+    is_start_state = fields.Boolean(
+        "Start State", compute="_is_start_state", store=True, index=True)
 
-    is_end_state = fields.Boolean("End State", compute="_is_end_state", store=True, index=True)
+    is_end_state = fields.Boolean(
+        "End State", compute="_is_end_state", store=True, index=True)
 
     @api.depends('transitions_to', 'automaton')
     def _is_start_state(self):
@@ -260,17 +260,18 @@ class StateObjectMixin(object):
 
         return self.env['crapo.automaton'].browse(default_value)
 
+
 class WrappedStateMixin(StateObjectMixin):
     """
     Mixin class that can be used to define a state object that wraps an existing 
     model defining a state for another model
-    
+
     The wrapped object can be used as a crapo_state
 
     Should be use as a mixin class in existing objects
     """
 
-    _inherits = {'crapo.state':'crapo_state'}
+    _inherits = {'crapo.state': 'crapo_state'}
 
     crapo_state = fields.Many2one(comodel_name='crapo.state',
                                   string='Related Crapo State',
@@ -280,25 +281,22 @@ class WrappedStateMixin(StateObjectMixin):
     def _do_search_default_automaton(self):
         logging.error("PATA PROUT SEARCH DE WrappedStateMixin")
         automaton_model = self.env['crapo.automaton']
-        my_model = self.env['ir.model'].search([('model', '=', self._state_for_model)], limit=1)
+        my_model = self.env['ir.model'].search(
+            [('model', '=', self._state_for_model)], limit=1)
         my_automaton = automaton_model.search([('model_id', '=', my_model.id)])
         if not my_automaton:
             my_automaton = automaton_model.create({'name': 'Automaton for {}'.format(self._state_for_model),
-                                                    'model_id': my_model.id})
+                                                   'model_id': my_model.id})
         return my_automaton
 
-    def _compute_related_state(self,values={}):
+    def _compute_related_state(self, values={}):
         my_automaton = self._do_search_default_automaton()
-
-        logging.error("GAABLLUUU  WrappedStateMixin %s =>  (%s)",str(self),str(self.crapo_state))
 
         if not self.crapo_state:
             if not my_automaton:
-                logging.error("NO DEFAULT AUTOMATON FOR  WrappedStateMixin %s => %s (%s)",str(self),str(self._state_for_model),str(my_automaton))
                 return False
             else:
                 if not 'name' in values:
-                    values['name'] ='Default State for %s'%self.id
-                values['automaton'] = my_automaton.id        
+                    values['name'] = 'Default State for %s' % self.id
+                values['automaton'] = my_automaton.id
                 return self.env['crapo.state'].create(values)
-                

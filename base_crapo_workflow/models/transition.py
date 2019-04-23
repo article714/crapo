@@ -53,7 +53,8 @@ Evaluation environment contains 'object' which is a reference to the object to b
                              comodel_name='crapo.action',  required=False)
 
     async_action = fields.Boolean(string=_(u"Async action"),
-                                  help=_(u"Action will be run asynchronously, after transition is completed"),
+                                  help=_(
+                                      u"Action will be run asynchronously, after transition is completed"),
                                   default=False
                                   )
 
@@ -73,8 +74,8 @@ or during the write process (computed fields) """),
 
     def _get_default_automaton(self):
         default_value = 0
-        logging.error("JE TE PROUT: %s ",str(self.env.context.keys()))
-        logging.error("JE TE COUINE: %s ",str(self.env.context.get('params')))
+        logging.error("JE TE PROUT: %s ", str(self.env.context.keys()))
+        logging.error("JE TE COUINE: %s ", str(self.env.context.get('params')))
         if 'current_automaton' in self.env.context:
             try:
                 default_value = int(self.env.context.get('current_automaton'))
@@ -82,11 +83,10 @@ or during the write process (computed fields) """),
                 default_value = 0
         elif 'params' in self.env.context:
             params = self.env.context.get('params')
-            if 'model' in params and params['model']=='crapo.automaton' and 'id' in params:
+            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params:
                 try:
                     default_value = int(params['id'])
                 except:
                     default_value = 0
-                
+
         return self.env['crapo.automaton'].browse(default_value)
-                

@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-       
-		
-        <!-- List of states -->
-                
-        <record id="crapo_list_states_action" model="ir.actions.act_window">
-            <field name="name">Workflow states</field>
-            <field name="target">current</field>
-            <field name="res_model">crapo.state</field>
-            <field name="limit">100</field>
-            <field name="auto_search" eval="True" />
-            <field name="view_type">form</field> 	
-            <field name="context">{'group_by':'automaton'}</field>
-            <field name="view_mode">tree,form</field>
-        </record>      
-        
 
-        <!-- List of automata -->
-                
-        <record id="crapo_list_automata_action" model="ir.actions.act_window">
-            <field name="name">Automata</field>
-            <field name="target">current</field>
-            <field name="res_model">crapo.automaton</field>
-            <field name="limit">100</field>
-            <field name="auto_search" eval="True" />
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,diagram</field>
-        </record>      
-        <!-- List of automata -->
-                
-        <record id="crapo_list_actions_action" model="ir.actions.act_window">
-            <field name="name">Actions</field>
-            <field name="target">current</field>
-            <field name="res_model">crapo.action</field>
-            <field name="limit">100</field>
-            <field name="auto_search" eval="True" />
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>      
-        
-        
+    <!-- List of states -->
+    <record id="crapo_list_states_action" model="ir.actions.act_window">
+        <field name="name">Workflow states</field>
+        <field name="target">current</field>
+        <field name="res_model">crapo.state</field>
+        <field name="limit">100</field>
+        <field name="auto_search" eval="True" />
+        <field name="view_type">form</field>
+        <field name="context">{'group_by':'automaton'}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- List of automata -->
+    <record id="crapo_list_automata_action" model="ir.actions.act_window">
+        <field name="name">Automata</field>
+        <field name="target">current</field>
+        <field name="res_model">crapo.automaton</field>
+        <field name="limit">100</field>
+        <field name="auto_search" eval="True" />
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,diagram</field>
+    </record>
+
+    <!-- List of actions -->
+    <record id="crapo_list_actions_action" model="ir.actions.act_window">
+        <field name="name">Actions</field>
+        <field name="target">current</field>
+        <field name="res_model">crapo.action</field>
+        <field name="limit">100</field>
+        <field name="auto_search" eval="True" />
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
 </odoo>
-
