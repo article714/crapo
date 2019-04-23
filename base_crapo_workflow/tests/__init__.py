@@ -8,4 +8,5 @@ You should only import here the tests that are runnable inside an Odoo instance
 """
 
 
-from . import odoo_test
+from . import config_test
+from . import installation_test
