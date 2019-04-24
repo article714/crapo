@@ -14,4 +14,4 @@ class WorkflowWorkflow(models.Model):
     _description = """ Specification of a Crapo Workflow, a set of Activities,
     Triggers, Events and WFTransitions"""
 
-    activities = fields.One2many("crapo.activity")
+    activities = fields.One2many("crapo.activity", inverse_name='workflow')
