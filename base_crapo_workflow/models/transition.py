@@ -14,11 +14,11 @@ class StateMachineTransition(models.Model):
     _name = 'crapo.transition'
     _description = 'Transition between two states'
 
-    name = fields.Char(string=_(u'Name'),
+    name = fields.Char(string=u'Name'),
                        help=_(u"Transition's name"),
                        required=True, translate=True, size=32)
 
-    description = fields.Text(string=_(u'Description'),
+    description = fields.Text(string=u'Description'),
                               required=False, translate=True, size=256)
 
     automaton = fields.Many2one(string="Automaton",
@@ -27,7 +27,7 @@ class StateMachineTransition(models.Model):
                                     self._get_default_automaton(),
                                 store=True, required=True, index=True)
 
-    model_id = fields.Many2one(string=_(u'Model'),
+    model_id = fields.Many2one(string=u'Model'),
                                comodel_name="ir.model",
                                related='automaton.model_id'
                                )
@@ -40,31 +40,40 @@ class StateMachineTransition(models.Model):
                                comodel_name='crapo.state',
                                ondelete='cascade', required=True, index=True)
 
-    preconditions = fields.Char(string=_(u"Pre-conditions"), help=_(u"""Conditions to be checked before initiating this transition.
+    preconditions = fields.Char(string=u"Pre-conditions",
+                                help=_(u"""Conditions to be checked before
+                                initiating this transition.
 
-Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment"""),
+Evaluation environment contains 'object' which is a reference to the object
+to be checked, and 'env' which is a reference to odoo environment"""),
                                 required=False)
 
-    postconditions = fields.Char(string=_(u"Post-conditions"), help=_(u"""Conditions to be checked before ending this transition.
-
-Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment
-    """),
+    postconditions = fields.Char(string=u"Post-conditions",
+                                 help=_(u"""
+                    Conditions to be checked before ending this transition.
+                    Evaluation environment contains 'object' which is a
+                    reference to the object to be checked, and 'env' which
+                    is a reference to odoo environment
+                    """),
                                  required=False)
 
-    action = fields.Many2one(string=_(u'Action to be executed when transitioning'),
-                             comodel_name='crapo.action',  required=False)
+    action = fields.Many2one(string=u'Action to be executed',
+                             comodel_name='crapo.action',
+                             required=False)
 
-    async_action = fields.Boolean(string=_(u"Async action"),
+    async_action = fields.Boolean(string=u"Async action",
                                   help=_(
                                       u"Action will be run asynchronously, after transition is completed"),
                                   default=False
                                   )
 
-    write_before = fields.Boolean(string=_(u"Write Object before"),
-                                  help=_(u"""All updates to object will be commited before transitioning
+    write_before = fields.Boolean(string=u"Write Object before",
+                                  help=_(u"""
+All updates to object will be commited before transitioning
 
-This is useful for transitions where preconditions needs to be tested with values that might have either changed together with the state change
-or during the write process (computed fields) """),
+This is useful for transitions where preconditions needs to be
+tested with values that might have either changed together with the state
+change or during the write process (computed fields) """),
                                   default=False
                                   )
 
