@@ -293,7 +293,7 @@ class WrappedStateMixin(StateObjectMixin):
                                                    'model_id': my_model.id})
         return my_automaton
 
-    def _compute_related_state(self, values={}):
+    def _compute_related_state(self, values={}):  # pylint: disable=dangerous-default-value
         """
         Create a new crapo_state for an existing record of the WrappedState
         """
