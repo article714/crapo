@@ -38,7 +38,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,
             target_state_id = values["state"]
 
         # check if there is a change state needed
-        if target_state_id != None:
+        if target_state_id is not None:
 
             # Check if next state is valid
             for record in self:
@@ -55,7 +55,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,
             # Search for elected transition
             transition_elected = self.env['crapo.transition'].search(
                 [('from_state', '=', self.state.id),
-                ('to_state', '=', target_state_id)],
+                 ('to_state', '=', target_state_id)],
                  limit=1)
 
             if transition_elected:

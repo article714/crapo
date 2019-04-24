@@ -4,7 +4,7 @@
 
 import logging
 
-from odoo import fields, models, _, api, exceptions
+from odoo import fields, models, _, api
 
 
 class StateMachineTransition(models.Model):
@@ -15,14 +15,16 @@ class StateMachineTransition(models.Model):
     _description = 'Transition between two states'
 
     name = fields.Char(string=_(u'Name'),
-                       help=_(u"Transition's name"), required=True, translate=True, size=32)
+                       help=_(u"Transition's name"),
+                       required=True, translate=True, size=32)
 
     description = fields.Text(string=_(u'Description'),
                               required=False, translate=True, size=256)
 
     automaton = fields.Many2one(string="Automaton",
                                 comodel_name='crapo.automaton',
-                                default=lambda self: self._get_default_automaton(),
+                                default=lambda self:
+                                    self._get_default_automaton(),
                                 store=True, required=True, index=True)
 
     model_id = fields.Many2one(string=_(u'Model'),
@@ -39,7 +41,7 @@ class StateMachineTransition(models.Model):
                                ondelete='cascade', required=True, index=True)
 
     preconditions = fields.Char(string=_(u"Pre-conditions"), help=_(u"""Conditions to be checked before initiating this transition.
-    
+
 Evaluation environment contains 'object' which is a reference to the object to be checked, and 'env' which is a reference to odoo environment"""),
                                 required=False)
 
@@ -74,8 +76,6 @@ or during the write process (computed fields) """),
 
     def _get_default_automaton(self):
         default_value = 0
-        logging.error("JE TE PROUT: %s ", str(self.env.context.keys()))
-        logging.error("JE TE COUINE: %s ", str(self.env.context.get('params')))
         if 'current_automaton' in self.env.context:
             try:
                 default_value = int(self.env.context.get('current_automaton'))

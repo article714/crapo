@@ -4,8 +4,6 @@
 
 from odoo import models, fields, api, _, exceptions
 
-import logging
-
 
 class Automaton(models.Model):
     """
