@@ -8,9 +8,7 @@ License: AGPL-3
 
 
 from odoo import models, api
-from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
-
-import logging
+from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins # pylint: disable=odoo-addons-relative-import
 
 
 class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):

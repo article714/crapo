@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -7,7 +6,7 @@ import logging
 from odoo import models, _, exceptions, api
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
+from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins # pylint: disable=odoo-addons-relative-import
 
 
 class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,

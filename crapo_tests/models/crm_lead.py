@@ -10,8 +10,6 @@ License: AGPL-3
 from odoo import models, fields, api
 from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
 
-import logging
-
 
 class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin,
                        models.Model):

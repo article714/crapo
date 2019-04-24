@@ -3,7 +3,7 @@
 
 from odoo import fields, models, _, api, exceptions
 
-from .mixins import crapo_automata_mixins
+from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins # pylint: disable=odoo-addons-relative-import
 
 
 class State(crapo_automata_mixins.StateObjectMixin, models.Model):
