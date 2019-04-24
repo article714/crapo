@@ -10,7 +10,8 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
 
 
-class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Model):
+class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,
+                          models.Model):
     """
     Base class to define a Business Object.
 
@@ -18,13 +19,16 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Mod
     """
     _name = 'crapo.business.object'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = u"An object on which to  in a workflow, specific to a given model"
+    _description = u""""
+    An object on which to  in a workflow, specific to a given model
+    """
     _sync_state_field = ""
 
     @api.multi
     def write(self, values):
         """
-        we override write method in order to preventing transitioning to a non eligible state
+        we override write method in order to preventing transitioning
+        to a non eligible state
         """
         # Look for a change of state
         target_state_id = None
@@ -42,14 +46,17 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Mod
                     next_states = record._next_states()
                     if not next_states:
                         raise exceptions.ValidationError(
-                            _(u"No target state is elegible for transitionning"))
+                            _(u"""No target state is elegible
+                             for transitionning"""))
                     if not target_state_id in next_states.ids:
                         raise exceptions.ValidationError(
                             _(u"State is not in eligible target states"))
 
             # Search for elected transition
             transition_elected = self.env['crapo.transition'].search(
-                [('from_state', '=', self.state.id), ('to_state', '=', target_state_id)], limit=1)
+                [('from_state', '=', self.state.id),
+                ('to_state', '=', target_state_id)],
+                 limit=1)
 
             if transition_elected:
                 is_valid = True
@@ -62,11 +69,12 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Mod
                 if transition_elected.preconditions:
                     for obj in self:
                         try:
-                            is_valid = safe_eval(transition_elected.preconditions, {
-                                                 'object': obj, 'env': self.env})
+                            is_valid = safe_eval(transition_elected.preconditions,
+                                                 {'object': obj, 'env': self.env})
                         except Exception as e:
                             logging.error(
-                                u"CRAPO: Failed to validate transition preconditions: %s", str(e))
+                                u"CRAPO: Failed to validate transition preconditions: %s",
+                                 str(e))
                             is_valid = False
 
                         # Raise an error if not valid
@@ -98,7 +106,8 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Mod
                                                  'object': obj, 'env': self.env})
                         except Exception as e:
                             logging.error(
-                                u"CRAPO: Failed to validate transition postconditions: %s", str(e))
+                                u"CRAPO: Failed to validate transition postconditions: %s",
+                                str(e))
                             is_valid = False
                         # Raise an error if not valid
                         if not is_valid:

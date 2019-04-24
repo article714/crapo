@@ -42,7 +42,9 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
                         _(u"There should only one default state per model"))
                 else:
                     found = self.search(
-                        [('default_state', '=', True), ('automaton', '=', self.automaton.id), ('id', '!=', self.id)])
+                        [('default_state', '=', True),
+                         ('automaton', '=', self.automaton.id),
+                         ('id', '!=', self.id)])
                     for s in found:
                         s.write({'default_state': False})
 

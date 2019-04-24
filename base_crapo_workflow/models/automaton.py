@@ -63,6 +63,4 @@ class Automaton(models.Model):
         else:
             raise exceptions.ValidationError(_(u"A target model is mandatory"))
 
-        logging.error("CREATING AUTOMATON WITH: %s", str(values))
-
         return super(Automaton, self).create(values)
