@@ -89,7 +89,7 @@ change or during the write process (computed fields) """,
                 default_value = 0
         elif 'params' in self.env.context:
             params = self.env.context.get('params')
-            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params: #
+            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params:
                 try:
                     default_value = int(params['id'])
                 except:
