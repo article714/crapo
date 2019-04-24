@@ -13,4 +13,4 @@ class WorkflowActivity(models.Model):
     _description = 'Workflow activity'
 
 
-    workflow = fields.One2many("crapo.workflow")
+    workflow = fields.Many2one("crapo.workflow")
