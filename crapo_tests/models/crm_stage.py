@@ -62,5 +62,4 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
 
                 query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (  # pylint: disable=sql-injection
                     self._table, column_name, stage[0])
-                logging.error("TADAAA: %s" % query)
-                self.env.cr.execute(query, (default_value,))
+                self.env.cr.execute(query, (default_value.id,))

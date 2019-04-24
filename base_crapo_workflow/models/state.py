@@ -27,7 +27,8 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
 
     fold = fields.Boolean(string='Folded in kanban',
                           help="""This stage is folded in the kanban view when
-                          there are no records in that stage to display.""", default=False)
+                          there are no records in that stage to display. """,
+                          default=False)
 
     @api.multi
     def write(self, values):

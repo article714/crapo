@@ -2,32 +2,32 @@
 
 <odoo>
     <data>
-    
+
         <!-- default users are crapo Users -->
         <record id="group_crapo_user" model="res.groups">
             <field name="name">Workflow (Crapo) - User</field>
             <field name="category_id" ref="base.module_category_crapo_workflows"/>
-                <field name="users" eval="[(4, ref('base.default_user'))]"/>
+            <field name="users" eval="[(4, ref('base.default_user'))]"/>
         </record>
-        
+
         <!-- Application Administrator -->
         <record id="group_crapo_app_admin" model="res.groups">
             <field name="name">Workflow (Crapo) - Application Administrator</field>
             <field name="category_id" ref="base.module_category_crapo_workflows"/>
-                <field name="implied_ids" eval="[(4, ref('group_crapo_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_crapo_user'))]"/>
         </record>
-        
+
         <!--  Crapo Administrator -->
         <record id="group_crapo_admin" model="res.groups">
             <field name="name">Workflow (Crapo) - Administrator</field>
             <field name="category_id" ref="base.module_category_crapo_workflows"/>
-                <field name="implied_ids" eval="[(4, ref('group_crapo_app_admin'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_crapo_app_admin'))]"/>
         </record>
-        
+
         <!-- admins are crapo Admins -->
         <record id="base.group_system" model="res.groups">
-                <field name="implied_ids" eval="[(4, ref('group_crapo_admin'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_crapo_admin'))]"/>
         </record>
-    </data>        
-        
+    </data>
+
 </odoo>
