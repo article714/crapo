@@ -14,11 +14,11 @@ class StateMachineTransition(models.Model):
     _name = 'crapo.transition'
     _description = 'Transition between two states'
 
-    name = fields.Char(string=u'Name'),
+    name = fields.Char(string=u'Name',
                        help=_(u"Transition's name"),
                        required=True, translate=True, size=32)
 
-    description = fields.Text(string=u'Description'),
+    description = fields.Text(string=u'Description',
                               required=False, translate=True, size=256)
 
     automaton = fields.Many2one(string="Automaton",
@@ -27,7 +27,7 @@ class StateMachineTransition(models.Model):
                                     self._get_default_automaton(),
                                 store=True, required=True, index=True)
 
-    model_id = fields.Many2one(string=u'Model'),
+    model_id = fields.Many2one(string=u'Model',
                                comodel_name="ir.model",
                                related='automaton.model_id'
                                )
