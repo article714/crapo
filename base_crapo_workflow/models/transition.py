@@ -2,8 +2,6 @@
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import logging
-
 from odoo import fields, models, _, api
 
 
@@ -62,8 +60,8 @@ to be checked, and 'env' which is a reference to odoo environment"""),
                              required=False)
 
     async_action = fields.Boolean(string=u"Async action",
-                                  help=_(
-                                      u"Action will be run asynchronously, after transition is completed"),
+                                  help=_(u"""Action will be run asynchronously, after transition
+                                  is completed"""),
                                   default=False
                                   )
 
@@ -92,7 +90,7 @@ change or during the write process (computed fields) """),
                 default_value = 0
         elif 'params' in self.env.context:
             params = self.env.context.get('params')
-            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params:
+            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params: # 
                 try:
                     default_value = int(params['id'])
                 except:

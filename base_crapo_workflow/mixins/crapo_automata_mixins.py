@@ -163,7 +163,7 @@ class ObjectWithStateMixin(object):
                         # Raise an error if not valid
                         if not is_valid:
                             raise exceptions.ValidationError(
-                                u"Invalid Pre-conditions for Object: %s" % obj.display_name)
+                                _(u"Invalid Pre-conditions for Object: %s") % obj.display_name)
 
                 # Should we go for it?
                 if is_valid and transition_elected.action:
@@ -194,7 +194,7 @@ class ObjectWithStateMixin(object):
                         # Raise an error if not valid
                         if not is_valid:
                             raise exceptions.ValidationError(
-                                u"Invalid Post-conditions for Object: %s" % obj.display_name)
+                                _(u"Invalid Post-conditions for Object: %s") % obj.display_name)
 
 
 class StateObjectMixin(object):
@@ -226,13 +226,13 @@ class StateObjectMixin(object):
     # computed field to identify start and end states
 
     is_start_state = fields.Boolean(
-        "Start State", compute="_is_start_state", store=True, index=True)
+        "Start State", compute="_compute_is_start_state", store=True, index=True)
 
     is_end_state = fields.Boolean(
-        "End State", compute="_is_end_state", store=True, index=True)
+        "End State", compute="_compute_is_end_state", store=True, index=True)
 
     @api.depends('transitions_to', 'automaton')
-    def _is_start_state(self):
+    def _compute_is_start_state(self):
         for record in self:
             if len(record.transitions_to) == 0 or record.transitions_to is False:
                 record.is_start_state = True
@@ -240,7 +240,7 @@ class StateObjectMixin(object):
                 record.is_start_state = False
 
     @api.depends('transitions_from', 'automaton')
-    def _is_end_state(self):
+    def _compute_is_end_state(self):
         for record in self:
             if len(record.transitions_to) == 0 or record.transitions_to is False:
                 record.is_end_state = True

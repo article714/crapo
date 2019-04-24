@@ -48,7 +48,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,
                         raise exceptions.ValidationError(
                             _(u"""No target state is elegible
                              for transitionning"""))
-                    if not target_state_id in next_states.ids:
+                    if target_state_id not in next_states.ids:
                         raise exceptions.ValidationError(
                             _(u"State is not in eligible target states"))
 
@@ -56,7 +56,7 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,
             transition_elected = self.env['crapo.transition'].search(
                 [('from_state', '=', self.state.id),
                  ('to_state', '=', target_state_id)],
-                 limit=1)
+                limit=1)
 
             if transition_elected:
                 is_valid = True
@@ -69,8 +69,11 @@ class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin,
                 if transition_elected.preconditions:
                     for obj in self:
                         try:
-                            is_valid = safe_eval(transition_elected.preconditions,
-                                                 {'object': obj, 'env': self.env})
+                            is_valid = safe_eval(
+                                        transition_elected.preconditions,
+                                        {'object': obj, 'env': self.env}
+                                        )
+
                         except Exception as e:
                             logging.error(
                                 u"CRAPO: Failed to validate transition preconditions: %s",
