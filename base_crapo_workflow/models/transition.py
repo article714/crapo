@@ -12,8 +12,8 @@ class StateMachineTransition(models.Model):
     _name = 'crapo.transition'
     _description = 'Transition between two states'
 
-    name = fields.Char(string=u'Name',
-                       help=_(u"Transition's name"),
+    name = fields.Char(string='Name',
+                       help="Transition's name",
                        required=True, translate=True, size=32)
 
     description = fields.Text(string=u'Description',
@@ -38,40 +38,40 @@ class StateMachineTransition(models.Model):
                                comodel_name='crapo.state',
                                ondelete='cascade', required=True, index=True)
 
-    preconditions = fields.Char(string=u"Pre-conditions",
-                                help=_(u"""Conditions to be checked before
+    preconditions = fields.Char(string="Pre-conditions",
+                                help="""Conditions to be checked before
                                 initiating this transition.
 
 Evaluation environment contains 'object' which is a reference to the object
-to be checked, and 'env' which is a reference to odoo environment"""),
+to be checked, and 'env' which is a reference to odoo environment""",
                                 required=False)
 
-    postconditions = fields.Char(string=u"Post-conditions",
-                                 help=_(u"""
+    postconditions = fields.Char(string="Post-conditions",
+                                 help="""
                     Conditions to be checked before ending this transition.
                     Evaluation environment contains 'object' which is a
                     reference to the object to be checked, and 'env' which
                     is a reference to odoo environment
-                    """),
+                    """,
                                  required=False)
 
-    action = fields.Many2one(string=u'Action to be executed',
+    action = fields.Many2one(string='Action to be executed',
                              comodel_name='crapo.action',
                              required=False)
 
-    async_action = fields.Boolean(string=u"Async action",
-                                  help=_(u"""Action will be run asynchronously, after transition
-                                  is completed"""),
+    async_action = fields.Boolean(string="Async action",
+                                  help="""Action will be run asynchronously, after transition
+                                  is completed""",
                                   default=False
                                   )
 
-    write_before = fields.Boolean(string=u"Write Object before",
-                                  help=_(u"""
+    write_before = fields.Boolean(string="Write Object before",
+                                  help="""
 All updates to object will be commited before transitioning
 
 This is useful for transitions where preconditions needs to be
 tested with values that might have either changed together with the state
-change or during the write process (computed fields) """),
+change or during the write process (computed fields) """,
                                   default=False
                                   )
 
@@ -90,7 +90,7 @@ change or during the write process (computed fields) """),
                 default_value = 0
         elif 'params' in self.env.context:
             params = self.env.context.get('params')
-            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params: # 
+            if 'model' in params and params['model'] == 'crapo.automaton' and 'id' in params: #
                 try:
                     default_value = int(params['id'])
                 except:

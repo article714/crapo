@@ -24,11 +24,11 @@ class Automaton(models.Model):
     ]
 
     name = fields.Char(string='Name',
-                       help=_("State's name"), required=True, translate=True)
+                       help="State's name", required=True, translate=True)
 
     model_id = fields.Many2one(string='Model',
-                               help=_(""""
-                               Model for which this state is relevant"""),
+                               help=""""
+                               Model for which this state is relevant""",
                                comodel_name="ir.model",
                                required=True
                                )

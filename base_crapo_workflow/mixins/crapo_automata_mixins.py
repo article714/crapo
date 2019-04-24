@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -117,7 +116,7 @@ class ObjectWithStateMixin(object):
         """
         we override write method in order to preventing transitioning to a non eligible state
         """
-        self.ensure_one
+        self.ensure_one()
         # Look for a change of state
         target_state_id = None
 
