@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -24,21 +23,21 @@ class Automaton(models.Model):
          'Choose another value - automaton has to be unique per Model !')
     ]
 
-    name = fields.Char(string=_(u'Name'),
-                       help=_(u"State's name"), required=True, translate=True)
+    name = fields.Char(string='Name',
+                       help=_("State's name"), required=True, translate=True)
 
-    model_id = fields.Many2one(string=_(u'Model'),
-                               help=_(u""""
+    model_id = fields.Many2one(string='Model',
+                               help=_(""""
                                Model for which this state is relevant"""),
                                comodel_name="ir.model",
                                required=True
                                )
 
-    transitions = fields.One2many(string=(u'Transitions'),
+    transitions = fields.One2many(string='Transitions',
                                   comodel_name='crapo.transition',
                                   inverse_name='automaton')
 
-    states = fields.One2many(string=(u'States'),
+    states = fields.One2many(string='States',
                              comodel_name='crapo.state',
                              inverse_name='automaton')
 
@@ -56,9 +55,9 @@ class Automaton(models.Model):
         if "model_id" in values and values["model_id"]:
             found = self.search([('model_id', '=', values["model_id"])])
             if found:
-                raise exceptions.ValidationError(_(u"""
+                raise exceptions.ValidationError(_("""
                 There should be a single autmaton per model"""))
         else:
-            raise exceptions.ValidationError(_(u"A target model is mandatory"))
+            raise exceptions.ValidationError(_("A target model is mandatory"))
 
         return super(Automaton, self).create(values)

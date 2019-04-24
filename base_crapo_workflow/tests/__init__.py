@@ -1,4 +1,3 @@
-# coding: utf-8
 """
  ©2018-2019 Infibail
  License OPL-1

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ©2018 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -15,14 +14,14 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     _description = u"State in a workflow, specific to a given model"
     _order = "sequence, name, id"
 
-    name = fields.Char(string=_(u'Name'),
+    name = fields.Char(string='Name',
                        help=_(u"State's name"), required=True,
                        translate=True, size=32)
 
-    description = fields.Char(string=_(u'Description'),
+    description = fields.Char(string='Description',
                               required=False, translate=True, size=256)
 
-    sequence = fields.Integer(string=_(u'Sequence'), default=1, help=_(
+    sequence = fields.Integer(string='Sequence', default=1, help=_(
         u"Sequence gives the order in which states are displayed"))
 
     fold = fields.Boolean(string='Folded in kanban',
