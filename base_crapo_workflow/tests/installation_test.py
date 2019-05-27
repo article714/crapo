@@ -14,10 +14,11 @@ class IntegrationTestSuite(common.TransactionCase):
         """
         Testing that current module is installed
         """
-        module_model = self.env['ir.module.module']
+        module_model = self.env["ir.module.module"]
         self.assertIsNotNone(module_model)
 
         found_modules = module_model.search(
-            [('name', '=', 'base_crapo_workflow'), ('state', '=', 'installed')])
+            [("name", "=", "base_crapo_workflow"), ("state", "=", "installed")]
+        )
 
         self.assertEqual(len(found_modules), 1, "Module not installed")

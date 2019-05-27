@@ -86,7 +86,10 @@ class CrapoBusinessObject(
 
                         except Exception as e:
                             logging.error(
-                                u"CRAPO: Failed to validate transition preconditions: %s",
+                                (
+                                    "CRAPO: Failed to validate "
+                                    "transition preconditions: %s"
+                                ),
                                 str(e),
                             )
                             is_valid = False
@@ -128,7 +131,10 @@ class CrapoBusinessObject(
                             )
                         except Exception as e:
                             logging.error(
-                                u"CRAPO: Failed to validate transition postconditions: %s",
+                                (
+                                    "CRAPO: Failed to validate transition "
+                                    "postconditions: %s"
+                                ),
                                 str(e),
                             )
                             is_valid = False

@@ -12,8 +12,8 @@ class ConfigTestSuite(common.TransactionCase):
 
     def setUp(self):
         super(ConfigTestSuite, self).setUp()
-        self.res_config = self.env['res.config.settings']
-        self.ir_config_param = self.env['ir.config_parameter']
+        self.res_config = self.env["res.config.settings"]
+        self.ir_config_param = self.env["ir.config_parameter"]
 
     def test_config(self):
         """

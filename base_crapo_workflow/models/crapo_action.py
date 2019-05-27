@@ -11,19 +11,22 @@ class CrapoAction(models.Model):
     Crapo Action is a specialisation of Server Actions in order to be
     able to use them in actions/activities and run them asynchronously
     """
-    _name = 'crapo.action'
-    _inherit = 'ir.actions.server'
-    _description = u"A specialization of server actions for Crapol"
+
+    _name = "crapo.action"
+    _inherit = "ir.actions.server"
+    _description = u"A specialization of server actions for Crapo"
 
     @api.model
     def _get_states(self):
 
-        return [('code', 'Execute Python Code'),
-                ('object_create', 'Create or Copy a new Record'),
-                ('object_write', 'Write on a Record'),
-                ('multi', 'Execute several actions')]
+        return [
+            ("code", "Execute Python Code"),
+            ("object_create", "Create or Copy a new Record"),
+            ("object_write", "Write on a Record"),
+            ("multi", "Execute several actions"),
+        ]
 
     @api.multi
     @job
-    def run_async(self, context={}): # pylint: disable=dangerous-default-value
+    def run_async(self, context={}):  # pylint: disable=dangerous-default-value
         self.with_context(context).run()
