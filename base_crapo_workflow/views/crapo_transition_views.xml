@@ -8,7 +8,7 @@
         <field name="mode">primary</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Transitions" default_order="sequence asc">
+            <tree string="Transitions">
                 <field name="name" />
                 <field name="from_state" />
                 <field name="to_state" />
@@ -24,7 +24,7 @@
         <field name="mode">primary</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Transitions definitions" default_order="sequence asc">
+            <form string="Transitions definitions">
                 <group name="transition" string="transition definition">
                     <field name="name" />
                     <field name="automaton" invisible="1"/>

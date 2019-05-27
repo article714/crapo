@@ -3,31 +3,45 @@
 
 from odoo import fields, models, _, api, exceptions
 
-from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins # pylint: disable=odoo-addons-relative-import
+from odoo.addons.base_crapo_workflow.mixins import (
+    crapo_automata_mixins,
+)  # pylint: disable=odoo-addons-relative-import
 
 
 class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     """
     A state used in the context of an automaton
     """
-    _name = 'crapo.state'
+
+    _name = "crapo.state"
     _description = u"State in a workflow, specific to a given model"
-    _order = "sequence, name, id"
+    _order = "sequence, name"
 
-    name = fields.Char(string='Name',
-                       help="State's name", required=True,
-                       translate=True, size=32)
+    name = fields.Char(
+        string="Name",
+        help="State's name",
+        required=True,
+        translate=True,
+        size=32,
+    )
 
-    description = fields.Char(string='Description',
-                              required=False, translate=True, size=256)
+    description = fields.Char(
+        string="Description", required=False, translate=True, size=256
+    )
 
-    sequence = fields.Integer(string='Sequence', default=1, help="""
-        Sequence gives the order in which states are displayed""")
+    sequence = fields.Integer(
+        string="Sequence",
+        default=1,
+        help="""
+        Sequence gives the order in which states are displayed""",
+    )
 
-    fold = fields.Boolean(string='Folded in kanban',
-                          help="""This stage is folded in the kanban view when
+    fold = fields.Boolean(
+        string="Folded in kanban",
+        help="""This stage is folded in the kanban view when
                           there are no records in that stage to display. """,
-                          default=False)
+        default=False,
+    )
 
     @api.multi
     def write(self, values):
@@ -38,13 +52,17 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
             if values["default_state"]:
                 if len(self) > 1:
                     raise exceptions.ValidationError(
-                        _(u"There should only one default state per model"))
+                        _(u"There should only one default state per model")
+                    )
                 else:
                     found = self.search(
-                        [('default_state', '=', True),
-                         ('automaton', '=', self.automaton.id),
-                         ('id', '!=', self.id)])
+                        [
+                            ("default_state", "=", True),
+                            ("automaton", "=", self.automaton.id),
+                            ("id", "!=", self.id),
+                        ]
+                    )
                     for s in found:
-                        s.write({'default_state': False})
+                        s.write({"default_state": False})
 
         return super(State, self).write(values)
