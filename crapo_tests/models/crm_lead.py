@@ -11,8 +11,7 @@ from odoo import models, fields, api
 from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
 
 
-class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin,
-                       models.Model):
+class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin, models.Model):
     _inherit = "crm.lead"
     _sync_state_field = "stage_id"
 
@@ -25,7 +24,7 @@ class CrmLeadWithMixin(crapo_automata_mixins.ObjectWithStateMixin,
             record.state = record.stage_id.crapo_state
 
     def _get_sync_state(self, newid):
-        return self.env['crm.stage'].browse(newid).crapo_state.id
+        return self.env["crm.stage"].browse(newid).crapo_state.id
 
     def _get_default_state(self):
 

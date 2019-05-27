@@ -18,11 +18,7 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     _order = "sequence, name"
 
     name = fields.Char(
-        string="Name",
-        help="State's name",
-        required=True,
-        translate=True,
-        size=32,
+        string="Name", help="State's name", required=True, translate=True, size=32
     )
 
     description = fields.Char(

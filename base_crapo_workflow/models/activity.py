@@ -8,8 +8,8 @@ class WorkflowActivity(models.Model):
     """
     An activity step in a Workflow, i.e. a step where something must me done
     """
-    _name = 'crapo.workflow.activity'
-    _description = 'Workflow activity'
 
+    _name = "crapo.workflow.activity"
+    _description = "Workflow activity"
 
     workflow = fields.Many2one("crapo.workflow")
