@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from odoo import models, api
+from odoo import models, api, fields
 from odoo.addons.queue_job.job import job
 
 
@@ -15,6 +15,9 @@ class CrapoAction(models.Model):
     _name = "crapo.action"
     _inherit = "ir.actions.server"
     _description = u"A specialization of server actions for Crapo"
+
+    # Multi
+    child_ids = fields.Many2many("crapo.action", "rel_crapo_actions")
 
     @api.model
     def _get_states(self):
