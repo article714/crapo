@@ -47,14 +47,21 @@ class ObjectWithStateMixin(object):
     def _get_model_automaton(self):
         automaton_model = self.env["crapo.automaton"]
 
-        my_model = self.env["ir.model"].search([("model", "=", self._name)], limit=1)
-        my_automaton = automaton_model.search([("model_id", "=", my_model.id)], limit=1)
+        my_model = self.env["ir.model"].search(
+            [("model", "=", self._name)], limit=1
+        )
+        my_automaton = automaton_model.search(
+            [("model_id", "=", my_model.id)], limit=1
+        )
 
         if my_automaton:
             return my_automaton
         else:
             return automaton_model.create(
-                {"name": "Automaton for {}".format(self._name), "model_id": my_model.id}
+                {
+                    "name": "Automaton for {}".format(self._name),
+                    "model_id": my_model.id,
+                }
             )
 
     # State Management
@@ -83,7 +90,9 @@ class ObjectWithStateMixin(object):
         if default_state:
             return default_state
         elif automaton:
-            return state_model.create({"name": "New", "automaton": automaton.id})
+            return state_model.create(
+                {"name": "New", "automaton": automaton.id}
+            )
         else:
             return False
 
@@ -131,7 +140,9 @@ class ObjectWithStateMixin(object):
         target_state_id = None
 
         if self._sync_state_field in values and "state" not in values:
-            values["state"] = self._get_sync_state(values[self._sync_state_field])
+            values["state"] = self._get_sync_state(
+                values[self._sync_state_field]
+            )
 
         if "state" in values:
             target_state_id = values["state"]
@@ -145,7 +156,10 @@ class ObjectWithStateMixin(object):
                     next_states = record._next_states()
                     if not next_states:
                         raise exceptions.ValidationError(
-                            _("No target state is " "elegible for transitionning")
+                            _(
+                                "No target state is "
+                                "elegible for transitionning"
+                            )
                         )
                     if target_state_id not in next_states.ids:
                         raise exceptions.ValidationError(
@@ -274,7 +288,10 @@ class StateObjectMixin(object):
     # computed field to identify start and end states
 
     is_start_state = fields.Boolean(
-        "Start State", compute="_compute_is_start_state", store=True, index=True
+        "Start State",
+        compute="_compute_is_start_state",
+        store=True,
+        index=True,
     )
 
     is_end_state = fields.Boolean(
@@ -284,7 +301,10 @@ class StateObjectMixin(object):
     @api.depends("transitions_to", "automaton")
     def _compute_is_start_state(self):
         for record in self:
-            if len(record.transitions_to) == 0 or record.transitions_to is False:
+            if (
+                len(record.transitions_to) == 0
+                or record.transitions_to is False
+            ):
                 record.is_start_state = True
             else:
                 record.is_start_state = False
@@ -292,7 +312,10 @@ class StateObjectMixin(object):
     @api.depends("transitions_from", "automaton")
     def _compute_is_end_state(self):
         for record in self:
-            if len(record.transitions_to) == 0 or record.transitions_to is False:
+            if (
+                len(record.transitions_to) == 0
+                or record.transitions_to is False
+            ):
                 record.is_end_state = True
             else:
                 record.is_end_state = False
