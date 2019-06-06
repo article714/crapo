@@ -3,6 +3,8 @@
 
 from odoo import fields, models, _, api
 
+import logging
+
 
 class StateMachineTransition(models.Model):
     """
@@ -13,7 +15,11 @@ class StateMachineTransition(models.Model):
     _description = "Transition between two states"
 
     name = fields.Char(
-        string="Name", help="Transition's name", required=True, translate=True, size=32
+        string="Name",
+        help="Transition's name",
+        required=True,
+        translate=True,
+        size=32,
     )
 
     description = fields.Text(
@@ -23,7 +29,7 @@ class StateMachineTransition(models.Model):
     automaton = fields.Many2one(
         string="Automaton",
         comodel_name="crapo.automaton",
-        default=lambda self: self._get_default_automaton(),
+        related="from_state.automaton",
         store=True,
         required=True,
         index=True,
@@ -52,7 +58,7 @@ class StateMachineTransition(models.Model):
     preconditions = fields.Char(
         string="Pre-conditions",
         help="""Conditions to be checked before
-                                initiating this transition.
+ initiating this transition.
 
 Evaluation environment contains 'object' which is a reference to the object
 to be checked, and 'env' which is a reference to odoo environment""",
@@ -71,7 +77,9 @@ to be checked, and 'env' which is a reference to odoo environment""",
     )
 
     action = fields.Many2one(
-        string="Action to be executed", comodel_name="crapo.action", required=False
+        string="Action to be executed",
+        comodel_name="crapo.action",
+        required=False,
     )
 
     async_action = fields.Boolean(
@@ -91,30 +99,3 @@ tested with values that might have either changed together with the state
 change or during the write process (computed fields) """,
         default=False,
     )
-
-    @api.onchange("model_id")
-    def _changed_model(self):
-        self.action = False
-        self.from_state = False
-        self.to_state = False
-
-    def _get_default_automaton(self):
-        default_value = 0
-        if "current_automaton" in self.env.context:
-            try:
-                default_value = int(self.env.context.get("current_automaton"))
-            except Exception:
-                default_value = 0
-        elif "params" in self.env.context:
-            params = self.env.context.get("params")
-            if (
-                "model" in params
-                and params["model"] == "crapo.automaton"
-                and "id" in params
-            ):
-                try:
-                    default_value = int(params["id"])
-                except Exception:
-                    default_value = 0
-
-        return self.env["crapo.automaton"].browse(default_value)

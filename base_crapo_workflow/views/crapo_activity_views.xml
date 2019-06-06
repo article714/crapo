@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_crapo_action_form" model="ir.ui.view">
+    <record id="view_crapo_workflow_activity_form" model="ir.ui.view">
         <field name="name">Crapo Action</field>
-        <field name="model">crapo.action</field>
+        <field name="model">crapo.workflow.activity</field>
         <field name="arch" type="xml">
             <form string="Crapo Action">
                 <header>
@@ -132,11 +132,11 @@
         </field>
     </record>
 
-    <record id="view_crapo_action_tree" model="ir.ui.view">
-        <field name="name">Crapo Actions</field>
-        <field name="model">crapo.action</field>
+    <record id="view_crapo_workflow_activity_tree" model="ir.ui.view">
+        <field name="name">Workflow activities</field>
+        <field name="model">crapo.workflow.activity</field>
         <field name="arch" type="xml">
-            <tree string="Crapo Actions">
+            <tree string="Crapo Activities">
                 <field name="name" />
                 <field name="state" />
                 <field name="model_id" />
@@ -144,12 +144,12 @@
         </field>
     </record>
 
-    <record id="view_crapo_action_search" model="ir.ui.view">
-        <field name="name">crapo.action.search</field>
-        <field name="model">crapo.action</field>
+    <record id="view_crapo_workflow_activity_search" model="ir.ui.view">
+        <field name="name">crapo.workflow.activity.search</field>
+        <field name="model">crapo.workflow.activity</field>
         <field name="arch" type="xml">
 
-            <search string="Crapo Actions">
+            <search string="Crapo Activities">
                 <field name="name" string="Server Action" />
                 <field name="model_id" />
                 <field name="state" />

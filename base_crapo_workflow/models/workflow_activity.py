@@ -1,23 +1,26 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-
-from odoo import models, api, fields
-from odoo.addons.queue_job.job import job
+from odoo import models, fields
 
 
-class CrapoAction(models.Model):
+class WorkflowActivity(models.Model):
     """
-    Crapo Action is a specialisation of Server Actions in order to be
-    able to use them in actions/activities and run them asynchronously
+    An activity step in a Workflow, i.e. a step where something must be done
     """
 
-    _name = "crapo.action"
+    _name = "crapo.workflow.activity"
     _inherit = "ir.actions.server"
-    _description = u"A specialization of server actions for Crapo Automata"
+    _description = (
+        u"Workflow activity: a specialization of server actions for Crapo"
+    )
+
+    workflow = fields.Many2one("crapo.workflow")
 
     # Multi
-    child_ids = fields.Many2many("crapo.action", "rel_crapo_actions")
+    child_ids = fields.Many2many(
+        "crapo.workflow.activity", "rel_crapo_actions"
+    )
 
     @api.model
     def _get_states(self):

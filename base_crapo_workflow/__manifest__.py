@@ -4,7 +4,7 @@
 
 {
     "name": u"Crapo: Base Module for workflow management",
-    "version": u"12.0.1.0.0",
+    "version": u"12.0.2.0.0",
     "category": u"Crapo Workflows",
     "author": u"Article714",
     "license": u"AGPL-3",
@@ -14,13 +14,15 @@
     "depends": ["queue_job"],
     "data": [
         "security/crapo_security.xml",
-        "security/activity.xml",
         "security/crapo_action.xml",
         "security/crapo_business_object.xml",
         "security/automaton.xml",
+        "security/automaton_transition.xml",
         "security/state.xml",
         "security/transition.xml",
         "security/workflow.xml",
+        "security/workflow_activity.xml",
+        "security/workflow_transition.xml",
         "actions/window_actions.xml",
         "views/crapo_menus.xml",
         "views/crapo_state_views.xml",

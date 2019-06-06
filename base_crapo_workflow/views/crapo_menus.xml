@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Base menu -->
-    <menuitem id="crapo_base_menu" parent="base.menu_custom" name="Workflows and State-machines" groups="group_crapo_admin" sequence="10" />
+    <menuitem id="crapo_base_menu" name="Automation" groups="group_crapo_admin" sequence="10" />
 
     <!-- List automata menu -->
 
