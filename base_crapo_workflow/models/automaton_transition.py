@@ -15,7 +15,11 @@ class StateMachineTransition(models.Model):
     _description = "Transition between two states"
 
     name = fields.Char(
-        string="Name", help="Transition's name", required=True, translate=True, size=32
+        string="Name",
+        help="Transition's name",
+        required=True,
+        translate=True,
+        size=32,
     )
 
     description = fields.Text(
@@ -73,7 +77,9 @@ to be checked, and 'env' which is a reference to odoo environment""",
     )
 
     action = fields.Many2one(
-        string="Action to be executed", comodel_name="crapo.action", required=False
+        string="Action to be executed",
+        comodel_name="crapo.action",
+        required=False,
     )
 
     async_action = fields.Boolean(

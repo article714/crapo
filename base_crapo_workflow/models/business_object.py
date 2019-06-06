@@ -11,7 +11,9 @@ from odoo.addons.base_crapo_workflow.mixins import (
 )  # pylint: disable=odoo-addons-relative-import
 
 
-class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Model):
+class CrapoBusinessObject(
+    crapo_automata_mixins.ObjectWithStateMixin, models.Model
+):
     """
     Base class to define a Business Object.
 
