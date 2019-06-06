@@ -8,12 +8,12 @@ License: AGPL-3
 
 
 from odoo import models, fields, api
-from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins
+from odoo.addons.base_crapo_workflow.mixins.crapo_automata_mixins import (
+    ObjectWithStateMixin,
+)
 
 
-class CrmLeadWithMixin(
-    crapo_automata_mixins.ObjectWithStateMixin, models.Model
-):
+class CrmLeadWithMixin(ObjectWithStateMixin, models.Model):
     _inherit = "crm.lead"
     _sync_state_field = "stage_id"
 
@@ -38,9 +38,7 @@ class CrmLeadWithMixin(
         if default_stage is not None and default_stage.crapo_state:
             return default_stage.crapo_state
         else:
-            return crapo_automata_mixins.ObjectWithStateMixin._get_default_state(
-                self
-            )
+            return ObjectWithStateMixin._get_default_state(self)
 
     @api.multi
     def write(self, values):
