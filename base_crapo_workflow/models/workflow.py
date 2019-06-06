@@ -18,9 +18,7 @@ class WorkflowWorkflow(models.Model):
         string="Name", help="Workflow's name", required=True, translate=True
     )
 
-    activities = fields.One2many(
-        "crapo.workflow.activity", inverse_name="workflow"
-    )
+    activities = fields.One2many("crapo.workflow.activity", inverse_name="workflow")
 
     transitions = fields.One2many(
         comodel_name="crapo.workflow.transition", inverse_name="workflow"

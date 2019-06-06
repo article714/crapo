@@ -1,56 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-	<record model="ir.ui.view" id="view_crapo_workflows_tree">
-		<field name="name">Workflows</field>
-		<field name="model">crapo.workflow</field>
-		<field name="priority" eval="16" />
-		<field name="mode">primary</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Workflow" default_order="name asc">
-				<field name="name" />
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" 
+        id="view_crapo_workflows_tree">
+        <field name="name">Workflows</field>
+        <field name="model">crapo.workflow</field>
+        <field name="priority" 
+            eval="16" />
+        <field name="mode">primary</field>
+        <field name="type">tree</field>
+        <field name="arch" 
+            type="xml">
+            <tree string="Workflow" 
+                default_order="name asc">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_crapo_workflow_form">
-		<field name="name">Workflow</field>
-		<field name="model">crapo.workflow</field>
-		<field name="priority" eval="16" />
-		<field name="mode">primary</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Workflow">
-				<group name="automaton" string="Workflow definition">
-					<field name="name" />
-				</group>
-				<notebook>
-					<page string="Activities">
-						<field name="activities" context="{'default_workflow':active_id,'current_workflow':active_id}" />
-					</page>
-					<page string="Transitions">
-						<field name="transitions" context="{'default_workflow':active_id,'current_workflow':active_id}"/>
-					</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
+    <record model="ir.ui.view" 
+        id="view_crapo_workflow_form">
+        <field name="name">Workflow</field>
+        <field name="model">crapo.workflow</field>
+        <field name="priority" 
+            eval="16" />
+        <field name="mode">primary</field>
+        <field name="type">form</field>
+        <field name="arch" 
+            type="xml">
+            <form string="Workflow">
+                <group name="automaton" 
+                    string="Workflow definition">
+                    <field name="name" />
+                </group>
+                <notebook>
+                    <page string="Activities">
+                        <field name="activities" 
+                            context="{'default_workflow':active_id,'current_workflow':active_id}" />
+                    </page>
+                    <page string="Transitions">
+                        <field name="transitions" 
+                            context="{'default_workflow':active_id,'current_workflow':active_id}"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
 
-	<record id="view_workflow_diagram" model="ir.ui.view">
-		<field name="name">workflow.diagram</field>
-		<field name="model">crapo.workflow</field>
-		<field name="arch" type="xml">
-			<diagram string="Workflow Editor">
-				<node object="crapo.workflow.activity" shape="rectangle">
-					<field name="name"/>
-				</node>
-				<arrow object="crapo.workflow.transition" source="from_activity" destination="to_activity" label="['name']">
-					<field name="from_activity" />
-					<field name="to_activity" />
-				</arrow>
-			</diagram>
-		</field>
-	</record>
+    <record id="view_workflow_diagram" 
+        model="ir.ui.view">
+        <field name="name">workflow.diagram</field>
+        <field name="model">crapo.workflow</field>
+        <field name="arch" 
+            type="xml">
+            <diagram string="Workflow Editor">
+                <node object="crapo.workflow.activity" 
+                    shape="rectangle">
+                    <field name="name"/>
+                </node>
+                <arrow object="crapo.workflow.transition" 
+                    source="from_activity" 
+                    destination="to_activity" 
+                    label="['name']">
+                    <field name="from_activity" />
+                    <field name="to_activity" />
+                </arrow>
+            </diagram>
+        </field>
+    </record>
 
 </odoo>
