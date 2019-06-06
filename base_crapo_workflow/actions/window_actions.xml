@@ -36,4 +36,27 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <!-- List of workflows -->
+    <record id="crapo_list_workflows_action" model="ir.actions.act_window">
+        <field name="name">Workflows</field>
+        <field name="target">current</field>
+        <field name="res_model">crapo.workflow</field>
+        <field name="limit">100</field>
+        <field name="auto_search" eval="True" />
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,diagram</field>
+    </record>
+
+    <!-- List of activities -->
+    <record id="crapo_list_activities_action" model="ir.actions.act_window">
+        <field name="name">Activities</field>
+        <field name="target">current</field>
+        <field name="res_model">crapo.workflow.activity</field>
+        <field name="limit">100</field>
+        <field name="auto_search" eval="True" />
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
 </odoo>
