@@ -12,7 +12,7 @@
     <menuitem id="crapo_list_actions_menu" parent="crapo_automata_menu" name="Actions definitions" groups="group_crapo_admin" sequence="30" action="crapo_list_actions_action" />
 
     <!-- Workflows menu -->
-    <menuitem id="crapo_workflows_menu" parent="crapo_base_menu" name="Automata" groups="group_crapo_admin" sequence="30" />
+    <menuitem id="crapo_workflows_menu" parent="crapo_base_menu" name="Workflows" groups="group_crapo_admin" sequence="30" />
 
     <menuitem id="crapo_list_workflows_menu" parent="crapo_workflows_menu" name="Workflows definitions" groups="group_crapo_admin" sequence="20" action="crapo_list_workflows_action" />
 

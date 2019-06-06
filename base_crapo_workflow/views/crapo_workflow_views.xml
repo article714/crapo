@@ -26,11 +26,11 @@
 					<field name="name" />
 				</group>
 				<notebook>
-					<page string="States">
-						<field name="activities" context="{'default_automaton':active_id,'current_automaton':active_id}" />
+					<page string="Activities">
+						<field name="activities" context="{'default_workflow':active_id,'current_workflow':active_id}" />
 					</page>
 					<page string="Transitions">
-						<field name="transitions" context="{'default_automaton':active_id,'current_automaton':active_id}"/>
+						<field name="transitions" context="{'default_workflow':active_id,'current_workflow':active_id}"/>
 					</page>
 				</notebook>
 			</form>
