@@ -16,7 +16,7 @@
 
     <menuitem id="crapo_list_workflows_menu" parent="crapo_workflows_menu" name="Workflows definitions" groups="group_crapo_admin" sequence="20" action="crapo_list_workflows_action" />
 
-    <menuitem id="crapo_list_actions_menu" parent="crapo_workflows_menu" name="Activities definitions" groups="group_crapo_admin" sequence="30" action="crapo_list_activities_action" />
+    <menuitem id="crapo_list_activities_menu" parent="crapo_workflows_menu" name="Activities definitions" groups="group_crapo_admin" sequence="30" action="crapo_list_activities_action" />
 
 
 

@@ -27,7 +27,7 @@ class Automaton(models.Model):
     ]
 
     name = fields.Char(
-        string="Name", help="State's name", required=True, translate=True
+        string="Name", help="Automaton's name", required=True, translate=True
     )
 
     model_id = fields.Many2one(
@@ -39,7 +39,9 @@ class Automaton(models.Model):
     )
 
     transitions = fields.One2many(
-        string="Transitions", comodel_name="crapo.transition", inverse_name="automaton"
+        string="Transitions",
+        comodel_name="crapo.transition",
+        inverse_name="automaton",
     )
 
     states = fields.One2many(

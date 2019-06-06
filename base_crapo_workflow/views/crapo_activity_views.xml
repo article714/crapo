@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="view_crapo_workflow_activity_form" model="ir.ui.view">
-        <field name="name">Crapo Action</field>
+        <field name="name">Workflow Activity</field>
         <field name="model">crapo.workflow.activity</field>
         <field name="arch" type="xml">
             <form string="Crapo Action">

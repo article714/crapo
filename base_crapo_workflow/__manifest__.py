@@ -27,9 +27,11 @@
         "views/crapo_state_views.xml",
         "views/crapo_transition_views.xml",
         "views/crapo_action_views.xml",
+        "views/crapo_activity_views.xml",
         "views/crapo_automaton_views.xml",
+        "views/crapo_workflow_views.xml",
     ],
     "installable": True,
     "images": [],
-    "application": False,
+    "application": True,
 }
