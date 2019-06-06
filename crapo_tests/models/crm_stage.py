@@ -8,7 +8,9 @@ License: AGPL-3
 
 
 from odoo import models, api
-from odoo.addons.base_crapo_workflow.mixins import crapo_automata_mixins # pylint: disable=odoo-addons-relative-import
+from odoo.addons.base_crapo_workflow.mixins import (
+    crapo_automata_mixins,
+)  # pylint: disable=odoo-addons-relative-import
 
 
 class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
@@ -17,23 +19,23 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
 
     def write(self, values):
         if len(self) == 1:
-            if 'crapo_state' not in values and not self.crapo_state:
-                if 'name' in values:
-                    vals = {'name': values['name']}
+            if "crapo_state" not in values and not self.crapo_state:
+                if "name" in values:
+                    vals = {"name": values["name"]}
                 else:
-                    vals = {'name': self.name}
+                    vals = {"name": self.name}
                 mystate = self._compute_related_state(vals)
-                values['crapo_state'] = mystate.id
+                values["crapo_state"] = mystate.id
 
         return super(CrmStageWithMixin, self).write(values)
 
     @api.model
     def create(self, values):
-        if 'crapo_state' not in values and not self.crapo_state:
-            if 'name' in values:
-                vals = {'name': values['name']}
+        if "crapo_state" not in values and not self.crapo_state:
+            if "name" in values:
+                vals = {"name": values["name"]}
             mystate = self._compute_related_state(vals)
-            values['crapo_state'] = mystate.id
+            values["crapo_state"] = mystate.id
 
         return super(CrmStageWithMixin, self).create(values)
 
@@ -48,14 +50,19 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
         else:
             default_compute = self._compute_related_state
 
-            query = 'SELECT id, name FROM "%s" WHERE "%s" is NULL' % (  # pylint: disable=sql-injection
-                self._table, column_name)
+            query = 'SELECT id, name FROM "%s" WHERE "%s" is NULL' % (
+                self._table,
+                column_name,
+            )
             self.env.cr.execute(query)
             stages = self.env.cr.fetchall()
 
             for stage in stages:
-                default_value = default_compute(values={'name': stage[1]})
+                default_value = default_compute(values={"name": stage[1]})
 
-                query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (  # pylint: disable=sql-injection
-                    self._table, column_name, stage[0])
+                query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (
+                    self._table,
+                    column_name,
+                    stage[0],
+                )
                 self.env.cr.execute(query, (default_value.id,))
