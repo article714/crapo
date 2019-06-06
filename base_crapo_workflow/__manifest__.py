@@ -19,7 +19,6 @@
         "security/automaton.xml",
         "security/automaton_transition.xml",
         "security/state.xml",
-        "security/transition.xml",
         "security/workflow.xml",
         "security/workflow_activity.xml",
         "security/workflow_transition.xml",
