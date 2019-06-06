@@ -13,7 +13,6 @@ from . import business_object
 from . import crapo_action
 from . import crapo_config
 from . import state
-from . import transition
 from . import workflow
 from . import workflow_activity
 from . import workflow_transition
