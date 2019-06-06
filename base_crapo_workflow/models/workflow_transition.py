@@ -13,11 +13,7 @@ class WorkflowTransition(models.Model):
     _description = "Transition between two activities"
 
     name = fields.Char(
-        string="Name",
-        help="Transition's name",
-        required=True,
-        translate=True,
-        size=32,
+        string="Name", help="Transition's name", required=True, translate=True, size=32
     )
 
     description = fields.Text(
@@ -52,10 +48,7 @@ class WorkflowTransition(models.Model):
     transition_kind = fields.Selection(
         [
             ("event", "Event triggered"),
-            (
-                "auto",
-                "Automatic when activity ended and preconditions are met",
-            ),
+            ("auto", "Automatic when activity ended and preconditions are met"),
         ],
         required=True,
         default="auto",
