@@ -4,7 +4,7 @@
 
 {
     "name": u"Crapo: Base Module for workflow management",
-    "version": u"12.0.2.0.0",
+    "version": u"10.0.3.0.0",
     "category": u"Crapo Workflows",
     "author": u"Article714",
     "license": u"AGPL-3",
