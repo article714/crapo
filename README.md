@@ -5,3 +5,25 @@
 # crapo
 
 Dynamic workflow tooling for Odoo
+
+
+## Getting started with Crapo
+
+
+# Credits
+
+## Author
+
+Christophe Guychard (Article714)
+
+## Contributors
+
+* Julien Carette
+* Christophe Guychard
+* Damien Couppé
+
+## Maintainer
+
+This module is maintained by Article714.
+
+[![Module Icon](<https://article714.org/branding/>)](https://www.article714.org)
