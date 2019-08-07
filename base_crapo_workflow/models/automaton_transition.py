@@ -91,6 +91,7 @@ change or during the write process (computed fields) """,
         default=False,
     )
 
+    @api.model
     def create(self, values):
         """
            Override to prevent save postcondtions on async_action
@@ -99,6 +100,7 @@ change or during the write process (computed fields) """,
             values["postconditions"] = False
         return super(StateMachineTransition, self).create(values)
 
+    @api.multi
     def write(self, values):
         """
             Override to prevent save postcondtions on async_action
