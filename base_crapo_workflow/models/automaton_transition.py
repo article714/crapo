@@ -1,7 +1,9 @@
+# coding: utf-8
+
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields, models
+from odoo import fields, models, exceptions, api, _
 
 
 class StateMachineTransition(models.Model):
@@ -12,20 +14,22 @@ class StateMachineTransition(models.Model):
     _name = "crapo.transition"
     _description = "Transition between two states"
 
-    name = fields.Char(
-        string="Name",
-        help="Transition's name",
-        required=True,
-        translate=True,
-        size=32,
-    )
+    @api.constrains("postconditions", "async_action")
+    def async_action_post_conditions_conflict(self):
+        """
+            Valide de la durée est bien un multiple de la périodicité
+        """
+        for rec in self:
+            if rec.async_action and rec.postconditions:
+                raise exceptions.ValidationError(
+                    _("Transition can't have async action and postcontitions")
+                )
 
-    description = fields.Text(
-        string=u"Description", required=False, translate=True, size=256
-    )
+    name = fields.Char(help="Transition's name", required=True, translate=True, size=32)
+
+    description = fields.Text(required=False, translate=True, size=256)
 
     automaton = fields.Many2one(
-        string="Automaton",
         comodel_name="crapo.automaton",
         related="from_state.automaton",
         store=True,
@@ -34,23 +38,15 @@ class StateMachineTransition(models.Model):
     )
 
     model_id = fields.Many2one(
-        string=u"Model", comodel_name="ir.model", related="automaton.model_id"
+        string="Model", comodel_name="ir.model", related="automaton.model_id"
     )
 
     from_state = fields.Many2one(
-        string="From state",
-        comodel_name="crapo.state",
-        ondelete="cascade",
-        required=True,
-        index=True,
+        comodel_name="crapo.state", ondelete="cascade", required=True, index=True
     )
 
     to_state = fields.Many2one(
-        string="To state",
-        comodel_name="crapo.state",
-        ondelete="cascade",
-        required=True,
-        index=True,
+        comodel_name="crapo.state", ondelete="cascade", required=True, index=True
     )
 
     preconditions = fields.Char(
@@ -75,13 +71,10 @@ to be checked, and 'env' which is a reference to odoo environment""",
     )
 
     action = fields.Many2one(
-        string="Action to be executed",
-        comodel_name="crapo.action",
-        required=False,
+        string="Action to be executed", comodel_name="crapo.action", required=False
     )
 
     async_action = fields.Boolean(
-        string="Async action",
         help="""Action will be run asynchronously, after transition
                                   is completed""",
         default=False,
@@ -97,3 +90,20 @@ tested with values that might have either changed together with the state
 change or during the write process (computed fields) """,
         default=False,
     )
+
+    def create(self, values):
+        """
+           Override to prevent save postcondtions on async_action
+        """
+        if values.get("async_action"):
+            values["postconditions"] = False
+        return super(StateMachineTransition, self).create(values)
+
+    def write(self, values):
+        """
+            Override to prevent save postcondtions on async_action
+        """
+        if values.get("async_action"):
+            values["postconditions"] = False
+
+        return super(StateMachineTransition, self).write(values)
