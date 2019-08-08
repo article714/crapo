@@ -4,6 +4,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
 
+from lxml import etree
+from lxml.builder import E
+
 from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.tools.safe_eval import safe_eval
@@ -41,6 +44,19 @@ class ObjectWithStateMixin(object):
         index=True,
         required=True,
     )
+
+    crapo_readonly_fields = fields.Char(
+        compute="_compute_crapo_readonly_fields", default=",0,"
+    )
+
+    @api.depends("state")
+    @api.onchange("state")
+    def _compute_crapo_readonly_fields(self):
+        for rec in self:
+            if rec.state.readonly_fields:
+                rec.crapo_readonly_fields = ",{},".format(rec.state.readonly_fields)
+            else:
+                rec.crapo_readonly_fields = ",0,"
 
     # Computes automaton for current model
     @api.model
@@ -120,6 +136,87 @@ class ObjectWithStateMixin(object):
         )
         return states.browse(state_ids)
 
+    def _fields_view_get(
+        self, view_id=None, view_type="form", toolbar=False, submenu=False
+    ):
+        """
+            Override to add crapo_readonly_fields to arch and attrs readonly
+            on fields that could be editable
+        """
+        result = super(ObjectWithStateMixin, self)._fields_view_get(
+            view_id, view_type, toolbar, submenu
+        )
+        readonly_fields = self.fields_get(attributes=["readonly"])
+        node = etree.fromstring(result["arch"])
+        node.append(E.field(name="crapo_readonly_fields", invisible="1"))
+        self.process_field(node, readonly_fields)
+        result["arch"] = etree.tostring(node)
+        return result
+
+    def process_field(self, node, readonly_fields):
+        """
+            Add readnoly attrs if needed
+        """
+        if node.tag == "field":
+            field_name = node.get("name")
+
+            attrs = safe_eval(node.get("attrs", "{}"))
+            readonly = attrs.get("readonly", [])
+            if readonly:
+                pos = 0
+                for token in readonly:
+                    if isinstance(token, (list, tuple)):
+                        break
+                    pos += 1
+                readonly.insert(pos, "|")
+
+            if readonly or not readonly_fields[field_name]["readonly"]:
+                readonly.append(
+                    ("crapo_readonly_fields", "like", ",{},".format(field_name))
+                )
+                attrs["readonly"] = readonly
+                node.set("attrs", str(attrs))
+
+        for child_node in node:
+            self.process_field(child_node, readonly_fields)
+
+    # =================
+    # Write / Create
+    # =================
+    @api.multi
+    def write(self, values):
+        """
+            Override write method in order to preventing transitioning
+            to a non eligible state
+        """
+        # Look for a change of state
+        target_state_id = None
+        result = True
+
+        if "state" in values:
+            target_state_id = values["state"]
+
+        # check if there is a change state needed
+        if target_state_id is not None:
+            # Search for elected transition
+            transition = self._get_transition(target_state_id)
+
+            if transition:
+                result = True
+
+                if transition.write_before:
+                    result = super(ObjectWithStateMixin, self).write(values)
+
+                self.exec_conditions(transition.preconditions, "Pre")
+                self.exec_action(transition.action, transition.async_action)
+                self.exec_conditions(transition.postconditions, "Post")
+
+                # Return now if write has already been done
+                if transition.write_before:
+                    return result
+
+        return super(ObjectWithStateMixin, self).write(values)
+
     def _get_transition(self, target_state_id):
         """
             Retrieve transition between two state
@@ -128,7 +225,10 @@ class ObjectWithStateMixin(object):
         current_state = False
         for rec in self:
             next_states = rec._next_states()
-            if not next_states:
+            if rec.state.id == target_state_id:
+                current_state = rec.state
+                continue
+            elif not next_states:
                 raise exceptions.ValidationError(
                     _("No target state is elegible for transitionning")
                 )
@@ -190,40 +290,6 @@ class ObjectWithStateMixin(object):
             else:
                 action.with_context(context).run()
 
-    @api.multi
-    def write(self, values):
-        """
-            Override write method in order to preventing transitioning
-            to a non eligible state
-        """
-        # Look for a change of state
-        target_state_id = None
-        result = True
-
-        if "state" in values:
-            target_state_id = values["state"]
-
-        # check if there is a change state needed
-        if target_state_id is not None:
-            # Search for elected transition
-            transition = self._get_transition(target_state_id)
-
-            if transition:
-                result = True
-
-                if transition.write_before:
-                    result = super(ObjectWithStateMixin, self).write(values)
-
-                self.exec_conditions(transition.preconditions, "Pre")
-                self.exec_action(transition.action, transition.async_action)
-                self.exec_conditions(transition.postconditions, "Post")
-
-                # Return now if write has already been done
-                if transition.write_before:
-                    return result
-
-        return super(ObjectWithStateMixin, self).write(values)
-
 
 class StateObjectMixin(object):
     """
@@ -267,6 +333,8 @@ class StateObjectMixin(object):
     is_end_state = fields.Boolean(
         "End State", compute="_compute_is_end_state", store=True, index=True
     )
+
+    readonly_fields = fields.Char(help="List of model's fields name separated by comma")
 
     @api.depends("transitions_to", "automaton")
     def _compute_is_start_state(self):
