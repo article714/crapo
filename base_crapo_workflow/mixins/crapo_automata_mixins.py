@@ -162,20 +162,31 @@ class ObjectWithStateMixin(object):
 
             attrs = safe_eval(node.get("attrs", "{}"))
             readonly = attrs.get("readonly", [])
-            if readonly:
-                pos = 0
-                for token in readonly:
-                    if isinstance(token, (list, tuple)):
-                        break
-                    pos += 1
-                readonly.insert(pos, "|")
 
-            if readonly or not readonly_fields[field_name]["readonly"]:
-                readonly.append(
-                    ("crapo_readonly_fields", "like", ",{},".format(field_name))
-                )
-                attrs["readonly"] = readonly
-                node.set("attrs", str(attrs))
+            skip = False
+
+            # Deal with boolean
+            if isinstance(readonly, bool):
+                if readonly:
+                    skip = True
+                else:
+                    readonly = []
+
+            if not skip:
+                if readonly:
+                    pos = 0
+                    for token in readonly:
+                        if isinstance(token, (list, tuple)):
+                            break
+                        pos += 1
+                    readonly.insert(pos, "|")
+
+                if readonly or not readonly_fields[field_name]["readonly"]:
+                    readonly.append(
+                        ("crapo_readonly_fields", "like", ",{},".format(field_name))
+                    )
+                    attrs["readonly"] = readonly
+                    node.set("attrs", str(attrs))
 
         for child_node in node:
             self.process_field(child_node, readonly_fields)
