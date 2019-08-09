@@ -187,9 +187,9 @@ class ObjectWithStateMixin(object):
                     )
                     attrs["readonly"] = readonly
                     node.set("attrs", str(attrs))
-
-        for child_node in node:
-            self.process_field(child_node, readonly_fields)
+        else:
+            for child_node in node:
+                self.process_field(child_node, readonly_fields)
 
     # =================
     # Write / Create
