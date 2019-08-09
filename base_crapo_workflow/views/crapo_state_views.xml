@@ -45,7 +45,7 @@
                     <field name="sequence" />
                     <field name="fold" />
                 </group>
-                <group string="state rules">
+                <group string="State rules">
                     <field name="readonly_fields" />
                 </group>
             </form>
