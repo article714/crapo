@@ -10,6 +10,7 @@ from lxml.builder import E
 from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv import expression
 
 
 class ObjectWithStateMixin(object):
@@ -161,32 +162,27 @@ class ObjectWithStateMixin(object):
             field_name = node.get("name")
 
             attrs = safe_eval(node.get("attrs", "{}"))
-            readonly = attrs.get("readonly", [])
+            readonly = attrs.get("readonly") or node.get("readonly")
+            if isinstance(readonly, str):
+                readonly = safe_eval(node.get("readonly", "{}"))
 
-            skip = False
+            # Deal with none domain value, if field is explicitly in readonly we skip
+            if not isinstance(readonly, (list, tuple)) and readonly:
+                return
+            # If there is no domain define and fields is already in readonly
+            # we skip too
+            elif readonly is None and readonly_fields[field_name]["readonly"]:
+                return
 
-            # Deal with boolean
-            if isinstance(readonly, bool):
-                if readonly:
-                    skip = True
-                else:
-                    readonly = []
+            crapo_readonly = [
+                ("crapo_readonly_fields", "like", ",{},".format(field_name))
+            ]
+            if readonly:
+                crapo_readonly = expression.OR([readonly, crapo_readonly])
 
-            if not skip:
-                if readonly:
-                    pos = 0
-                    for token in readonly:
-                        if isinstance(token, (list, tuple)):
-                            break
-                        pos += 1
-                    readonly.insert(pos, "|")
+            attrs["readonly"] = crapo_readonly
+            node.set("attrs", str(attrs))
 
-                if readonly or not readonly_fields[field_name]["readonly"]:
-                    readonly.append(
-                        ("crapo_readonly_fields", "like", ",{},".format(field_name))
-                    )
-                    attrs["readonly"] = readonly
-                    node.set("attrs", str(attrs))
         else:
             for child_node in node:
                 self.process_field(child_node, readonly_fields)
