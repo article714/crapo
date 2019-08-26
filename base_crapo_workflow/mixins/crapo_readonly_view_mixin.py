@@ -35,16 +35,21 @@ class ReadonlyViewMixin(object):
         for field in self._readonly_fields_to_add:
             node.append(E.field(name=field, invisible="1"))
 
-        self._process_field(node, readonly_fields, self._readonly_domain)
+        if not isinstance(self._readonly_domain, (list, tuple)):
+            lst_domain = [self._readonly_domain]
+        else:
+            lst_domain = self._readonly_domain
+
+        self._process_field(node, readonly_fields, lst_domain)
         result["arch"] = etree.tostring(node)
         return result
 
-    def _process_field(self, node, readonly_fields, readonly_global_domain):
+    def _process_field(self, node, readonly_fields, lst_domain):
         """
             Add readnoly attrs if needed
         """
         if node.get("readonly_global_domain"):
-            readonly_global_domain = node.get("readonly_global_domain")
+            lst_domain = lst_domain + [node.get("readonly_global_domain")]
 
         if node.tag == "field":
             field_name = node.get("name")
@@ -62,8 +67,8 @@ class ReadonlyViewMixin(object):
             elif readonly is None and readonly_fields[field_name]["readonly"]:
                 return
 
-            _readonly_domain = safe_eval(
-                readonly_global_domain, {"field_name": field_name}
+            _readonly_domain = expression.OR(
+                [safe_eval(domain, {"field_name": field_name}) for domain in lst_domain]
             )
             if readonly:
                 _readonly_domain = expression.OR([readonly, _readonly_domain])
@@ -73,4 +78,4 @@ class ReadonlyViewMixin(object):
 
         else:
             for child_node in node:
-                self._process_field(child_node, readonly_fields, readonly_global_domain)
+                self._process_field(child_node, readonly_fields, lst_domain)
