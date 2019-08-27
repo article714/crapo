@@ -17,7 +17,7 @@ class StateMachineTransition(models.Model):
     @api.constrains("postconditions", "async_action")
     def async_action_post_conditions_conflict(self):
         """
-            Valide de la durée est bien un multiple de la périodicité
+            Checks that no post-condition is set when using an async action
         """
         for rec in self:
             if rec.async_action and rec.postconditions:
@@ -25,7 +25,9 @@ class StateMachineTransition(models.Model):
                     _("Transition can't have async action and postcontitions")
                 )
 
-    name = fields.Char(help="Transition's name", required=True, translate=True, size=32)
+    name = fields.Char(
+        help="Transition's name", required=True, translate=True, size=32
+    )
 
     description = fields.Text(required=False, translate=True, size=256)
 
@@ -42,11 +44,17 @@ class StateMachineTransition(models.Model):
     )
 
     from_state = fields.Many2one(
-        comodel_name="crapo.state", ondelete="cascade", required=True, index=True
+        comodel_name="crapo.state",
+        ondelete="cascade",
+        required=True,
+        index=True,
     )
 
     to_state = fields.Many2one(
-        comodel_name="crapo.state", ondelete="cascade", required=True, index=True
+        comodel_name="crapo.state",
+        ondelete="cascade",
+        required=True,
+        index=True,
     )
 
     preconditions = fields.Char(
@@ -71,7 +79,9 @@ to be checked, and 'env' which is a reference to odoo environment""",
     )
 
     action = fields.Many2one(
-        string="Action to be executed", comodel_name="crapo.action", required=False
+        string="Action to be executed",
+        comodel_name="crapo.action",
+        required=False,
     )
 
     async_action = fields.Boolean(
