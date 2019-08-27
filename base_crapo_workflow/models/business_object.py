@@ -3,7 +3,7 @@
 
 from odoo import models
 
-from .mixins import crapo_automata_mixins
+from ..mixins import crapo_automata_mixins
 
 
 class CrapoBusinessObject(
