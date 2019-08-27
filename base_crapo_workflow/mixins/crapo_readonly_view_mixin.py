@@ -1,6 +1,5 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-import logging
 
 from lxml import etree
 from lxml.builder import E
@@ -57,7 +56,8 @@ class ReadonlyViewMixin(object):
             if isinstance(readonly, str):
                 readonly = safe_eval(node.get("readonly", "{}"))
 
-            # Deal with none domain value, if field is explicitly in readonly we skip
+            # Deal with none domain value, if field is explicitly in
+            # readonly we skip
             if not isinstance(readonly, (list, tuple)) and readonly:
                 return
             # If there is no domain define and fields is already in readonly

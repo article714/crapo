@@ -238,7 +238,8 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                     )
                 except Exception as err:
                     logging.error(
-                        "CRAPO: Failed to validate transition %sconditions: %s",
+                        "CRAPO: Failed to validate transition"
+                        " %sconditions: %s",
                         prefix,
                         str(err),
                     )

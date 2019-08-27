@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
 ©2019
 License: AGPL-3
@@ -45,6 +43,8 @@ class CrmLeadWithMixin(ObjectWithStateMixin, models.Model):
     @api.multi
     def write(self, values):
         if self._sync_state_field in values and "state" not in values:
-            values["state"] = self._get_sync_state(values[self._sync_state_field])
+            values["state"] = self._get_sync_state(
+                values[self._sync_state_field]
+            )
 
         return super(CrmLeadWithMixin, self).write(values)
