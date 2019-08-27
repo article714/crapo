@@ -1,5 +1,3 @@
-# coding: utf-8
-
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
@@ -68,7 +66,10 @@ class ReadonlyViewMixin(object):
                 return
 
             _readonly_domain = expression.OR(
-                [safe_eval(domain, {"field_name": field_name}) for domain in lst_domain]
+                [
+                    safe_eval(domain, {"field_name": field_name})
+                    for domain in lst_domain
+                ]
             )
             if readonly:
                 _readonly_domain = expression.OR([readonly, _readonly_domain])

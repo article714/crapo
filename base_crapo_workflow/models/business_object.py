@@ -1,16 +1,14 @@
-# coding: utf-8
-
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models
 
-from odoo.addons.base_crapo_workflow.mixins import (
-    crapo_automata_mixins,
-)  # pylint: disable=odoo-addons-relative-import
+from .mixins import crapo_automata_mixins
 
 
-class CrapoBusinessObject(crapo_automata_mixins.ObjectWithStateMixin, models.Model):
+class CrapoBusinessObject(
+    crapo_automata_mixins.ObjectWithStateMixin, models.Model
+):
     """
     Base class to define a Business Object.
 

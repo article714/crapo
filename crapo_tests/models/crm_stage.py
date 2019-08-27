@@ -50,19 +50,16 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
         else:
             default_compute = self._compute_related_state
 
-            query = 'SELECT id, name FROM "%s" WHERE "%s" is NULL' % (
-                self._table,
-                column_name,
+            self.env.cr.execute(
+                'SELECT id, name FROM "%s" WHERE "%s" is NULL',
+                (self._table, column_name),
             )
-            self.env.cr.execute(query)
             stages = self.env.cr.fetchall()
 
             for stage in stages:
                 default_value = default_compute(values={"name": stage[1]})
 
-                query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (
-                    self._table,
-                    column_name,
-                    stage[0],
+                self.env.cr.execute(
+                    'UPDATE "%s" SET "%s"=%s WHERE id = %s',
+                    (self._table, column_name, default_value.id, stage[0]),
                 )
-                self.env.cr.execute(query, (default_value.id,))

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
@@ -8,9 +6,7 @@ from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.base_crapo_workflow.mixins.crapo_readonly_view_mixin import (
-    ReadonlyViewMixin,
-)
+from .crapo_readonly_view_mixin import ReadonlyViewMixin
 
 
 class ObjectWithStateMixin(ReadonlyViewMixin):
