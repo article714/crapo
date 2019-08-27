@@ -4,13 +4,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
 
-from lxml import etree
-from lxml.builder import E
-
 from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv import expression
 
 from odoo.addons.base_crapo_workflow.mixins.crapo_readonly_view_mixin import (
     ReadonlyViewMixin,
@@ -25,7 +21,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
         Should be use as a mixin class in existing objects
     """
 
-    _readonly_domain = "[('crapo_readonly_fields', 'like', ',{},'.format(field_name))]"
+    _readonly_domain = (
+        "[('crapo_readonly_fields', 'like', ',{},'.format(field_name))]"
+    )
     _readonly_fields_to_add = ["crapo_readonly_fields"]
 
     automaton = fields.Many2one(
@@ -62,7 +60,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     def _compute_crapo_readonly_fields(self):
         for rec in self:
             if rec.state.readonly_fields:
-                rec.crapo_readonly_fields = ",{},".format(rec.state.readonly_fields)
+                rec.crapo_readonly_fields = ",{},".format(
+                    rec.state.readonly_fields
+                )
             else:
                 rec.crapo_readonly_fields = ",0,"
 
@@ -71,14 +71,21 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     def _get_model_automaton(self):
         automaton_model = self.env["crapo.automaton"]
 
-        my_model = self.env["ir.model"].search([("model", "=", self._name)], limit=1)
-        my_automaton = automaton_model.search([("model_id", "=", my_model.id)], limit=1)
+        my_model = self.env["ir.model"].search(
+            [("model", "=", self._name)], limit=1
+        )
+        my_automaton = automaton_model.search(
+            [("model_id", "=", my_model.id)], limit=1
+        )
 
         if my_automaton:
             return my_automaton
         else:
             return automaton_model.create(
-                {"name": "Automaton for {}".format(self._name), "model_id": my_model.id}
+                {
+                    "name": "Automaton for {}".format(self._name),
+                    "model_id": my_model.id,
+                }
             )
 
     # State Management
@@ -107,7 +114,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
         if default_state:
             return default_state
         elif automaton:
-            return state_model.create({"name": "New", "automaton": automaton.id})
+            return state_model.create(
+                {"name": "New", "automaton": automaton.id}
+            )
         else:
             return False
 
@@ -209,7 +218,10 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
 
         # Search for elected transition
         transition = self.env["crapo.transition"].search(
-            [("from_state", "=", current_state.id), ("to_state", "=", target_state_id)],
+            [
+                ("from_state", "=", current_state.id),
+                ("to_state", "=", target_state_id),
+            ],
             limit=1,
         )
 
@@ -225,7 +237,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
         if conditions:
             for rec in self:
                 try:
-                    is_valid = safe_eval(conditions, {"object": rec, "env": self.env})
+                    is_valid = safe_eval(
+                        conditions, {"object": rec, "env": self.env}
+                    )
                 except Exception as err:
                     logging.error(
                         "CRAPO: Failed to validate transition %sconditions: %s",
@@ -291,19 +305,27 @@ class StateObjectMixin(object):
     # computed field to identify start and end states
 
     is_start_state = fields.Boolean(
-        "Start State", compute="_compute_is_start_state", store=True, index=True
+        "Start State",
+        compute="_compute_is_start_state",
+        store=True,
+        index=True,
     )
 
     is_end_state = fields.Boolean(
         "End State", compute="_compute_is_end_state", store=True, index=True
     )
 
-    readonly_fields = fields.Char(help="List of model's fields name separated by comma")
+    readonly_fields = fields.Char(
+        help="List of model's fields name separated by comma"
+    )
 
     @api.depends("transitions_to", "automaton")
     def _compute_is_start_state(self):
         for record in self:
-            if len(record.transitions_to) == 0 or record.transitions_to is False:
+            if (
+                len(record.transitions_to) == 0
+                or record.transitions_to is False
+            ):
                 record.is_start_state = True
             else:
                 record.is_start_state = False
@@ -311,7 +333,10 @@ class StateObjectMixin(object):
     @api.depends("transitions_from", "automaton")
     def _compute_is_end_state(self):
         for record in self:
-            if len(record.transitions_to) == 0 or record.transitions_to is False:
+            if (
+                len(record.transitions_to) == 0
+                or record.transitions_to is False
+            ):
                 record.is_end_state = True
             else:
                 record.is_end_state = False
