@@ -3,7 +3,7 @@
 
 from odoo import fields, models, _, api, exceptions
 
-from .mixins import (
+from ..mixins import (
     crapo_automata_mixins,
 )  # pylint: disable=odoo-addons-relative-import
 
