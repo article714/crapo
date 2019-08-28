@@ -6,6 +6,7 @@ License: AGPL-3
 
 """
 
+import logging
 
 from odoo import models, api
 from psycopg2.sql import Identifier
@@ -58,6 +59,10 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
             )
             cname = Identifier(column_name).as_string(
                 self.env.cr._obj  # pylint: disable=protected-access
+            )
+
+            logging.error(
+                "MMMMMAIS %s (%s) -> %s", tname, type(tname), str(tname)
             )
 
             self.env.cr.execute(
