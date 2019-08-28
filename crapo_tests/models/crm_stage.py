@@ -6,8 +6,6 @@ License: AGPL-3
 
 """
 
-import logging
-
 from odoo import models, api
 from psycopg2.sql import Identifier, SQL
 from odoo.addons.base_crapo_workflow.mixins import (
