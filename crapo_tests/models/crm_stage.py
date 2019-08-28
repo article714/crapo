@@ -8,7 +8,7 @@ License: AGPL-3
 
 
 from odoo import models, api
-from psycopg2.sql import SQL, Identifier
+from psycopg2.sql import Identifier
 from odoo.addons.base_crapo_workflow.mixins import (
     crapo_automata_mixins,
 )  # pylint: disable=odoo-addons-relative-import
@@ -32,6 +32,8 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
 
     @api.model
     def create(self, values):
+        """ Create a new crapo_stage for each crm_stage
+        """
         if "crapo_state" not in values and not self.crapo_state:
             if "name" in values:
                 vals = {"name": values["name"]}
@@ -47,22 +49,21 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
             a new crapo_state for each stage (including a default automaton)
         """
         if column_name not in ["crapo_state"]:
-            super(CrmStageWithMixin, self)._init_column(column_name)
+            return super(CrmStageWithMixin, self)._init_column(column_name)
         else:
             default_compute = self._compute_related_state
-            query = SQL(
-                "SELECT id, name FROM {} WHERE {} is NULL".format(
-                    Identifier(self._table), Identifier(column_name)
-                )
+
+            tname = (Identifier(self._table).as_string(self.env.cr),)
+            cname = (Identifier(column_name).as_string(self.env.cr),)
+            self.env.cr.execute(
+                "SELECT id, name FROM %s WHERE %s is NULL", (tname, cname)
             )
-            self.env.cr.execute(query)
             stages = self.env.cr.fetchall()
 
             for stage in stages:
                 default_value = default_compute(values={"name": stage[1]})
-                query = SQL(
-                    "UPDATE {} SET {}=%s WHERE id = %s".format(
-                        Identifier(self._table), Identifier(column_name)
-                    )
+                self.env.cr.execute(
+                    "UPDATE %s SET %s=%s WHERE id = %s",
+                    (tname, cname, default_value.id, stage[0]),
                 )
-                self.env.cr.execute(query, (default_value.id, stage[0]))
+        return True
