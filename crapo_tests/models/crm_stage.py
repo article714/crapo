@@ -54,19 +54,24 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
         else:
             default_compute = self._compute_related_state
 
-            tname = Identifier(self._table).as_string(
+            tname = Identifier(self._table.replace('"', "")).as_string(
                 self.env.cr._obj  # pylint: disable=protected-access
             )
-            cname = Identifier(column_name).as_string(
+            cname = Identifier(column_name.replace('"', "")).as_string(
                 self.env.cr._obj  # pylint: disable=protected-access
             )
 
             logging.error(
-                "MMMMMAIS %s (%s) -> %s", tname, type(tname), str(tname)
+                "MMMMMAIS %s ==> %s (%s) -> %s",
+                self._table,
+                tname,
+                type(tname),
+                str(tname),
             )
 
             self.env.cr.execute(
-                "SELECT id, name FROM %s WHERE %s is NULL", (tname, cname)
+                "SELECT id, name FROM %s WHERE %s is NULL",
+                (self._table, cname),
             )
             stages = self.env.cr.fetchall()
 
@@ -74,6 +79,6 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
                 default_value = default_compute(values={"name": stage[1]})
                 self.env.cr.execute(
                     "UPDATE %s SET %s=%s WHERE id = %s",
-                    (tname, cname, default_value.id, stage[0]),
+                    (self._table, cname, default_value.id, stage[0]),
                 )
         return True
