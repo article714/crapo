@@ -9,7 +9,7 @@ License: AGPL-3
 import logging
 
 from odoo import models, api
-from psycopg2.sql import Identifier
+from psycopg2.sql import Identifier, SQL
 from odoo.addons.base_crapo_workflow.mixins import (
     crapo_automata_mixins,
 )  # pylint: disable=odoo-addons-relative-import
@@ -54,31 +54,21 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
         else:
             default_compute = self._compute_related_state
 
-            tname = Identifier(self._table.replace('"', "")).as_string(
-                self.env.cr._obj  # pylint: disable=protected-access
-            )
-            cname = Identifier(column_name.replace('"', "")).as_string(
-                self.env.cr._obj  # pylint: disable=protected-access
-            )
+            tname = Identifier(self._table.replace('"', ""))
+            cname = Identifier(column_name.replace('"', ""))
 
-            logging.error(
-                "MMMMMAIS %s ==> %s (%s) -> %s",
-                self._table,
-                tname,
-                type(tname),
-                str(tname),
-            )
+            query = SQL(  # pylint: disable=sql-injection
+                "SELECT id, name FROM {} WHERE {} is NULL"
+            ).format(tname, cname)
 
-            self.env.cr.execute(
-                "SELECT id, name FROM %s WHERE %s is NULL",
-                (self._table, cname),
-            )
+            self.env.cr.execute(query)
             stages = self.env.cr.fetchall()
 
             for stage in stages:
+                query = SQL(  # pylint: disable=sql-injection
+                    "UPDATE {} SET {}=%s WHERE id = %s"
+                ).format(tname, cname)
+
                 default_value = default_compute(values={"name": stage[1]})
-                self.env.cr.execute(
-                    "UPDATE %s SET %s=%s WHERE id = %s",
-                    (self._table, cname, default_value.id, stage[0]),
-                )
+                self.env.cr.execute(query, (default_value.id, stage[0]))
         return True
