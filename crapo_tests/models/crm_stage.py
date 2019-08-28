@@ -53,12 +53,12 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
         else:
             default_compute = self._compute_related_state
 
-            tname = (
-                Identifier(self._table).as_string(self.env.cr._obj),
-            )  # pylint: disable=protected-access
-            cname = (
-                Identifier(column_name).as_string(self.env.cr._obj),
-            )  # pylint: disable=protected-access
+            tname = Identifier(self._table).as_string(
+                self.env.cr._obj  # pylint: disable=protected-access
+            )
+            cname = Identifier(column_name).as_string(
+                self.env.cr._obj  # pylint: disable=protected-access
+            )
 
             self.env.cr.execute(
                 "SELECT id, name FROM %s WHERE %s is NULL", (tname, cname)
