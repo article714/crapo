@@ -8,6 +8,7 @@ License: AGPL-3
 
 
 from odoo import models, api
+from psycopg2.sql import SQL, Identifier
 from odoo.addons.base_crapo_workflow.mixins import (
     crapo_automata_mixins,
 )  # pylint: disable=odoo-addons-relative-import
@@ -49,17 +50,19 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
             super(CrmStageWithMixin, self)._init_column(column_name)
         else:
             default_compute = self._compute_related_state
-
-            self.env.cr.execute(
-                "SELECT id, name FROM %s WHERE %s is NULL",
-                (self._table, column_name),
+            query = SQL(
+                "SELECT id, name FROM {} WHERE {} is NULL".format(
+                    Identifier(self._table), Identifier(column_name)
+                )
             )
+            self.env.cr.execute(query)
             stages = self.env.cr.fetchall()
 
             for stage in stages:
                 default_value = default_compute(values={"name": stage[1]})
-
-                self.env.cr.execute(
-                    "UPDATE %s SET %s=%s WHERE id = %s",
-                    (self._table, column_name, default_value.id, stage[0]),
+                query = SQL(
+                    "UPDATE {} SET {}=%s WHERE id = %s".format(
+                        Identifier(self._table), Identifier(column_name)
+                    )
                 )
+                self.env.cr.execute(query, (default_value.id, stage[0]))
