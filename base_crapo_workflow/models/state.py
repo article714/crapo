@@ -3,7 +3,7 @@
 
 from odoo import fields, models, _, api, exceptions
 
-from odoo.addons.base_crapo_workflow.mixins import (
+from ..mixins import (
     crapo_automata_mixins,
 )  # pylint: disable=odoo-addons-relative-import
 
@@ -18,28 +18,22 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     _order = "sequence, name"
 
     name = fields.Char(
-        string="Name",
-        help="State's name",
-        required=True,
-        translate=True,
-        size=32,
+        help="State's name", required=True, translate=True, size=32
     )
 
-    description = fields.Char(
-        string="Description", required=False, translate=True, size=256
-    )
+    description = fields.Char(required=False, translate=True, size=256)
 
     sequence = fields.Integer(
-        string="Sequence",
         default=1,
-        help="""
-        Sequence gives the order in which states are displayed""",
+        help="Sequence gives the order in which states are displayed",
     )
 
     fold = fields.Boolean(
         string="Folded in kanban",
-        help="""This stage is folded in the kanban view when
-                          there are no records in that stage to display. """,
+        help=(
+            "This stage is folded in the kanban view "
+            "when there are no records in that stage to display."
+        ),
         default=False,
     )
 

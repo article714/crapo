@@ -1,28 +1,34 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+import logging
 
 from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.tools.safe_eval import safe_eval
 
-import logging
+from .crapo_readonly_view_mixin import ReadonlyViewMixin
 
 
-class ObjectWithStateMixin(object):
+class ObjectWithStateMixin(ReadonlyViewMixin):
     """
-    Mixin class that can be used to define an Odoo Model eligible
-    to be managed by a Crapo Automaton
+        Mixin class that can be used to define an Odoo Model eligible
+        to be managed by a Crapo Automaton
 
-    Should be use as a mixin class in existing objects
+        Should be use as a mixin class in existing objects
     """
+
+    _readonly_domain = (
+        "[('crapo_readonly_fields', 'like', ',{},'.format(field_name))]"
+    )
+    _readonly_fields_to_add = ["crapo_readonly_fields"]
 
     automaton = fields.Many2one(
         comodel_name="crapo.automaton",
-        string=u"Related automaton",
-        help="""
-                        The automaton describes the various transitions
-                        an object can go through between states.
-                        """,
+        string="Related automaton",
+        help=(
+            "The automaton describes the various transitions "
+            "an object can go through between states."
+        ),
         default=lambda self: self._get_model_automaton(),
         store=True,
         index=True,
@@ -31,7 +37,6 @@ class ObjectWithStateMixin(object):
 
     state = fields.Many2one(
         comodel_name="crapo.state",
-        string="State",
         help="""State in which this object is""",
         track_visibility="onchange",
         domain=lambda self: self._get_state_domain(),
@@ -41,6 +46,21 @@ class ObjectWithStateMixin(object):
         index=True,
         required=True,
     )
+
+    crapo_readonly_fields = fields.Char(
+        compute="_compute_crapo_readonly_fields", default=",0,"
+    )
+
+    @api.depends("state")
+    @api.onchange("state")
+    def _compute_crapo_readonly_fields(self):
+        for rec in self:
+            if rec.state.readonly_fields:
+                rec.crapo_readonly_fields = ",{},".format(
+                    rec.state.readonly_fields
+                )
+            else:
+                rec.crapo_readonly_fields = ",0,"
 
     # Computes automaton for current model
     @api.model
@@ -129,123 +149,121 @@ class ObjectWithStateMixin(object):
         )
         return states.browse(state_ids)
 
+    # =================
+    # Write / Create
+    # =================
     @api.multi
-    def pre_write_checks(self, values):
+    def write(self, values):
         """
-        we override write method in order to preventing transitioning
-        to a non eligible state
+            Override write method in order to preventing transitioning
+            to a non eligible state
         """
-        self.ensure_one()
         # Look for a change of state
         target_state_id = None
-
-        if self._sync_state_field in values and "state" not in values:
-            values["state"] = self._get_sync_state(
-                values[self._sync_state_field]
-            )
+        result = True
 
         if "state" in values:
             target_state_id = values["state"]
 
         # check if there is a change state needed
         if target_state_id is not None:
-
-            # Check if next state is valid
-            for record in self:
-                if record.state and target_state_id:
-                    next_states = record._next_states()
-                    if not next_states:
-                        raise exceptions.ValidationError(
-                            _(
-                                "No target state is "
-                                "elegible for transitionning"
-                            )
-                        )
-                    if target_state_id not in next_states.ids:
-                        raise exceptions.ValidationError(
-                            _(u"State is not in eligible target states")
-                        )
-
             # Search for elected transition
-            transition_elected = self.env["crapo.transition"].search(
-                [
-                    ("from_state", "=", self.state.id),
-                    ("to_state", "=", target_state_id),
-                ],
-                limit=1,
-            )
+            transition = self._get_transition(target_state_id)
 
-            if transition_elected:
-                is_valid = True
+            if transition:
+                result = True
 
-                # Test preconditions
-                if transition_elected.preconditions:
-                    for obj in self:
-                        try:
-                            is_valid = safe_eval(
-                                transition_elected.preconditions,
-                                {"object": obj, "env": self.env},
-                            )
-                        except Exception as e:
-                            logging.error(
-                                (
-                                    "CRAPO: Failed to validate transition "
-                                    "preconditions: %s"
-                                ),
-                                str(e),
-                            )
-                            is_valid = False
+                if transition.write_before:
+                    result = super(ObjectWithStateMixin, self).write(values)
 
-                        # Raise an error if not valid
-                        if not is_valid:
-                            raise exceptions.ValidationError(
-                                _(u"Invalid Pre-conditions for Object: %s")
-                                % obj.display_name
-                            )
+                self.exec_conditions(transition.preconditions, "Pre")
+                self.exec_action(transition.action, transition.async_action)
+                self.exec_conditions(transition.postconditions, "Post")
 
-                # Should we go for it?
-                if is_valid and transition_elected.action:
-                    # does action needs to be taken asynchronously?
-                    action = self.env["crapo.action"].browse(
-                        transition_elected.action.id
+                # Return now if write has already been done
+                if transition.write_before:
+                    return result
+
+        return super(ObjectWithStateMixin, self).write(values)
+
+    def _get_transition(self, target_state_id):
+        """
+            Retrieve transition between two state
+        """
+        # Check if next state is valid
+        current_state = False
+        for rec in self:
+            next_states = rec._next_states()
+            if rec.state.id == target_state_id:
+                current_state = rec.state
+                continue
+            elif not next_states:
+                raise exceptions.ValidationError(
+                    _("No target state is elegible for transitionning")
+                )
+            elif target_state_id not in next_states.ids:
+                raise exceptions.ValidationError(
+                    _("State is not in eligible target states")
+                )
+            elif current_state is not False and current_state != rec.state:
+                raise exceptions.ValidationError(
+                    _("Transitionning is not possible from differents states")
+                )
+            else:
+                current_state = rec.state
+
+        # Search for elected transition
+        transition = self.env["crapo.transition"].search(
+            [
+                ("from_state", "=", current_state.id),
+                ("to_state", "=", target_state_id),
+            ],
+            limit=1,
+        )
+
+        return transition
+
+    def exec_conditions(self, conditions, prefix):
+        """
+            Execute Pre/Postconditions.
+
+            conditions: must be a safe_eval expression
+            prefix: a string to indicate if it's pre or post conditions
+        """
+        if conditions:
+            for rec in self:
+                try:
+                    is_valid = safe_eval(
+                        conditions, {"object": rec, "env": self.env}
                     )
-                    context = {
-                        "active_model": self._name,
-                        "active_id": self.id,
-                        "active_ids": self.ids,
-                    }
-                    if action:
-                        if transition_elected.async_action:
-                            action.with_delay().run_async(context)
-                        else:
-                            action.with_context(context).run()
+                except Exception as err:
+                    logging.error(
+                        "CRAPO: Failed to validate transition"
+                        " %sconditions: %s",
+                        prefix,
+                        str(err),
+                    )
+                    is_valid = False
 
-                # Test postconditions if action is not asynchronous
-                if (
-                    transition_elected.postconditions
-                    and not transition_elected.async_action
-                ):
-                    for obj in self:
-                        try:
-                            is_valid = safe_eval(
-                                transition_elected.postconditions,
-                                {"object": obj, "env": self.env},
-                            )
-                        except Exception as e:
-                            logging.error(
-                                (
-                                    "CRAPO: Failed to validate "
-                                    "transition postconditions: %s"
-                                ),
-                                str(e),
-                            )
-                            is_valid = False
-                        # Raise an error if not valid
-                        if not is_valid:
-                            raise exceptions.ValidationError(
-                                _(u"Invalid Post-conditions for Object: %s")
-                                % obj.display_name
-                            )
+                # Raise an error if not valid
+                if not is_valid:
+                    raise exceptions.ValidationError(
+                        _("Invalid {}-conditions for Object: {}").format(
+                            prefix, rec.display_name
+                        )
+                    )
+
+    def exec_action(self, action, async_action):
+        if action:
+            context = {
+                "active_model": self._name,
+                "active_id": self.id,
+                "active_ids": self.ids,
+            }
+            if async_action:
+                action.with_delay().run_async(context)
+            else:
+                action.with_context(context).run()
 
 
 class StateObjectMixin(object):
@@ -257,7 +275,6 @@ class StateObjectMixin(object):
     """
 
     automaton = fields.Many2one(
-        string="Automaton",
         comodel_name="crapo.automaton",
         default=lambda self: self._get_default_automaton(),
         store=True,
@@ -266,10 +283,7 @@ class StateObjectMixin(object):
     )
 
     default_state = fields.Boolean(
-        string="Default state",
-        help="Might be use as default stage.",
-        default=False,
-        store=True,
+        help="Might be use as default stage.", default=False, store=True
     )
 
     # Transitions (inverse relations)
@@ -296,6 +310,10 @@ class StateObjectMixin(object):
 
     is_end_state = fields.Boolean(
         "End State", compute="_compute_is_end_state", store=True, index=True
+    )
+
+    readonly_fields = fields.Char(
+        help="List of model's fields name separated by comma"
     )
 
     @api.depends("transitions_to", "automaton")
