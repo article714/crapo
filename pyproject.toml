@@ -1,0 +1,6 @@
+# This is a TOML document.
+
+title = "Crapo build system requirement"
+
+[tool.black]
+line-length = 79

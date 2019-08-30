@@ -176,9 +176,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                 if transition.write_before:
                     result = super(ObjectWithStateMixin, self).write(values)
 
-                self.exec_conditions(transition.preconditions, "Pre")
+                self.exec_conditions(transition.precondition_ids, "Pre")
                 self.exec_action(transition.action, transition.async_action)
-                self.exec_conditions(transition.postconditions, "Post")
+                self.exec_conditions(transition.postcondition_ids, "Post")
 
                 # Return now if write has already been done
                 if transition.write_before:
@@ -223,35 +223,46 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
 
         return transition
 
-    def exec_conditions(self, conditions, prefix):
+    def exec_conditions(self, condition_ids, prefix):
         """
             Execute Pre/Postconditions.
 
-            conditions: must be a safe_eval expression
+            condition_ids: must be a crapo.condition object
             prefix: a string to indicate if it's pre or post conditions
         """
-        if conditions:
-            for rec in self:
-                try:
-                    is_valid = safe_eval(
-                        conditions, {"object": rec, "env": self.env}
-                    )
-                except Exception as err:
-                    logging.error(
-                        "CRAPO: Failed to validate transition"
-                        " %sconditions: %s",
-                        prefix,
-                        str(err),
-                    )
-                    is_valid = False
 
-                # Raise an error if not valid
-                if not is_valid:
-                    raise exceptions.ValidationError(
-                        _("Invalid {}-conditions for Object: {}").format(
-                            prefix, rec.display_name
+        if condition_ids:
+            for rec in self:
+                for condition_id in condition_ids:
+                    try:
+                        is_valid = safe_eval(
+                            condition_id.condition,
+                            {"object": rec, "env": self.env},
                         )
-                    )
+                    except Exception as err:
+                        logging.error(
+                            "CRAPO: Failed to validate transition"
+                            " %sconditions: %s",
+                            prefix,
+                            str(err),
+                        )
+                        is_valid = False
+
+                    # Raise an error if not valid
+                    if not is_valid:
+                        raise exceptions.ValidationError(
+                            _(
+                                "Invalid {}-conditions for Object: {} \n"
+                                "{}condition: {} failed \n"
+                                "Details: {}"
+                            ).format(
+                                prefix,
+                                rec.display_name,
+                                prefix,
+                                condition_id.name,
+                                condition_id.description,
+                            )
+                        )
 
     def exec_action(self, action, async_action):
         if action:

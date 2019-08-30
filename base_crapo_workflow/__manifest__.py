@@ -18,7 +18,7 @@
         "security/crapo_business_object.xml",
         "security/automaton.xml",
         "security/automaton_transition.xml",
-        "secutity/condition.xml",
+        "security/condition.xml",
         "security/state.xml",
         "security/workflow.xml",
         "security/workflow_activity.xml",
