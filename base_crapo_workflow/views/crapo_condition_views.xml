@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="view_crapo_condition_tree">
+    <record model="ir.ui.view" 
+        id="view_crapo_condition_tree">
         <field name="name">Automaton conditions</field>
         <field name="model">crapo.condition</field>
         <field name="mode">primary</field>
         <field name="type">tree</field>
-        <field name="arch" type="xml">
+        <field name="arch" 
+            type="xml">
             <tree string="Conditions">
                 <field name="name" />
                 <field name="description" />
                 <field name="condition" />
-                <field name="transition_id" />
             </tree>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_crapo_condition_form">
+    <record model="ir.ui.view" 
+        id="view_crapo_condition_form">
         <field name="name">Automaton conditions</field>
         <field name="model">crapo.condition</field>
         <field name="mode">primary</field>
         <field name="type">form</field>
-        <field name="arch" type="xml">
+        <field name="arch" 
+            type="xml">
             <form string="Conditions definitions">
                 <sheet>
-                    <field name="name" />
-                    <field name="description" />
-                    <field name="condition" />
-                    <field name="transition_id" />
+                    <group>
+                        <field name="name" />
+                        <field name="description" />
+                        <field name="condition" />
+                        <field name="is_precondition" />
+                        <field name="is_postcondition" />
+                    </group>
                 </sheet>
             </form>
         </field>
