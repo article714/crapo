@@ -9,7 +9,7 @@
         <field name="type">tree</field>
         <field name="arch" 
             type="xml">
-            <tree string="Conditions">
+            <tree string="Conditions" default_order="sequence asc">
                 <field name="name" />
                 <field name="description" />
                 <field name="condition" />
@@ -31,6 +31,7 @@
                         <field name="name" />
                         <field name="description" />
                         <field name="condition" />
+                        <field name="sequence" />
                         <field name="is_precondition" />
                         <field name="is_postcondition" />
                     </group>
