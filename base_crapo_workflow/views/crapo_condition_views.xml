@@ -9,7 +9,10 @@
         <field name="type">tree</field>
         <field name="arch" 
             type="xml">
-            <tree string="Conditions" default_order="sequence asc">
+            <tree string="Conditions" 
+                default_order="sequence asc">
+                <field name="sequence" 
+                    widget="handle" />
                 <field name="name" />
                 <field name="description" />
                 <field name="condition" />
