@@ -19,6 +19,8 @@ class Condition(models.Model):
     is_precondition = fields.Boolean(required=True, default=True)
     is_postcondition = fields.Boolean(required=True, default=False)
 
+    sequence = fields.Integer(required=True, default=1)
+    
     transition_id = fields.Many2one(
         string="Transition",
         comodel_name="crapo.transition",
