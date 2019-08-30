@@ -11,6 +11,7 @@ class Condition(models.Model):
 
     _name = "crapo.condition"
     _description = "Condition description"
+    _order = "sequence, name"
 
     name = fields.Char(required=True)
     description = fields.Text(required=True)
@@ -20,7 +21,7 @@ class Condition(models.Model):
     is_postcondition = fields.Boolean(required=True, default=False)
 
     sequence = fields.Integer(required=True, default=1)
-    
+
     transition_id = fields.Many2one(
         string="Transition",
         comodel_name="crapo.transition",
