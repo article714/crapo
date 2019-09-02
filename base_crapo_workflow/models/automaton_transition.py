@@ -62,8 +62,9 @@ class StateMachineTransition(models.Model):
         help=(
             "Conditions to be checked before "
             "initiating this transition. "
-            "Evaluation environment contains 'object' which is a reference to the object "
-            "to be checked, and 'env' which is a reference to odoo environment"
+            "Evaluation environment contains 'object' which is a reference to"
+            " the object to be checked, and 'env' which is a reference to "
+            "odoo environment"
         ),
         required=False,
         domain=[("is_precondition", "=", True)],
