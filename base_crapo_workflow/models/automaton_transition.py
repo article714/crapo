@@ -55,25 +55,33 @@ class StateMachineTransition(models.Model):
         index=True,
     )
 
-    preconditions = fields.Char(
+    precondition_ids = fields.One2many(
+        "crapo.condition",
+        "transition_id",
         string="Pre-conditions",
-        help="""Conditions to be checked before
- initiating this transition.
-
-Evaluation environment contains 'object' which is a reference to the object
-to be checked, and 'env' which is a reference to odoo environment""",
+        help=(
+            "Conditions to be checked before "
+            "initiating this transition. "
+            "Evaluation environment contains 'object' which is a reference to"
+            " the object to be checked, and 'env' which is a reference to "
+            "odoo environment"
+        ),
         required=False,
+        domain=[("is_precondition", "=", True)],
     )
 
-    postconditions = fields.Char(
+    postcondition_ids = fields.One2many(
+        "crapo.condition",
+        "transition_id",
         string="Post-conditions",
-        help="""
-                    Conditions to be checked before ending this transition.
-                    Evaluation environment contains 'object' which is a
-                    reference to the object to be checked, and 'env' which
-                    is a reference to odoo environment
-                    """,
+        help=(
+            "Conditions to be checked before ending this transition. "
+            "Evaluation environment contains 'object' which is a "
+            "reference to the object to be checked, and 'env' which "
+            "is a reference to odoo environment"
+        ),
         required=False,
+        domain=[("is_postcondition", "=", True)],
     )
 
     action = fields.Many2one(
@@ -105,7 +113,7 @@ change or during the write process (computed fields) """,
            Override to prevent save postcondtions on async_action
         """
         if values.get("async_action"):
-            values["postconditions"] = False
+            values["postcondition_ids"] = False
         return super(StateMachineTransition, self).create(values)
 
     @api.multi
@@ -114,6 +122,6 @@ change or during the write process (computed fields) """,
             Override to prevent save postcondtions on async_action
         """
         if values.get("async_action"):
-            values["postconditions"] = False
+            values["postcondition_ids"] = False
 
         return super(StateMachineTransition, self).write(values)
