@@ -204,7 +204,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
             elif target_state_id not in next_states.ids:
                 raise exceptions.ValidationError(
                     _('State "{}" is not in eligible target states').format(
-                        target_state_id.display_name
+                        self.env["crapo.state"]
+                        .browse(target_state_id)
+                        .display_name
                         if target_state_id
                         else target_state_id
                     )
