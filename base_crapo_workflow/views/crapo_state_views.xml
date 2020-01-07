@@ -39,6 +39,7 @@
                     <field name="automaton" 
                         invisible="1" />
                     <field name="description" />
+                    <field name="default_state" />
                 </group>
                 <group name="ordering" 
                     string="State ordering">
