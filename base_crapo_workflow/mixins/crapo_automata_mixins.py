@@ -6,6 +6,7 @@ from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.addons.queue_job.job import job
 
 from .crapo_readonly_view_mixin import ReadonlyViewMixin
 
@@ -153,7 +154,6 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     # =================
     # Write / Create
     # =================
-
     @api.model
     def create(self, values):
         rec = super(ObjectWithStateMixin, self).create(values)
@@ -201,6 +201,11 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                 self.exec_conditions(transition.precondition_ids, "Pre")
                 self.exec_action(transition.action, transition.async_action)
                 self.exec_conditions(transition.postcondition_ids, "Post")
+
+                for rec in self:
+                    self._event("on_transition").notify(
+                        rec, transition.from_state, transition.to_state
+                    )
 
                 # Return now if write has already been done
                 if transition.write_before:
