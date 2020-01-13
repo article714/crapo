@@ -3,7 +3,7 @@
 # @license: AGPL v3
 
 {
-    "name": u"Crapo: Base Module for workflow management",
+    "name": u"Crapo: Automaton",
     "version": u"12.0.2.0.0",
     "category": u"Crapo Workflows",
     "author": u"Article714",
