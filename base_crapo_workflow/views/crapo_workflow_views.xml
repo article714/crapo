@@ -35,12 +35,16 @@
                 </group>
                 <notebook>
                     <page string="Activities">
-                        <field name="activities" 
-                            context="{'default_workflow':active_id,'current_workflow':active_id}" />
+                        <field name="activity_ids" />
                     </page>
                     <page string="Transitions">
-                        <field name="transitions" 
-                            context="{'default_workflow':active_id,'current_workflow':active_id}"/>
+                        <field name="transition_ids" />
+                    </page>
+                    <page string="Joiners">
+                        <field name="joiner_ids" />
+                    </page>
+                    <page string="Context">
+                        <field name="context_entry_ids" />
                     </page>
                 </notebook>
             </form>
@@ -56,14 +60,14 @@
             <diagram string="Workflow Editor">
                 <node object="crapo.workflow.activity" 
                     shape="rectangle">
-                    <field name="name"/>
+                    <field name="name" />
                 </node>
                 <arrow object="crapo.workflow.transition" 
-                    source="from_activity" 
-                    destination="to_activity" 
+                    source="activity_id" 
+                    destination="joiner_id" 
                     label="['name']">
-                    <field name="from_activity" />
-                    <field name="to_activity" />
+                    <field name="activity_id" />
+                    <field name="joiner_id" />
                 </arrow>
             </diagram>
         </field>

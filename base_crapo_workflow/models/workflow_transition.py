@@ -12,61 +12,29 @@ class WorkflowTransition(models.Model):
     _name = "crapo.workflow.transition"
     _description = "Transition between two activities"
 
-    name = fields.Char(
-        string="Name",
-        help="Transition's name",
-        required=True,
-        translate=True,
-        size=32,
-    )
+    name = fields.Char(help="Transition's name", required=True, size=32,)
 
-    description = fields.Text(
-        string=u"Description", required=False, translate=True, size=256
-    )
+    description = fields.Text(size=256)
 
-    workflow = fields.Many2one(
-        string="Automaton",
-        comodel_name="crapo.workflow",
-        related="from_activity.workflow",
+    workflow_id = fields.Many2one(
+        "crapo.workflow",
+        related="activity_id.workflow_id",
         store=True,
         required=True,
-        index=True,
     )
 
-    from_activity = fields.Many2one(
-        string="From activity",
-        comodel_name="crapo.workflow.activity",
-        ondelete="cascade",
-        required=True,
-        index=True,
+    activity_id = fields.Many2one(
+        "crapo.workflow.activity", string="From activity", required=True,
     )
 
-    to_activity = fields.Many2one(
-        string="To activity",
-        comodel_name="crapo.workflow.activity",
-        ondelete="cascade",
-        required=True,
-        index=True,
+    joiner_id = fields.Many2one(
+        "crapo.workflow.joiner", string="To joiner", required=True,
     )
 
-    transition_kind = fields.Selection(
-        [
-            ("event", "Event triggered"),
-            (
-                "auto",
-                "Automatic when activity ended and preconditions are met",
-            ),
-        ],
-        required=True,
-        default="auto",
-    )
-
-    preconditions = fields.Char(
-        string="Pre-conditions",
+    condition = fields.Char(
         help="""Conditions to be checked before
  initiating this transition.
 
 Evaluation environment contains 'object' which is a reference to the object
 to be checked, and 'env' which is a reference to odoo environment""",
-        required=False,
     )
