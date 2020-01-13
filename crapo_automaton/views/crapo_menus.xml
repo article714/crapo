@@ -5,20 +5,20 @@
     <menuitem id="crapo_automata_menu" 
         parent="crapo_base.crapo_base_menu" 
         name="Automata" 
-        groups="group_crapo_admin" 
+        groups="crapo_base.group_crapo_admin" 
         sequence="20" />
 
     <menuitem id="crapo_list_automata_menu" 
         parent="crapo_automata_menu" 
         name="Automata definitions" 
-        groups="group_crapo_admin" 
+        groups="crapo_base.group_crapo_admin" 
         sequence="20" 
         action="crapo_list_automata_action" />
 
     <menuitem id="crapo_list_actions_menu" 
         parent="crapo_automata_menu" 
         name="Actions definitions" 
-        groups="group_crapo_admin" 
+        groups="crapo_base.group_crapo_admin" 
         sequence="30" 
         action="crapo_list_actions_action" />
 

@@ -4,11 +4,11 @@
 
         <!-- All users should be able to read data -->
 
-        <record id="access_workflow_all" 
+        <record id="access_workflow_state_all" 
             model="ir.model.access">
-            <field name="name">access.workflow.readall</field>
+            <field name="name">access.workflow.state.readall</field>
             <field name="model_id" 
-                ref="model_crapo_workflow" />
+                ref="model_crapo_state" />
             <field name="group_id" 
                 eval="ref('base.group_user')" />
             <field name="perm_read">1</field>
@@ -17,11 +17,11 @@
             <field name="perm_unlink">0</field>
         </record>
 
-        <record id="access_workflow_appadmin" 
+        <record id="access_workflow_state_appadmin" 
             model="ir.model.access">
-            <field name="name">access.workflow.appadmin</field>
+            <field name="name">access.workflow.state.appadmin</field>
             <field name="model_id" 
-                ref="model_crapo_workflow" />
+                ref="model_crapo_state" />
             <field name="group_id" 
                 eval="ref('crapo_base.group_crapo_app_admin')" />
             <field name="perm_read">1</field>
@@ -30,11 +30,11 @@
             <field name="perm_unlink">0</field>
         </record>
 
-        <record id="access_workflow_admin" 
+        <record id="access_workflow_state_admin" 
             model="ir.model.access">
-            <field name="name">access.workflow.admin</field>
+            <field name="name">access.workflow.state.admin</field>
             <field name="model_id" 
-                ref="model_crapo_workflow" />
+                ref="model_crapo_state" />
             <field name="group_id" 
                 eval="ref('crapo_base.group_crapo_admin')" />
             <field name="perm_read">1</field>
@@ -42,6 +42,5 @@
             <field name="perm_create">1</field>
             <field name="perm_unlink">1</field>
         </record>
-
     </data>
 </odoo>
