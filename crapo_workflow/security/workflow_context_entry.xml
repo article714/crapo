@@ -23,7 +23,7 @@
             <field name="model_id" 
                 ref="model_crapo_workflow_context_entry" />
             <field name="group_id" 
-                eval="ref('group_crapo_admin')" />
+                eval="ref('crapo_base.group_crapo_admin')" />
             <field name="perm_read">1</field>
             <field name="perm_write">1</field>
             <field name="perm_create">1</field>
