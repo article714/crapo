@@ -6,7 +6,6 @@ from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
-from odoo.addons.queue_job.job import job
 
 from .crapo_readonly_view_mixin import ReadonlyViewMixin
 

@@ -16,12 +16,7 @@ class WorkflowActivity(models.Model):
         u"Workflow activity: a specialization of server actions for Crapo"
     )
 
-    workflow = fields.Many2one("crapo.workflow")
-
-    # Multi
-    child_ids = fields.Many2many(
-        "crapo.workflow.activity", "rel_crapo_actions"
-    )
+    workflow_id = fields.Many2one("crapo.workflow")
 
     @api.multi
     @job

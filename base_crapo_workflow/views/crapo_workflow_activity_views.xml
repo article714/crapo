@@ -1,57 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_crapo_workflow_activity_form" model="ir.ui.view">
+    <record id="view_crapo_workflow_activity_form" 
+        model="ir.ui.view">
         <field name="name">Workflow Activity</field>
         <field name="model">crapo.workflow.activity</field>
-        <field name="arch" type="xml">
+        <field name="arch" 
+            type="xml">
             <form string="Crapo Action">
                 <header>
-                    <field name="binding_model_id" invisible="1" />
-                    <button name="create_action" string="Create Contextual Action" type="object" class="btn-primary" attrs="{'invisible':[('binding_model_id','!=',False)]}" help="Display an option in the 'More' top-menu in order to run this action." />
-                    <button name="unlink_action" string="Remove Contextual Action" type="object" attrs="{'invisible':[('binding_model_id','=',False)]}" help="Remove 'More' top-menu contextual action related to this action" />
-                    <button name="run" string="Run" type="object" class="btn-primary" attrs="{'invisible':[('model_id', '!=', 20)]}" help="Run this action manually." />
+                    <field name="binding_model_id" 
+                        invisible="1" />
+                    <button name="create_action" 
+                        string="Create Contextual Action" 
+                        type="object" 
+                        class="btn-primary" 
+                        attrs="{'invisible':[('binding_model_id','!=',False)]}" 
+                        help="Display an option in the 'More' top-menu in order to run this action." />
+                    <button name="unlink_action" 
+                        string="Remove Contextual Action" 
+                        type="object" 
+                        attrs="{'invisible':[('binding_model_id','=',False)]}" 
+                        help="Remove 'More' top-menu contextual action related to this action" />
+                    <button name="run" 
+                        string="Run" 
+                        type="object" 
+                        class="btn-primary" 
+                        attrs="{'invisible':[('model_id', '!=', 20)]}" 
+                        help="Run this action manually." />
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name" 
+                            class="oe_edit_only" />
                         <h1>
-                            <field name="name" placeholder="e.g. Update order quantity" />
+                            <field name="name" 
+                                placeholder="e.g. Update order quantity" />
                         </h1>
                     </div>
                     <group name="action_wrapper">
                         <group name="action_content">
                             <field name="model_id" />
-                            <field name="model_name" invisible="1" />
+                            <field name="model_name" 
+                                invisible="1" />
                         </group>
                         <group>
                             <field name="state" />
-                            <field name="type" invisible="1" />
-                            <field name="crud_model_id" attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}" />
-                            <field name="crud_model_name" invisible="1" />
-                            <field name="link_field_id" domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]" attrs="{'invisible': [('state', '!=', 'object_create')]}" />
+                            <field name="type" 
+                                invisible="1" />
+                            <field name="crud_model_id" 
+                                attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}" />
+                            <field name="crud_model_name" 
+                                invisible="1" />
+                            <field name="link_field_id" 
+                                domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]" 
+                                attrs="{'invisible': [('state', '!=', 'object_create')]}" />
                         </group>
                     </group>
                     <notebook>
-                        <page string="Python Code" name="code" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'code')]}">
-                            <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document." />
+                        <page string="Python Code" 
+                            name="code" 
+                            autofocus="autofocus" 
+                            attrs="{'invisible': [('state', '!=', 'code')]}">
+                            <field name="code" 
+                                widget="ace" 
+                                options="{'mode': 'python'}" 
+                                placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document." />
                         </page>
 
-                        <page string="Data to Write" autofocus="autofocus" attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
+                        <page string="Data to Write" 
+                            autofocus="autofocus" 
+                            attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
                             <p attrs="{'invisible': [('model_id', '!=', False)]}">
                                 Please set the Model to Create before choosing values
                             </p>
                             <field name="fields_lines">
-                                <tree string="Field Mappings" editable="bottom">
-                                    <field name="col1" domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]" />
+                                <tree string="Field Mappings" 
+                                    editable="bottom">
+                                    <field name="col1" 
+                                        domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]" />
                                     <field name="type" />
-                                    <field name="resource_ref" attrs="{'readonly': [('type', '!=', 'reference')]}" options="{'hide_model': True}" />
-                                    <field name="value" attrs="{'readonly': [('type', '=', 'reference')]}" force_save="1" />
+                                    <field name="resource_ref" 
+                                        attrs="{'readonly': [('type', '!=', 'reference')]}" 
+                                        options="{'hide_model': True}" />
+                                    <field name="value" 
+                                        attrs="{'readonly': [('type', '=', 'reference')]}" 
+                                        force_save="1" />
                                 </tree>
                             </field>
                         </page>
 
-                        <page string="Actions" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'multi')]}">
+                        <page string="Actions" 
+                            autofocus="autofocus" 
+                            attrs="{'invisible': [('state', '!=', 'multi')]}">
                             <p class="oe_grey">
                                 If several child actions return an action, only the
                                 last one will
@@ -61,10 +102,12 @@
                                 returns an action, or server actions
                                 returning a client action.
                             </p>
-                            <field name="child_ids" domain="[('model_id', '=', model_id)]" />
+                            <field name="child_ids" 
+                                domain="[('model_id', '=', model_id)]" />
                         </page>
 
-                        <page string="Help" attrs="{'invisible': [('state', '!=', 'code')]}">
+                        <page string="Help" 
+                            attrs="{'invisible': [('state', '!=', 'code')]}">
                             <group>
                                 <div style="margin-top: 4px;">
                                     <h3>Help with Python expressions</h3>
@@ -132,10 +175,12 @@
         </field>
     </record>
 
-    <record id="view_crapo_workflow_activity_tree" model="ir.ui.view">
+    <record id="view_crapo_workflow_activity_tree" 
+        model="ir.ui.view">
         <field name="name">Workflow activities</field>
         <field name="model">crapo.workflow.activity</field>
-        <field name="arch" type="xml">
+        <field name="arch" 
+            type="xml">
             <tree string="Crapo Activities">
                 <field name="name" />
                 <field name="state" />
@@ -144,19 +189,34 @@
         </field>
     </record>
 
-    <record id="view_crapo_workflow_activity_search" model="ir.ui.view">
+    <record id="view_crapo_workflow_activity_search" 
+        model="ir.ui.view">
         <field name="name">crapo.workflow.activity.search</field>
         <field name="model">crapo.workflow.activity</field>
-        <field name="arch" type="xml">
+        <field name="arch" 
+            type="xml">
 
             <search string="Crapo Activities">
-                <field name="name" string="Server Action" />
+                <field name="name" 
+                    string="Server Action" />
                 <field name="model_id" />
                 <field name="state" />
-                <group expand="0" string="Group By" colspan="4" col="4">
-                    <filter string="Action Type" name="action_type" domain="[]" context="{'group_by':'state'}" />
-                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}" />
-                    <filter string="Usage" name="usage" domain="[]" context="{'group_by':'usage'}" />
+                <group expand="0" 
+                    string="Group By" 
+                    colspan="4" 
+                    col="4">
+                    <filter string="Action Type" 
+                        name="action_type" 
+                        domain="[]" 
+                        context="{'group_by':'state'}" />
+                    <filter string="Model" 
+                        name="model" 
+                        domain="[]" 
+                        context="{'group_by':'model_id'}" />
+                    <filter string="Usage" 
+                        name="usage" 
+                        domain="[]" 
+                        context="{'group_by':'usage'}" />
                 </group>
             </search>
         </field>
