@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Base menu -->
+    <menuitem id="crapo_base_menu" 
+        name="Automation" 
+        groups="group_crapo_admin" 
+        sequence="10" />
+
+</odoo>

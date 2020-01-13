@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Base menu -->
-    <menuitem id="crapo_base_menu" name="Automation" groups="group_crapo_admin" sequence="10" />
-
     <!-- Automata menu -->
-    <menuitem id="crapo_automata_menu" parent="crapo_base_menu" name="Automata" groups="group_crapo_admin" sequence="20" />
+    <menuitem id="crapo_automata_menu" 
+        parent="crapo_base.crapo_base_menu" 
+        name="Automata" 
+        groups="group_crapo_admin" 
+        sequence="20" />
 
-    <menuitem id="crapo_list_automata_menu" parent="crapo_automata_menu" name="Automata definitions" groups="group_crapo_admin" sequence="20" action="crapo_list_automata_action" />
+    <menuitem id="crapo_list_automata_menu" 
+        parent="crapo_automata_menu" 
+        name="Automata definitions" 
+        groups="group_crapo_admin" 
+        sequence="20" 
+        action="crapo_list_automata_action" />
 
-    <menuitem id="crapo_list_actions_menu" parent="crapo_automata_menu" name="Actions definitions" groups="group_crapo_admin" sequence="30" action="crapo_list_actions_action" />
-
-    <!-- Workflows menu -->
-    <menuitem id="crapo_workflows_menu" parent="crapo_base_menu" name="Workflows" groups="group_crapo_admin" sequence="30" />
-
-    <menuitem id="crapo_list_workflows_menu" parent="crapo_workflows_menu" name="Workflows definitions" groups="group_crapo_admin" sequence="20" action="crapo_list_workflows_action" />
-
-    <menuitem id="crapo_list_activities_menu" parent="crapo_workflows_menu" name="Activities definitions" groups="group_crapo_admin" sequence="30" action="crapo_list_activities_action" />
-
-
+    <menuitem id="crapo_list_actions_menu" 
+        parent="crapo_automata_menu" 
+        name="Actions definitions" 
+        groups="group_crapo_admin" 
+        sequence="30" 
+        action="crapo_list_actions_action" />
 
 </odoo>
