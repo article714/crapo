@@ -24,7 +24,12 @@ class WorkflowListener(Component):
             from_state,
             to_state._module,
         )
-        self.env["crapo.workflow.joiner.event"].with_context(
+        try:
+            mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+        except KeyError:
+            return
+
+        mdl_joiner_event.with_context(
             {"notify_joiner_event": True}
         ).with_delay().notify(
             "transition",
@@ -39,7 +44,12 @@ class WorkflowListener(Component):
         logging.info(
             "OOOOOOOO on_activity_ended OOOOOOOO !!!!! %s, %s", self, record
         )
-        self.env["crapo.workflow.joiner.event"].with_context(
+        try:
+            mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+        except KeyError:
+            return
+
+        mdl_joiner_event.with_context(
             {"notify_joiner_event": True}
         ).with_delay().notify("activity_ended", {"record": record})
 
@@ -56,7 +66,12 @@ class WorkflowListener(Component):
             record._module,
             fields,
         )
-        self.env["crapo.workflow.joiner.event"].with_context(
+        try:
+            mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+        except KeyError:
+            return
+
+        mdl_joiner_event.with_context(
             {"notify_joiner_event": True}
         ).with_delay().notify(
             "record_create", {"record": record, "fields": fields}
@@ -75,7 +90,12 @@ class WorkflowListener(Component):
             record._module,
             fields,
         )
-        self.env["crapo.workflow.joiner.event"].with_context(
+        try:
+            mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+        except KeyError:
+            return
+
+        mdl_joiner_event.with_context(
             {"notify_joiner_event": True}
         ).with_delay().notify(
             "record_write", {"record": record, "fields": fields}
@@ -89,6 +109,11 @@ class WorkflowListener(Component):
         logging.info(
             "OOOOOOOO on_record_unlink OOOOOOOO !!!!! %s, %s", self, record
         )
-        self.env["crapo.workflow.joiner.event"].with_context(
+        try:
+            mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+        except KeyError:
+            return
+
+        mdl_joiner_event.with_context(
             {"notify_joiner_event": True}
         ).with_delay().notify("record_unlink", {"record": record})

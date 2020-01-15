@@ -15,9 +15,10 @@
     "data": [
         "security/workflow.xml",
         "security/workflow_activity.xml",
-        "security/workflow_transition.xml",
         "security/workflow_joiner.xml",
         "security/workflow_context_entry.xml",
+        "security/workflow_context.xml",
+        "security/workflow_context_joiner_event_status.xml",
         "actions/window_actions.xml",
         "views/crapo_menus.xml",
         "views/crapo_workflow_activity_views.xml",

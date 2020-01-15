@@ -37,14 +37,11 @@
                     <page string="Activities">
                         <field name="activity_ids" />
                     </page>
-                    <page string="Transitions">
-                        <field name="transition_ids" />
-                    </page>
                     <page string="Joiners">
                         <field name="joiner_ids" />
                     </page>
                     <page string="Context">
-                        <field name="context_entry_ids" />
+                        <field name="context_ids" />
                     </page>
                 </notebook>
             </form>

@@ -8,6 +8,5 @@ Created on 16 july 2018
 
 from . import workflow
 from . import workflow_activity
-from . import workflow_transition
 from . import workflow_joiner
 from . import workflow_context
