@@ -34,4 +34,6 @@ class WorkflowContextEntry(models.Model):
         if not self.model_id:
             raise UserError(_("This context is not linked to a model"))
 
-        return self.model_id.browse(map(int, self.value.split(",")))
+        return self.env[self.model_id.model].browse(
+            map(int, self.value.split(","))
+        )
