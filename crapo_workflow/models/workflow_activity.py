@@ -19,18 +19,14 @@ class WorkflowActivity(models.Model):
 
     workflow_id = fields.Many2one("crapo.workflow")
 
-    transition_ids = fields.One2many(
-        "crapo.workflow.transition", "activity_id"
-    )
-
     @job
     @api.multi
-    def run(self):
+    def run(self, wf_context_id):
         """
             Runs the server action, possibly in async and add some values to context
         """
 
-        context = {"wf": self.workflow_id, "logging": logging}
+        context = {"wf": wf_context_id, "logging": logging}
 
         res = False
         for rec in self.with_context(**context):

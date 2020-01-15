@@ -25,19 +25,24 @@ class WorkflowJoiner(models.Model):
     event_logical_condition = fields.Char()
 
     @job
-    def check_and_run(self):
+    def check_and_run(self, wf_context_id):
         for rec in self:
+            event_status_ids = wf_context_id.context_event_status_ids.filtered(
+                lambda event_status: event_status.joiner_id == rec.id
+            )
             if rec.event_logical_condition:
                 context = {}
-                for event in rec.event_ids:
-                    context[event.name] = event.done
+                for event_status in event_status_ids:
+                    context[
+                        event_status.joiner_event_id.name
+                    ] = event_status.done
                 run = safe_eval(rec.event_logical_condition, context)
             else:
-                run = all(rec.event_ids.mapped("done"))
+                run = all(event_status_ids).mapped("done")
 
             if run:
                 for activity_id in rec.to_activity_ids:
-                    activity_id.with_delay().run()
+                    activity_id.with_delay().run(wf_context_id)
 
     def check_event_logical_condition(self):
         for rec in self:
@@ -86,11 +91,13 @@ class WorkflowJoinerEvent(models.Model):
 
     joiner_id = fields.Many2one("crapo.workflow.joiner")
 
-    done = fields.Boolean(default=False, required=True)
-
     model_id = fields.Many2one("ir.model", required=True)
 
-    record_id = fields.Integer()
+    context_joiner_event_status_ids = fields.One2many(
+        "crapo.workflow.context.joiner.event.status", "joiner_event_id"
+    )
+
+    record_id_context_key = fields.Char()
 
     condition = fields.Char(
         help="""Conditions to be checked before set this event as done.""",
@@ -113,7 +120,7 @@ class WorkflowJoinerEvent(models.Model):
     @api.model
     def notify(self, event_type, values):
 
-        domain = [("event_type", "=", event_type), ("done", "=", False)]
+        domain = [("event_type", "=", event_type)]
         context = {"env": self.env, "values": values}
         if event_type == "transition":
             from_state = values["from_state"]
@@ -131,19 +138,19 @@ class WorkflowJoinerEvent(models.Model):
                 ("model_id", "=", self.env["ir.model"]._get_id(record._name),)
             )
 
-            if event_type in (
-                "record_write",
-                "record_unlink",
-                "activity_ended",
-            ):
-                domain.append(("record_id", "=", record.id))
-
-        logging.info("SAERCH DOMAIN : %s", domain)
-        records = self.search(domain).filtered(
-            lambda rec: not rec.condition or safe_eval(rec.condition, context,)
-        )
-        if records:
-            records.write({"done": True})
+        logging.info("SEARCH DOMAIN : %s", domain)
+        for rec_event in self.with_context(
+            {"notify_joiner_event": True}
+        ).search(domain):
+            for rec_status in rec_event.context_joiner_event_status_ids:
+                if (
+                    not rec_event.record_id_context_key
+                    or rec_status.record_id == record.id
+                ) and (
+                    not rec_event.condition
+                    or safe_eval(rec_event.condition, context,)
+                ):
+                    rec_status.write({"done": True})
 
     # ================================
     # Write / Create
@@ -158,13 +165,3 @@ class WorkflowJoinerEvent(models.Model):
             rec.name = "_".join((rec.event_type, str(rec.id)))
 
         return rec
-
-    @api.multi
-    def write(self, values):
-
-        res = super(WorkflowJoinerEvent, self).write(values)
-
-        if values.get("done"):
-            self.mapped("joiner_id").with_delay().check_and_run()
-
-        return res
