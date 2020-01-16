@@ -1,5 +1,6 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+import logging
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -22,16 +23,18 @@ class WorkflowContext(models.Model):
     def set_context_entry(self, key, value):
         data = {"key": key, "value": value}
         if isinstance(value, models.Model):
-            data["value"] = ",".join(value.ids())
-            data["model_id"] = value
+            data["value"] = ",".join(map(str, value.ids))
+            data["model_id"] = self.env["ir.model"]._get_id(value._name)
 
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
         if entry:
+            logging.info("########################################### AAAAA")
             entry.write(data)
         else:
-            self.write({"context_entry_ids": (0, False, data)})
+            logging.info("########################################### BBBB")
+            self.write({"context_entry_ids": [(0, False, data)]})
 
-    def get_context_entry(self, key):
+    def get_context_entry(self, key, convert=True):
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
 
         if not entry:
@@ -39,7 +42,7 @@ class WorkflowContext(models.Model):
                 _("There is not context entry for key: {}").format(key)
             )
 
-        if entry.model_id:
+        if convert and entry.model_id:
             return entry.get_recordset()
 
         return entry.value
@@ -92,7 +95,7 @@ class WorkflowContextJoinerEventStatus(models.Model):
     )
 
     joiner_id = fields.Many2one(
-        "crapo.workflow.joiner", related="joiner_event_id.joiner_id"
+        "crapo.workflow.joiner", related="joiner_event_id.joiner_id",
     )
 
     record_id = fields.Integer()
@@ -104,10 +107,11 @@ class WorkflowContextJoinerEventStatus(models.Model):
         if rec.joiner_event_id.record_id_context_key:
             rec.record_id = int(
                 rec.wf_context_id.get_context_entry(
-                    rec.joiner_event_id.record_id_context_key
+                    rec.joiner_event_id.record_id_context_key, convert=False
                 )
             )
-
+        elif rec.joiner_event_id.event_type == "activity_ended":
+            rec.record_id == rec.joiner_event_id.activity_id.id
         return rec
 
     @api.multi

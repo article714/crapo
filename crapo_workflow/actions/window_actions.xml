@@ -11,7 +11,7 @@
         <field name="auto_search" 
             eval="True" />
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,diagram</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
     <!-- List of activities -->

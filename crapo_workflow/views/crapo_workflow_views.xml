@@ -47,27 +47,4 @@
             </form>
         </field>
     </record>
-
-    <record id="view_workflow_diagram" 
-        model="ir.ui.view">
-        <field name="name">workflow.diagram</field>
-        <field name="model">crapo.workflow</field>
-        <field name="arch" 
-            type="xml">
-            <diagram string="Workflow Editor">
-                <node object="crapo.workflow.activity" 
-                    shape="rectangle">
-                    <field name="name" />
-                </node>
-                <arrow object="crapo.workflow.transition" 
-                    source="activity_id" 
-                    destination="joiner_id" 
-                    label="['name']">
-                    <field name="activity_id" />
-                    <field name="joiner_id" />
-                </arrow>
-            </diagram>
-        </field>
-    </record>
-
 </odoo>
