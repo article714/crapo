@@ -23,6 +23,7 @@
         "views/crapo_menus.xml",
         "views/crapo_workflow_activity_views.xml",
         "views/crapo_workflow_views.xml",
+        "views/crapo_workflow_joiner_event_views.xml",
     ],
     "installable": True,
     "images": [],

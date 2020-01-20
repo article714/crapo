@@ -19,7 +19,12 @@ class WorkflowJoiner(models.Model):
             "unique_init_per_wf",
             "unique(init_joiner, workflow_id)",
             "Worklfow can have only one init joiner",
-        )
+        ),
+        (
+            "unique_end_per_wf",
+            "unique(end_joiner, workflow_id)",
+            "Worklfow can have only one end joiner",
+        ),
     ]
 
     _name = "crapo.workflow.joiner"
@@ -88,6 +93,43 @@ class WorkflowJoiner(models.Model):
             )
 
         activity_id.with_delay().run(wf_context_id)
+
+    @api.onchange("from_activity_ids")
+    def activity_ended_event_consistency(self):
+        self.ensure_one()
+        values = []
+
+        event_activity_ended_ids = self.event_ids.filtered(
+            lambda evt: evt.event_type == "activity_ended"
+        )
+
+        # Add missing acitivy_ended event
+        for activity_id in (
+            self.from_activity_ids
+            - event_activity_ended_ids.mapped("activity_id")
+        ):
+            values.append(
+                (
+                    0,
+                    0,
+                    {
+                        "event_type": "activity_ended",
+                        "activity_id": activity_id.id,
+                        "model_id": self.env["ir.model"]._get_id(
+                            activity_id._name
+                        ),
+                    },
+                )
+            )
+
+        # Remove extra activity_ended event
+        for event_id in event_activity_ended_ids.filtered(
+            lambda evt: evt.activity_id not in self.from_activity_ids
+        ):
+            values.append((2, event_id.id, 0))
+
+        if values:
+            self.update({"event_ids": values})
 
     def check_event_logical_condition(self):
         for rec in self:
