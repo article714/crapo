@@ -10,7 +10,7 @@ class WorkflowContext(models.Model):
 
     _name = "crapo.workflow.context"
 
-    workflow_id = fields.Many2one("crapo.workflow")
+    workflow_id = fields.Many2one("crapo.workflow", ondelete="cascade")
 
     context_entry_ids = fields.One2many(
         "crapo.workflow.context.entry", "wf_context_id"
@@ -60,7 +60,9 @@ class WorkflowContextEntry(models.Model):
         )
     ]
 
-    wf_context_id = fields.Many2one("crapo.workflow.context")
+    wf_context_id = fields.Many2one(
+        "crapo.workflow.context", ondelete="cascade"
+    )
 
     model_id = fields.Many2one("ir.model")
 
@@ -86,7 +88,9 @@ class WorkflowContextJoinerEventStatus(models.Model):
 
     _name = "crapo.workflow.context.joiner.event.status"
 
-    wf_context_id = fields.Many2one("crapo.workflow.context", required=True)
+    wf_context_id = fields.Many2one(
+        "crapo.workflow.context", required=True, ondelete="cascade"
+    )
 
     done = fields.Boolean(default=False, required=True)
 

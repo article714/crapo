@@ -39,6 +39,8 @@ class WorkflowJoiner(models.Model):
 
     init_joiner = fields.Boolean(default=False, required=True)
 
+    end_joiner = fields.Boolean(default=False, required=True)
+
     init_record_key = fields.Char()
 
     @job
@@ -59,8 +61,11 @@ class WorkflowJoiner(models.Model):
                 run = all(event_status_ids.mapped("done"))
 
             if run:
-                for activity_id in rec.to_activity_ids:
-                    rec.start_activity(activity_id, wf_context_id)
+                if rec.end_joiner:
+                    wf_context_id.unlink()
+                else:
+                    for activity_id in rec.to_activity_ids:
+                        rec.start_activity(activity_id, wf_context_id)
 
     def start_activity(self, activity_id, wf_context_id):
         self.ensure_one()
