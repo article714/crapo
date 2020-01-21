@@ -11,7 +11,7 @@
     "website": u"https://www.article714.org",
     "summary": u""" Fexible tool to manage automata & workflows
      for your odoo objects""",
-    "depends": ["queue_job", "connector", "crapo_base"],
+    "depends": ["queue_job", "crapo_base"],
     "data": [
         "security/workflow.xml",
         "security/workflow_activity.xml",

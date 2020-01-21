@@ -17,4 +17,4 @@ class Base(models.AbstractModel):
         mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
         for rec in self:
             values["record"] = rec
-            mdl_joiner_event.notify(name, values)
+            mdl_joiner_event.with_delay().notify(name, values)
