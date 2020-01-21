@@ -8,7 +8,7 @@ License: AGPL-3
 
 
 from odoo import models, fields, api
-from odoo.addons.base_crapo_workflow.mixins.crapo_automata_mixins import (
+from odoo.addons.crapo_automaton.mixins.crapo_automata_mixins import (
     ObjectWithStateMixin,
 )
 

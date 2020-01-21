@@ -8,7 +8,7 @@ License: AGPL-3
 
 from odoo import models, api
 from psycopg2.sql import Identifier, SQL
-from odoo.addons.base_crapo_workflow.mixins import (
+from odoo.addons.crapo_automaton.mixins import (
     crapo_automata_mixins,
 )  # pylint: disable=odoo-addons-relative-import
 

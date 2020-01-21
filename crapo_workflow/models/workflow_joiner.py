@@ -247,7 +247,11 @@ class WorkflowJoinerEvent(models.Model):
         for rec_event in self.with_context(
             {"notify_joiner_event": True}
         ).search(domain):
-            logging.info("UUUUUUUUUUUUUUUUUUUUUUUUUUU")
+            logging.info(
+                "UUUUUUUUUUUUUUUUUUUUUUUUUUU %s, %s",
+                rec_event,
+                rec_event.joiner_id,
+            )
             if rec_event.joiner_id.init_joiner:
                 logging.info(
                     "GGGGGGGGGGGGGGGGGGGGGGGGGG %s, %s",
