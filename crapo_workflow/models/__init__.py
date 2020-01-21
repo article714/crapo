@@ -10,3 +10,4 @@ from . import workflow
 from . import workflow_activity
 from . import workflow_joiner
 from . import workflow_context
+from . import base
