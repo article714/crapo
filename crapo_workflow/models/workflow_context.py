@@ -16,8 +16,8 @@ class WorkflowContext(models.Model):
         "crapo.workflow.context.entry", "wf_context_id"
     )
 
-    context_event_status_ids = fields.One2many(
-        "crapo.workflow.context.event.status", "wf_context_id"
+    context_event_ids = fields.One2many(
+        "crapo.workflow.context.event", "wf_context_id"
     )
 
     def set_context_entry(self, key, value):
@@ -82,9 +82,9 @@ class WorkflowContextEntry(models.Model):
         )
 
 
-class WorkflowContextTriggerEventStatus(models.Model):
+class WorkflowContextEvent(models.Model):
 
-    _name = "crapo.workflow.context.event.status"
+    _name = "crapo.workflow.context.event"
 
     wf_context_id = fields.Many2one(
         "crapo.workflow.context", required=True, ondelete="cascade"
@@ -102,7 +102,7 @@ class WorkflowContextTriggerEventStatus(models.Model):
 
     @api.model
     def create(self, values):
-        rec = super(WorkflowContextTriggerEventStatus, self).create(values)
+        rec = super(WorkflowContextEvent, self).create(values)
 
         if rec.event_id.record_id_context_key:
             rec.record_id = int(
@@ -117,7 +117,7 @@ class WorkflowContextTriggerEventStatus(models.Model):
     @api.multi
     def write(self, values):
 
-        res = super(WorkflowContextTriggerEventStatus, self).write(values)
+        res = super(WorkflowContextEvent, self).write(values)
 
         if values.get("done"):
             for wf_context_id in self.mapped("wf_context_id"):

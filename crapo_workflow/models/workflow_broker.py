@@ -37,7 +37,7 @@ class WorkflowBroker(models.TransientModel):
                 new_ctx = self.env["crapo.workflow.context"].create(
                     {
                         "workflow_id": rec_event.trigger_id.workflow_id.id,
-                        "context_event_status_ids": [
+                        "context_event_ids": [
                             (0, False, {"event_id": rec_event.id,},)
                         ],
                     }
@@ -45,17 +45,17 @@ class WorkflowBroker(models.TransientModel):
                 new_ctx.set_context_entry(
                     rec_event.trigger_id.init_record_key, record
                 )
-                new_ctx.context_event_status_ids[0].write({"done": True})
+                new_ctx.context_event_ids[0].write({"done": True})
             else:
 
-                for rec_status in rec_event.context_event_status_ids:
-                    context["wf"] = rec_status.wf_context_id
+                for rec_ctx_event in rec_event.context_event_ids:
+                    context["wf"] = rec_ctx_event.wf_context_id
 
                     if (
                         not rec_event.record_id_context_key
-                        or rec_status.record_id == record.id
+                        or rec_ctx_event.record_id == record.id
                     ) and (
                         not rec_event.condition
                         or safe_eval(rec_event.condition, context,)
                     ):
-                        rec_status.write({"done": True})
+                        rec_ctx_event.write({"done": True})

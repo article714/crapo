@@ -18,7 +18,7 @@
         "security/workflow_trigger.xml",
         "security/workflow_context_entry.xml",
         "security/workflow_context.xml",
-        "security/workflow_context_event_status.xml",
+        "security/workflow_context_event.xml",
         "security/workflow_broker.xml",
         "actions/window_actions.xml",
         "views/crapo_menus.xml",
