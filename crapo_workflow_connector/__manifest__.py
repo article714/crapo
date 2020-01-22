@@ -3,7 +3,7 @@
 # @license: AGPL v3
 
 {
-    "name": u"Crapo: Workflow",
+    "name": u"Crapo: Workflow connector",
     "version": u"12.0.2.0.0",
     "category": u"Crapo Workflows",
     "author": u"Article714",

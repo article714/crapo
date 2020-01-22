@@ -4,11 +4,11 @@
 
         <!-- All users should be able to read data -->
 
-        <record id="access_workflow_joiner_all" 
+        <record id="access_workflow_trigger_all" 
             model="ir.model.access">
-            <field name="name">access.workflow.joiner.readall</field>
+            <field name="name">access.workflow.trigger.readall</field>
             <field name="model_id" 
-                ref="model_crapo_workflow_joiner" />
+                ref="model_crapo_workflow_trigger" />
             <field name="group_id" 
                 eval="ref('base.group_user')" />
             <field name="perm_read">1</field>
@@ -17,11 +17,11 @@
             <field name="perm_unlink">0</field>
         </record>
 
-        <record id="access_workflow_joiner_admin" 
+        <record id="access_workflow_trigger_admin" 
             model="ir.model.access">
-            <field name="name">access.workflow.joiner.admin</field>
+            <field name="name">access.workflow.trigger.admin</field>
             <field name="model_id" 
-                ref="model_crapo_workflow_joiner" />
+                ref="model_crapo_workflow_trigger" />
             <field name="group_id" 
                 eval="ref('crapo_base.group_crapo_admin')" />
             <field name="perm_read">1</field>
@@ -30,11 +30,11 @@
             <field name="perm_unlink">1</field>
         </record>
 
-        <record id="access_workflow_joiner_event_all" 
+        <record id="access_workflow_event_all" 
             model="ir.model.access">
-            <field name="name">access.workflow.joiner.event.readall</field>
+            <field name="name">access.workflow.event.readall</field>
             <field name="model_id" 
-                ref="model_crapo_workflow_joiner_event" />
+                ref="model_crapo_workflow_event" />
             <field name="group_id" 
                 eval="ref('base.group_user')" />
             <field name="perm_read">1</field>
@@ -43,11 +43,11 @@
             <field name="perm_unlink">0</field>
         </record>
 
-        <record id="access_workflow_joiner_event_admin" 
+        <record id="access_workflow_event_admin" 
             model="ir.model.access">
-            <field name="name">access.workflow.joiner.event.admin</field>
+            <field name="name">access.workflow.event.admin</field>
             <field name="model_id" 
-                ref="model_crapo_workflow_joiner_event" />
+                ref="model_crapo_workflow_event" />
             <field name="group_id" 
                 eval="ref('crapo_base.group_crapo_admin')" />
             <field name="perm_read">1</field>

@@ -17,7 +17,7 @@ class WorkflowContext(models.Model):
     )
 
     context_event_status_ids = fields.One2many(
-        "crapo.workflow.context.joiner.event.status", "wf_context_id"
+        "crapo.workflow.context.event.status", "wf_context_id"
     )
 
     def set_context_entry(self, key, value):
@@ -28,10 +28,8 @@ class WorkflowContext(models.Model):
 
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
         if entry:
-            logging.info("########################################### AAAAA")
             entry.write(data)
         else:
-            logging.info("########################################### BBBB")
             self.write({"context_entry_ids": [(0, False, data)]})
 
     def get_context_entry(self, key, convert=True):
@@ -84,9 +82,9 @@ class WorkflowContextEntry(models.Model):
         )
 
 
-class WorkflowContextJoinerEventStatus(models.Model):
+class WorkflowContextTriggerEventStatus(models.Model):
 
-    _name = "crapo.workflow.context.joiner.event.status"
+    _name = "crapo.workflow.context.event.status"
 
     wf_context_id = fields.Many2one(
         "crapo.workflow.context", required=True, ondelete="cascade"
@@ -94,38 +92,36 @@ class WorkflowContextJoinerEventStatus(models.Model):
 
     done = fields.Boolean(default=False, required=True)
 
-    joiner_event_id = fields.Many2one(
-        "crapo.workflow.joiner.event", required=True
-    )
+    event_id = fields.Many2one("crapo.workflow.event", required=True)
 
-    joiner_id = fields.Many2one(
-        "crapo.workflow.joiner", related="joiner_event_id.joiner_id",
+    trigger_id = fields.Many2one(
+        "crapo.workflow.trigger", related="event_id.trigger_id",
     )
 
     record_id = fields.Integer()
 
     @api.model
     def create(self, values):
-        rec = super(WorkflowContextJoinerEventStatus, self).create(values)
+        rec = super(WorkflowContextTriggerEventStatus, self).create(values)
 
-        if rec.joiner_event_id.record_id_context_key:
+        if rec.event_id.record_id_context_key:
             rec.record_id = int(
                 rec.wf_context_id.get_context_entry(
-                    rec.joiner_event_id.record_id_context_key, convert=False
+                    rec.event_id.record_id_context_key, convert=False
                 )
             )
-        elif rec.joiner_event_id.event_type == "activity_ended":
-            rec.record_id == rec.joiner_event_id.activity_id.id
+        elif rec.event_id.event_type == "activity_ended":
+            rec.record_id == rec.event_id.activity_id.id
         return rec
 
     @api.multi
     def write(self, values):
 
-        res = super(WorkflowContextJoinerEventStatus, self).write(values)
+        res = super(WorkflowContextTriggerEventStatus, self).write(values)
 
         if values.get("done"):
             for wf_context_id in self.mapped("wf_context_id"):
-                self.mapped("joiner_id").with_delay().check_and_run(
+                self.mapped("trigger_id").with_delay().check_and_run(
                     wf_context_id=wf_context_id
                 )
 

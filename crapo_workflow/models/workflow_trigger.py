@@ -9,42 +9,29 @@ from odoo.addons.queue_job.job import job
 from odoo.tools.safe_eval import safe_eval
 
 
-class WorkflowJoiner(models.Model):
+class WorkflowTrigger(models.Model):
     """
-        A joiner step in a Workflow
+        A trigger step in a Workflow
     """
 
-    _sql_constraints = [
-        (
-            "unique_init_per_wf",
-            "unique(init_joiner, workflow_id)",
-            "Worklfow can have only one init joiner",
-        ),
-        (
-            "unique_end_per_wf",
-            "unique(end_joiner, workflow_id)",
-            "Worklfow can have only one end joiner",
-        ),
-    ]
-
-    _name = "crapo.workflow.joiner"
+    _name = "crapo.workflow.trigger"
 
     workflow_id = fields.Many2one("crapo.workflow")
 
     to_activity_ids = fields.Many2many(
-        "crapo.workflow.activity", "crapo_workflow_tj_joiner_activity"
+        "crapo.workflow.activity", "crapo_workflow_tj_trigger_activity"
     )
     from_activity_ids = fields.Many2many(
-        "crapo.workflow.activity", "crapo_workflow_tj_activity_joiner"
+        "crapo.workflow.activity", "crapo_workflow_tj_activity_trigger"
     )
 
-    event_ids = fields.One2many("crapo.workflow.joiner.event", "joiner_id")
+    event_ids = fields.One2many("crapo.workflow.event", "trigger_id")
 
     event_logical_condition = fields.Char()
 
-    init_joiner = fields.Boolean(default=False, required=True)
+    init_trigger = fields.Boolean(default=False, required=True)
 
-    end_joiner = fields.Boolean(default=False, required=True)
+    end_trigger = fields.Boolean(default=False, required=True)
 
     init_record_key = fields.Char()
 
@@ -52,21 +39,19 @@ class WorkflowJoiner(models.Model):
     def check_and_run(self, wf_context_id):
         for rec in self:
             event_status_ids = wf_context_id.context_event_status_ids.filtered(
-                lambda event_status: event_status.joiner_id == rec
+                lambda event_status: event_status.trigger_id == rec
             )
             if rec.event_logical_condition:
                 context = {"wf": wf_context_id}
                 for event_status in event_status_ids:
-                    context[
-                        event_status.joiner_event_id.name
-                    ] = event_status.done
+                    context[event_status.event_id.name] = event_status.done
                 logging.info("YYYYYYYYYYYYYYYYYYYYYYY %s", context)
                 run = safe_eval(rec.event_logical_condition, context)
             else:
                 run = all(event_status_ids.mapped("done"))
 
             if run:
-                if rec.end_joiner:
+                if rec.end_trigger:
                     wf_context_id.unlink()
                 else:
                     for activity_id in rec.to_activity_ids:
@@ -76,7 +61,7 @@ class WorkflowJoiner(models.Model):
         self.ensure_one()
 
         for rec in wf_context_id.context_event_status_ids.filtered(
-            lambda rec: rec.joiner_id == self
+            lambda rec: rec.trigger_id == self
         ):
             logging.info("AZERTRTYYYYY UNLINK %s", rec)
             rec.unlink()
@@ -86,7 +71,7 @@ class WorkflowJoiner(models.Model):
             wf_context_id.write(
                 {
                     "context_event_status_ids": [
-                        (0, False, {"joiner_event_id": rec_event.id})
+                        (0, False, {"event_id": rec_event.id})
                         for rec_event in rec.event_ids
                     ]
                 }
@@ -147,57 +132,57 @@ class WorkflowJoiner(models.Model):
                         )
                 safe_eval(rec.event_logical_condition, context)
 
-    def check_init_joiner(self):
+    def check_init_trigger(self):
         """
-            Test if an init joiner has at most 1 joiner event
+            Test if an init trigger has at most 1 trigger event
         """
         for rec in self:
-            if rec.init_joiner and len(rec.event_ids) > 1:
+            if rec.init_trigger and len(rec.event_ids) > 1:
                 raise ValidationError(
-                    _("Init joiner can have only one joiner event")
+                    _("Init trigger can have only one trigger event")
                 )
 
     @api.model
     def create(self, values):
-        rec = super(WorkflowJoiner, self).create(values)
+        rec = super(WorkflowTrigger, self).create(values)
         if values.get("event_logical_condition"):
             rec.check_event_logical_condition()
 
-        rec.check_init_joiner()
+        rec.check_init_trigger()
 
         return rec
 
     @api.multi
     def write(self, values):
-        res = super(WorkflowJoiner, self).write(values)
+        res = super(WorkflowTrigger, self).write(values)
         if values.get("event_logical_condition"):
             self.check_event_logical_condition()
 
-        self.check_init_joiner()
+        self.check_init_trigger()
 
         return res
 
 
-class WorkflowJoinerEvent(models.Model):
+class WorkflowEvent(models.Model):
 
-    _name = "crapo.workflow.joiner.event"
+    _name = "crapo.workflow.event"
 
     _sql_constraints = [
         (
-            "unique_name_per_joiner_id",
-            "unique(name, joiner_id)",
-            "Joiner event can't have the same name in the same joiner",
+            "unique_name_per_trigger_id",
+            "unique(name, trigger_id)",
+            "Trigger event can't have the same name in the same trigger",
         )
     ]
 
     name = fields.Char()
 
-    joiner_id = fields.Many2one("crapo.workflow.joiner")
+    trigger_id = fields.Many2one("crapo.workflow.trigger")
 
     model_id = fields.Many2one("ir.model", required=True)
 
-    context_joiner_event_status_ids = fields.One2many(
-        "crapo.workflow.context.joiner.event.status", "joiner_event_id"
+    context_event_status_ids = fields.One2many(
+        "crapo.workflow.context.event.status", "event_id"
     )
 
     activity_id = fields.Many2one("crapo.workflow.activity")
@@ -218,73 +203,6 @@ class WorkflowJoinerEvent(models.Model):
         ]
     )
 
-    transition_from_state = fields.Many2one("crapo.state")
-    transition_to_state = fields.Many2one("crapo.state")
-
-    @job
-    @api.model
-    def notify(self, event_type, values):
-
-        domain = [("event_type", "=", event_type)]
-        context = {"env": self.env, "values": values}
-        if event_type == "transition":
-            from_state = values["from_state"]
-            to_state = values["to_state"]
-
-            if from_state:
-                domain.append(("transition_from_state", "=", from_state.id))
-
-            domain.append(("transition_to_state", "=", to_state.id))
-
-        else:
-            record = values["record"]
-
-            domain.append(
-                ("model_id", "=", self.env["ir.model"]._get_id(record._name),)
-            )
-
-        logging.info("SEARCH DOMAIN : %s", domain)
-        for rec_event in self.with_context(
-            {"notify_joiner_event": True}
-        ).search(domain):
-            logging.info(
-                "UUUUUUUUUUUUUUUUUUUUUUUUUUU %s, %s",
-                rec_event,
-                rec_event.joiner_id,
-            )
-            if rec_event.joiner_id.init_joiner:
-                logging.info(
-                    "GGGGGGGGGGGGGGGGGGGGGGGGGG %s, %s",
-                    rec_event,
-                    rec_event.joiner_id,
-                )
-                new_ctx = self.env["crapo.workflow.context"].create(
-                    {
-                        "workflow_id": rec_event.joiner_id.workflow_id.id,
-                        "context_event_status_ids": [
-                            (0, False, {"joiner_event_id": rec_event.id,},)
-                        ],
-                    }
-                )
-                new_ctx.set_context_entry(
-                    rec_event.joiner_id.init_record_key, record
-                )
-                new_ctx.context_event_status_ids[0].write({"done": True})
-            else:
-                logging.info("OLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-                for rec_status in rec_event.context_joiner_event_status_ids:
-                    context["wf"] = rec_status.wf_context_id
-                    logging.info("ZAZZZZZZZZZZZZZZZZZZZZZZ")
-                    if (
-                        not rec_event.record_id_context_key
-                        or rec_status.record_id == record.id
-                    ) and (
-                        not rec_event.condition
-                        or safe_eval(rec_event.condition, context,)
-                    ):
-                        logging.info("VVVVVVVVVVVVVVVVVVVVVV \o/")
-                        rec_status.write({"done": True})
-
     # ================================
     # Write / Create
     # ================================
@@ -292,7 +210,7 @@ class WorkflowJoinerEvent(models.Model):
     @api.model
     def create(self, values):
 
-        rec = super(WorkflowJoinerEvent, self).create(values)
+        rec = super(WorkflowEvent, self).create(values)
 
         if not rec.name:
             rec.name = "_".join((rec.event_type, str(rec.id)))
