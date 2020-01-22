@@ -38,17 +38,17 @@ class WorkflowTrigger(models.Model):
     @job
     def check_and_run(self, wf_context_id):
         for rec in self:
-            event_status_ids = wf_context_id.context_event_status_ids.filtered(
-                lambda event_status: event_status.trigger_id == rec
+            context_event_ids = wf_context_id.context_event_ids.filtered(
+                lambda context_event: context_event.trigger_id == rec
             )
             if rec.event_logical_condition:
                 context = {"wf": wf_context_id}
-                for event_status in event_status_ids:
-                    context[event_status.event_id.name] = event_status.done
-                logging.info("YYYYYYYYYYYYYYYYYYYYYYY %s", context)
+                for context_event in context_event_ids:
+                    context[context_event.event_id.name] = context_event.done
+
                 run = safe_eval(rec.event_logical_condition, context)
             else:
-                run = all(event_status_ids.mapped("done"))
+                run = all(context_event_ids.mapped("done"))
 
             if run:
                 if rec.end_trigger:
@@ -60,17 +60,15 @@ class WorkflowTrigger(models.Model):
     def start_activity(self, activity_id, wf_context_id):
         self.ensure_one()
 
-        for rec in wf_context_id.context_event_status_ids.filtered(
+        for rec in wf_context_id.context_event_ids.filtered(
             lambda rec: rec.trigger_id == self
         ):
-            logging.info("AZERTRTYYYYY UNLINK %s", rec)
             rec.unlink()
 
         for rec in self.search([("from_activity_ids", "=", activity_id.id)]):
-            logging.info("AZERTRTYYYYY ADD %s", rec)
             wf_context_id.write(
                 {
-                    "context_event_status_ids": [
+                    "context_event_ids": [
                         (0, False, {"event_id": rec_event.id})
                         for rec_event in rec.event_ids
                     ]
@@ -181,8 +179,8 @@ class WorkflowEvent(models.Model):
 
     model_id = fields.Many2one("ir.model", required=True)
 
-    context_event_status_ids = fields.One2many(
-        "crapo.workflow.context.event.status", "event_id"
+    context_event_ids = fields.One2many(
+        "crapo.workflow.context.event", "event_id"
     )
 
     activity_id = fields.Many2one("crapo.workflow.activity")
