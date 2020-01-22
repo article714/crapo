@@ -2,9 +2,9 @@
 <odoo>
 
     <record model="ir.ui.view" 
-        id="view_crapo_workflow_joiner_event_tree">
+        id="view_crapo_workflow_event_tree">
         <field name="name">Workflow</field>
-        <field name="model">crapo.workflow.joiner.event</field>
+        <field name="model">crapo.workflow.event</field>
         <field name="priority" 
             eval="16" />
         <field name="mode">primary</field>
@@ -13,15 +13,13 @@
             type="xml">
             <tree>
                 <field name="name" />
-                <field name="joiner_id" />
+                <field name="trigger_id" />
                 <field name="model_id" />
-                <field name="context_joiner_event_status_ids" />
+                <field name="context_event_status_ids" />
                 <field name="activity_id" />
                 <field name="record_id_context_key" />
                 <field name="condition" />
                 <field name="event_type" />
-                <field name="transition_from_state" />
-                <field name="transition_to_state" />
             </tree>
         </field>
     </record>

@@ -13,38 +13,34 @@ class WorkflowListener(Component):
     _name = "crapo.workflow.listener"
     _inherit = "base.event.listener"
 
-    def wf_trigger(self, name, values={}):
+    def wf_event(self, name, values={}):
         try:
-            mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+            mdl_event = self.env["crapo.workflow.event"]
         except KeyError:
             return
 
-        mdl_joiner_event.with_context(
-            {"notify_joiner_event": True}
-        ).with_delay().notify(name, values)
+        mdl_event.with_context({"notify_event": True}).with_delay().notify(
+            name, values
+        )
 
     @skip_if(
-        lambda self, record, fields: self.env.context.get(
-            "notify_joiner_event"
-        )
+        lambda self, record, fields: self.env.context.get("notify_event")
         or record._module in ("queue", "connector")
     )
     def on_record_create(self, record, fields):
 
-        self.wf_trigger("record_create", {"record": record, "fields": fields})
+        self.wf_event("record_create", {"record": record, "fields": fields})
 
     @skip_if(
-        lambda self, record, fields: self.env.context.get(
-            "notify_joiner_event"
-        )
+        lambda self, record, fields: self.env.context.get("notify_event")
         or record._module in ("queue", "connector")
     )
     def on_record_write(self, record, fields):
-        self.wf_trigger("record_write", {"record": record, "fields": fields})
+        self.wf_event("record_write", {"record": record, "fields": fields})
 
     @skip_if(
-        lambda self, record: self.env.context.get("notify_joiner_event")
+        lambda self, record: self.env.context.get("notify_event")
         or record._module in ("queue", "connector")
     )
     def on_record_unlink(self, record):
-        self.wf_trigger("record_unlink", {"record": record})
+        self.wf_event("record_unlink", {"record": record})

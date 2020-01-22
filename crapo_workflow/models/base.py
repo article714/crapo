@@ -7,14 +7,14 @@ from odoo import models
 class Base(models.AbstractModel):
     """The base model, which is implicitly inherited by all models.
 
-    A new :meth:`~wf_trigger` method is added on all Odoo Models, allowing to
+    A new :meth:`~wf_event` method is added on all Odoo Models, allowing to
     notify an event to crapo_warkflow
     """
 
     _inherit = "base"
 
-    def wf_trigger(self, name, values={}):
-        mdl_joiner_event = self.env["crapo.workflow.joiner.event"]
+    def wf_event(self, name, values={}):
+        broker = self.env["crapo.workflow.broker"]
         for rec in self:
             values["record"] = rec
-            mdl_joiner_event.with_delay().notify(name, values)
+            broker.with_delay().notify(name, values)

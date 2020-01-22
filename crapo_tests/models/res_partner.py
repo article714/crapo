@@ -9,7 +9,6 @@ import logging
 
 from odoo import models, api
 from odoo.addons.crapo_automaton.mixins import crapo_automata_mixins
-from odoo.addons.crapo_workflow.trigger import wf_trigger
 
 
 class ResPartnerWithMixin(
@@ -20,11 +19,11 @@ class ResPartnerWithMixin(
     @api.multi
     def write(self, values):
         res = super(ResPartnerWithMixin, self).write(values)
-        self.wf_trigger("record_write")
+        self.wf_event("record_write")
         return res
 
     @api.model
     def create(self, values):
         rec = super(ResPartnerWithMixin, self).create(values)
-        rec.wf_trigger("record_create")
+        rec.wf_event("record_create")
         return rec

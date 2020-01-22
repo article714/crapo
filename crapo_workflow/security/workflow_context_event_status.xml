@@ -4,11 +4,11 @@
 
         <!-- All users should be able to read data -->
 
-        <record id="access_workflow_context_joiner_event_status_all" 
+        <record id="access_workflow_context_event_status_all" 
             model="ir.model.access">
-            <field name="name">access.workflow.context.joiner.event.status.readall</field>
+            <field name="name">access.workflow.context.event.status.readall</field>
             <field name="model_id" 
-                ref="model_crapo_workflow_context_joiner_event_status" />
+                ref="model_crapo_workflow_context_event_status" />
             <field name="group_id" 
                 eval="ref('base.group_user')" />
             <field name="perm_read">1</field>
@@ -17,11 +17,11 @@
             <field name="perm_unlink">0</field>
         </record>
 
-        <record id="access_workflow_context_joiner_event_status_admin" 
+        <record id="access_workflow_context_event_status_admin" 
             model="ir.model.access">
-            <field name="name">access.workflow.context.joiner.event.status.admin</field>
+            <field name="name">access.workflow.context.event.status.admin</field>
             <field name="model_id" 
-                ref="model_crapo_workflow_context_joiner_event_status" />
+                ref="model_crapo_workflow_context_event_status" />
             <field name="group_id" 
                 eval="ref('crapo_base.group_crapo_admin')" />
             <field name="perm_read">1</field>

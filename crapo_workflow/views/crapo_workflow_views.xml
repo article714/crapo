@@ -37,8 +37,8 @@
                     <page string="Activities">
                         <field name="activity_ids" />
                     </page>
-                    <page string="Joiners">
-                        <field name="joiner_ids" />
+                    <page string="Triggers">
+                        <field name="trigger_ids" />
                     </page>
                     <page string="Context">
                         <field name="context_ids" />

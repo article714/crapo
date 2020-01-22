@@ -18,6 +18,6 @@ class Workflow(models.Model):
 
     activity_ids = fields.One2many("crapo.workflow.activity", "workflow_id")
 
-    joiner_ids = fields.One2many("crapo.workflow.joiner", "workflow_id")
+    trigger_ids = fields.One2many("crapo.workflow.trigger", "workflow_id")
 
     context_ids = fields.One2many("crapo.workflow.context", "workflow_id")
