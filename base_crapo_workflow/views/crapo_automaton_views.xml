@@ -43,7 +43,7 @@
                     </page>
                     <page string="Transitions">
                         <field name="transitions" 
-                            context="{'default_automaton':active_id,'current_automaton':active_id}"/>
+                            context="{'default_automaton':active_id,'current_automaton':active_id}" />
                     </page>
                 </notebook>
             </form>
@@ -59,7 +59,7 @@
             <diagram string="Automaton Editor">
                 <node object="crapo.state" 
                     shape="rectangle:is_start_state or is_end_state">
-                    <field name="name"/>
+                    <field name="name" />
                 </node>
                 <arrow object="crapo.transition" 
                     source="from_state" 

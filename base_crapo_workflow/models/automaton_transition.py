@@ -30,11 +30,7 @@ class StateMachineTransition(models.Model):
     description = fields.Text(required=False, translate=True, size=256)
 
     automaton = fields.Many2one(
-        comodel_name="crapo.automaton",
-        related="from_state.automaton",
-        store=True,
-        required=True,
-        index=True,
+        comodel_name="crapo.automaton", store=True, required=True, index=True,
     )
 
     model_id = fields.Many2one(
