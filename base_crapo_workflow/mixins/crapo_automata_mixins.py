@@ -158,17 +158,20 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     def create(self, values):
         rec = super(ObjectWithStateMixin, self).create(values)
 
-        state_id = rec.state
-        if not (state_id.is_start_state or state_id.is_creation_state):
-            ir_model = self.env["ir.model"]
-            raise ValidationError(
-                _(
-                    """ "{}" is not a possible state to create a record of "{}" """
-                ).format(
-                    state_id.display_name,
-                    ir_model.browse(ir_model._get_id(rec._name)).display_name,
+        if not self.env.context.get("crapo_no_creation_state_validation"):
+            state_id = rec.state
+            if not (state_id.is_start_state or state_id.is_creation_state):
+                ir_model = self.env["ir.model"]
+                raise ValidationError(
+                    _(
+                        """ "{}" is not a possible state to create a record of "{}" """
+                    ).format(
+                        state_id.display_name,
+                        ir_model.browse(
+                            ir_model._get_id(rec._name)
+                        ).display_name,
+                    )
                 )
-            )
         return rec
 
     @api.multi
