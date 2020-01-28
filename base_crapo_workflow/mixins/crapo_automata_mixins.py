@@ -4,6 +4,7 @@ import logging
 
 from odoo import fields, api, exceptions, _
 from odoo import SUPERUSER_ID
+from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 from .crapo_readonly_view_mixin import ReadonlyViewMixin
@@ -152,6 +153,24 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     # =================
     # Write / Create
     # =================
+
+    @api.model
+    def create(self, values):
+        rec = super(ObjectWithStateMixin, self).create(values)
+
+        state_id = rec.state
+        if not (state_id.is_start_state or state_id.is_creation_state):
+            ir_model = self.env["ir.model"]
+            raise ValidationError(
+                _(
+                    """ "{}" is not a possible state to create a record of "{}" """
+                ).format(
+                    state_id.display_name,
+                    ir_model.browse(ir_model._get_id(rec._name)).display_name,
+                )
+            )
+        return rec
+
     @api.multi
     def write(self, values):
         """
@@ -316,8 +335,8 @@ class StateObjectMixin(object):
         comodel_name="crapo.transition",
         inverse_name="from_state",
     )
-    # computed field to identify start and end states
 
+    # computed field to identify start and end states
     is_start_state = fields.Boolean(
         "Start State",
         compute="_compute_is_start_state",
@@ -327,6 +346,12 @@ class StateObjectMixin(object):
 
     is_end_state = fields.Boolean(
         "End State", compute="_compute_is_end_state", store=True, index=True
+    )
+
+    is_creation_state = fields.Boolean(
+        help="""Indicate if this state is a possible state to create a record.
+        This value is not take in account if it's a start state""",
+        default=False,
     )
 
     readonly_fields = fields.Char(
