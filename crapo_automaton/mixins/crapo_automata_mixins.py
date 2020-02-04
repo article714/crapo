@@ -152,13 +152,6 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     # =================
     # Write / Create
     # =================
-    @api.model
-    def create(self, values):
-        rec = super(ObjectWithStateMixin, self).create(values)
-
-        self._event("on_transition").notify(rec, None, rec.state)
-
-        return rec
 
     @api.multi
     def write(self, values):
@@ -187,11 +180,6 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                 self.exec_conditions(transition.precondition_ids, "Pre")
                 self.exec_action(transition.action, transition.async_action)
                 self.exec_conditions(transition.postcondition_ids, "Post")
-
-                for rec in self:
-                    self._event("on_transition").notify(
-                        rec, transition.from_state, transition.to_state
-                    )
 
                 # Return now if write has already been done
                 if transition.write_before:
