@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" 
+        id="view_crapo_workflow_trigger_tree">
+        <field name="name">Workflow</field>
+        <field name="model">crapo.workflow.trigger</field>
+        <field name="priority" 
+            eval="16" />
+        <field name="mode">primary</field>
+        <field name="type">tree</field>
+        <field name="arch" 
+            type="xml">
+            <tree>
+                <field name="name" 
+                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                <field name="from_activity_ids" 
+                    widget="many2many_tags" 
+                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                <field name="to_activity_ids" 
+                    widget="many2many_tags" 
+                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                <field name="event_ids" 
+                    widget="many2many_tags" 
+                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                <field name="init_trigger" 
+                    invisible="1" />
+                <field name="end_trigger" 
+                    invisible="1" />
+            </tree>
+        </field>
+    </record>
+</odoo>

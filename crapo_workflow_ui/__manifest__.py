@@ -3,7 +3,7 @@
 # @license: AGPL v3
 
 {
-    "name": u"Crapo: Workflow",
+    "name": u"Crapo: Workflow UI",
     "version": u"12.0.2.0.0",
     "category": u"Crapo Workflows",
     "author": u"Article714",
@@ -11,15 +11,18 @@
     "website": u"https://www.article714.org",
     "summary": u""" Fexible tool to manage automata & workflows
      for your odoo objects""",
-    "depends": ["queue_job", "crapo_base"],
+    "depends": [
+        "crapo_base_ui",
+        "crapo_workflow",
+        "web_tree_dynamic_colored_field",
+    ],
     "data": [
-        "security/workflow.xml",
-        "security/workflow_activity.xml",
-        "security/workflow_trigger.xml",
-        "security/workflow_context_entry.xml",
-        "security/workflow_context.xml",
-        "security/workflow_context_event.xml",
-        "security/workflow_broker.xml",
+        "actions/window_actions.xml",
+        "views/crapo_menus.xml",
+        "views/crapo_workflow_activity_views.xml",
+        "views/crapo_workflow_views.xml",
+        "views/crapo_workflow_event_views.xml",
+        "views/crapo_workflow_trigger_views.xml",
     ],
     "installable": True,
     "images": [],
