@@ -201,11 +201,6 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                 self.exec_action(transition.action, transition.async_action)
                 self.exec_conditions(transition.postcondition_ids, "Post")
 
-                for rec in self:
-                    self._event("on_transition").notify(
-                        rec, transition.from_state, transition.to_state
-                    )
-
                 # Return now if write has already been done
                 if transition.write_before:
                     return result
