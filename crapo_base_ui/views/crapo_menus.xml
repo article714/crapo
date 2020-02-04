@@ -4,7 +4,7 @@
     <!-- Base menu -->
     <menuitem id="crapo_base_menu" 
         name="Automation" 
-        groups="group_crapo_admin" 
+        groups="crapo_base.group_crapo_admin" 
         sequence="10" />
 
 </odoo>

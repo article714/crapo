@@ -12,7 +12,7 @@
     "summary": u""" Fexible tool to manage automata & workflows
      for your odoo objects""",
     "depends": [],
-    "data": ["security/crapo_security.xml", "views/crapo_menus.xml",],
+    "data": ["security/crapo_security.xml"],
     "installable": True,
     "images": [],
     "application": True,
