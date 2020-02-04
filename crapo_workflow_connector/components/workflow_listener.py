@@ -15,11 +15,11 @@ class WorkflowListener(Component):
 
     def wf_event(self, name, values={}):
         try:
-            mdl_event = self.env["crapo.workflow.event"]
+            mdl_broker = self.env["crapo.workflow.broker"]
         except KeyError:
             return
 
-        mdl_event.with_context({"notify_event": True}).with_delay().notify(
+        mdl_broker.with_context({"notify_event": True}).with_delay().notify(
             name, values
         )
 

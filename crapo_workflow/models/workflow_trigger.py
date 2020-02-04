@@ -16,6 +16,8 @@ class WorkflowTrigger(models.Model):
 
     _name = "crapo.workflow.trigger"
 
+    name = fields.Char()
+
     workflow_id = fields.Many2one("crapo.workflow")
 
     to_activity_ids = fields.Many2many(
@@ -159,58 +161,3 @@ class WorkflowTrigger(models.Model):
         self.check_init_trigger()
 
         return res
-
-
-class WorkflowEvent(models.Model):
-
-    _name = "crapo.workflow.event"
-
-    _sql_constraints = [
-        (
-            "unique_name_per_trigger_id",
-            "unique(name, trigger_id)",
-            "Trigger event can't have the same name in the same trigger",
-        )
-    ]
-
-    name = fields.Char()
-
-    trigger_id = fields.Many2one("crapo.workflow.trigger")
-
-    model_id = fields.Many2one("ir.model", required=True)
-
-    context_event_ids = fields.One2many(
-        "crapo.workflow.context.event", "event_id"
-    )
-
-    activity_id = fields.Many2one("crapo.workflow.activity")
-
-    record_id_context_key = fields.Char()
-
-    condition = fields.Char(
-        help="""Conditions to be checked before set this event as done.""",
-    )
-
-    event_type = fields.Selection(
-        [
-            ("transition", "transition"),
-            ("record_create", "record_create"),
-            ("record_write", "record_write"),
-            ("record_unlink", "record_unlink"),
-            ("activity_ended", "activity_ended"),
-        ]
-    )
-
-    # ================================
-    # Write / Create
-    # ================================
-
-    @api.model
-    def create(self, values):
-
-        rec = super(WorkflowEvent, self).create(values)
-
-        if not rec.name:
-            rec.name = "_".join((rec.event_type, str(rec.id)))
-
-        return rec
