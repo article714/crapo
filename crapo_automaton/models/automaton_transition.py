@@ -82,7 +82,7 @@ class StateMachineTransition(models.Model):
 
     action = fields.Many2one(
         string="Action to be executed",
-        comodel_name="crapo.action",
+        comodel_name="crapo.automaton.action",
         required=False,
     )
 

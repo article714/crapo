@@ -299,7 +299,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                 "active_ids": self.ids,
             }
             if async_action:
-                action.with_delay().run_async(context)
+                action.with_context(context).with_delay().run_async()
             else:
                 action.with_context(context).run()
 

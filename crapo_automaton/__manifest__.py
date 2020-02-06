@@ -13,7 +13,7 @@
      for your odoo objects""",
     "depends": ["queue_job", "crapo_base"],
     "data": [
-        "security/crapo_action.xml",
+        "security/automaton_action.xml",
         "security/crapo_business_object.xml",
         "security/automaton.xml",
         "security/automaton_transition.xml",
@@ -23,7 +23,7 @@
         "views/crapo_menus.xml",
         "views/crapo_state_views.xml",
         "views/crapo_transition_views.xml",
-        "views/crapo_action_views.xml",
+        "views/crapo_automaton_action_views.xml",
         "views/crapo_automaton_views.xml",
         "views/crapo_condition_views.xml",
     ],
