@@ -34,7 +34,7 @@
         model="ir.actions.act_window">
         <field name="name">Actions</field>
         <field name="target">current</field>
-        <field name="res_model">crapo.action</field>
+        <field name="res_model">crapo.automaton.action</field>
         <field name="limit">100</field>
         <field name="auto_search" 
             eval="True" />

@@ -11,6 +11,6 @@ from . import automaton
 from . import automaton_transition
 from . import business_object
 from . import condition
-from . import crapo_action
 from . import crapo_config
 from . import state
+from . import automaton_action

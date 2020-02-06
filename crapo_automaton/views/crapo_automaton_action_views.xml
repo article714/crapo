@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crapo_automaton_action_form" 
+        model="ir.ui.view">
+        <field name="name">Crapo Action</field>
+        <field name="model">crapo.automaton.action</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" 
+            ref="base.view_server_action_form" />
+        <field name="arch" 
+            type="xml">
+            <form />
+        </field>
+    </record>
+
+    <record id="view_crapo_automaton_action_tree" 
+        model="ir.ui.view">
+        <field name="name">Crapo Actions</field>
+        <field name="model">crapo.automaton.action</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" 
+            ref="base.view_server_action_tree" />
+        <field name="arch" 
+            type="xml">
+            <tree />
+        </field>
+    </record>
+
+</odoo>

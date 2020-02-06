@@ -5,9 +5,9 @@
         <!-- All users should be able to read data -->
         <record id="access_action_all" 
             model="ir.model.access">
-            <field name="name">access.crapo.action.readall</field>
+            <field name="name">access.crapo.automaton.action.readall</field>
             <field name="model_id" 
-                ref="model_crapo_action" />
+                ref="model_crapo_automaton_action" />
             <field name="group_id" 
                 eval="ref('base.group_user')" />
             <field name="perm_read">1</field>
@@ -18,9 +18,9 @@
 
         <record id="access_action_appadmin" 
             model="ir.model.access">
-            <field name="name">access.crapo.action.appadmin</field>
+            <field name="name">access.crapo.automaton.action.appadmin</field>
             <field name="model_id" 
-                ref="model_crapo_action" />
+                ref="model_crapo_automaton_action" />
             <field name="group_id" 
                 eval="ref('crapo_base.group_crapo_app_admin')" />
             <field name="perm_read">1</field>
