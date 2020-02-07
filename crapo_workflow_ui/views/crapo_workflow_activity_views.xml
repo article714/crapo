@@ -13,7 +13,7 @@
             <xpath expr="//group[@name='action_wrapper']" 
                 position="inside">
                 <group>
-                    <field name="record_context_key" />
+                    <field name="active_record_context_key" />
                 </group>
             </xpath>
         </field>

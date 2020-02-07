@@ -6,8 +6,8 @@ from odoo import models, fields, _
 
 class Workflow(models.Model):
     """
-    A workflow coordinates and automates a set of workflow activities that
-    can apply to a whole set of business objects
+        A workflow coordinates and automates a set of workflow activities that
+        can apply to a whole set of business objects
     """
 
     _name = "crapo.workflow"
@@ -15,9 +15,3 @@ class Workflow(models.Model):
     Triggers, Events and WFTransitions"""
 
     name = fields.Char(help="Workflow's name", required=True)
-
-    activity_ids = fields.One2many("crapo.workflow.activity", "workflow_id")
-
-    trigger_ids = fields.One2many("crapo.workflow.trigger", "workflow_id")
-
-    context_ids = fields.One2many("crapo.workflow.context", "workflow_id")

@@ -9,9 +9,37 @@ from odoo.addons.queue_job.job import job
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    DEFAULT_PYTHON_CODE = """# Available variables:
+#  - env: Odoo Environment on which the activity is triggered
+#  - model: Odoo Model of the record on which the activity is triggered; is a void recordset
+#  - record: record linked to active record context key; may be void
+#  - records: recordset of all records on which the activity is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+#  - wf_context: record of crapo workflow context that triggered this activity
+#  - logging: python logging module helpfull to debug
+# To return an action, assign: action = {...}\n\n\n\n"""
+
     usage = fields.Selection(
         selection_add=[("crapo_workflow_activity", "Crapo workflow activity")]
     )
+
+    code = fields.Text(default=DEFAULT_PYTHON_CODE)
+
+    @api.model
+    def _get_eval_context(self, action=None):
+        eval_context = super(IrActionsServer, self)._get_eval_context(
+            action=action
+        )
+
+        eval_context.update(
+            {
+                "logging": logging,
+                "wf_context": self.env.context["wf_context_id"],
+            }
+        )
+        return eval_context
 
 
 class WorkflowActivity(models.Model):
@@ -31,7 +59,7 @@ class WorkflowActivity(models.Model):
 
     workflow_id = fields.Many2one("crapo.workflow", ondelete="cascade")
 
-    record_context_key = fields.Char()
+    active_record_context_key = fields.Char()
 
     @job
     @api.multi
@@ -40,13 +68,13 @@ class WorkflowActivity(models.Model):
             Runs the server action, possibly in async and add some values to context
         """
 
-        context = {"wf": wf_context_id, "logging": logging}
+        context = {"wf_context_id": wf_context_id}
 
         res = False
         for rec in self:
-            if rec.record_context_key:
+            if rec.active_record_context_key:
                 active_record = wf_context_id.get_context_entry(
-                    rec.record_context_key
+                    rec.active_record_context_key
                 )
                 context["active_id"] = active_record.id
                 context["active_model"] = active_record._name

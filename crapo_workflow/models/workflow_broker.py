@@ -30,7 +30,7 @@ class WorkflowBroker(models.TransientModel):
         # Looking for event concerned
         for rec_event in self.env["crapo.workflow.event"].search(domain):
 
-            if rec_event.trigger_id.init_trigger and (
+            if rec_event.trigger_id.trigger_type == "init" and (
                 not rec_event.condition
                 or safe_eval(rec_event.condition, context,)
             ):
