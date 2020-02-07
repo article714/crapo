@@ -13,19 +13,17 @@
             type="xml">
             <tree>
                 <field name="name" 
-                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                    options="{'bg_color': 'rgb(135, 233, 144):trigger_type == \'init\'; rgb(221, 152, 92):trigger_type == \'end\''}" />
                 <field name="from_activity_ids" 
                     widget="many2many_tags" 
-                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                    options="{'bg_color': 'rgb(135, 233, 144):trigger_type == \'init\'; rgb(221, 152, 92):trigger_type == \'end\''}" />
                 <field name="to_activity_ids" 
                     widget="many2many_tags" 
-                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
+                    options="{'bg_color': 'rgb(135, 233, 144):trigger_type == \'init\'; rgb(221, 152, 92):trigger_type == \'end\''}" />
                 <field name="event_ids" 
                     widget="many2many_tags" 
-                    options="{'bg_color': 'rgb(135, 233, 144):init_trigger == True; rgb(221, 152, 92):end_trigger == True'}" />
-                <field name="init_trigger" 
-                    invisible="1" />
-                <field name="end_trigger" 
+                    options="{'bg_color': 'rgb(135, 233, 144):trigger_type == \'init\'; rgb(221, 152, 92):trigger_type == \'end\''}" />
+                <field name="trigger_type" 
                     invisible="1" />
             </tree>
         </field>
