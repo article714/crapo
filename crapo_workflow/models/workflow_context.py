@@ -97,6 +97,15 @@ class WorkflowContextEntry(models.Model):
             map(int, self.value.split(","))
         )
 
+    @api.depends("key", "model_id", "value")
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.model_id:
+                value = rec.get_recordset()
+            else:
+                value = rec.value
+            rec.display_name = "{}: {}".format(rec.key, value)
+
 
 class WorkflowContextEvent(models.Model):
 
@@ -116,6 +125,15 @@ class WorkflowContextEvent(models.Model):
     )
 
     record_id = fields.Integer()
+
+    @api.depends("trigger_id", "event_id", "done")
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = "{}.{}: {}".format(
+                rec.trigger_id.display_name,
+                rec.event_id.display_name,
+                rec.done,
+            )
 
     # ==================
     # Write / Create

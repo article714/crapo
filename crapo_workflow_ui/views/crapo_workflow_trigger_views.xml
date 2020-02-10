@@ -28,4 +28,37 @@
             </tree>
         </field>
     </record>
+
+    <record model="ir.ui.view" 
+        id="view_crapo_workflow_trigger_form">
+        <field name="name">Workflow</field>
+        <field name="model">crapo.workflow.trigger</field>
+        <field name="priority" 
+            eval="16" />
+        <field name="mode">primary</field>
+        <field name="type">form</field>
+        <field name="arch" 
+            type="xml">
+            <form>
+                <field name="workflow_id" 
+                    invisible="1" />
+                <group col="4">
+                    <field name="name" />
+                    <field name="trigger_type" />
+                    <field name="init_record_key" 
+                        attrs="{'invisible': [('trigger_type', '!=', 'init')]}" />
+                </group>
+                <group string="Activities">
+                    <field name="from_activity_ids" 
+                        attrs="{'invisible': [('trigger_type', '=', 'init')]}" />
+                    <field name="to_activity_ids" 
+                        attrs="{'invisible': [('trigger_type', '=', 'end')]}" />
+                </group>
+                <group string="Events">
+                    <field name="event_ids" />
+                    <field name="event_logical_condition" />
+                </group>
+            </form>
+        </field>
+    </record>
 </odoo>

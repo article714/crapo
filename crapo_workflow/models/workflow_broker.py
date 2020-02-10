@@ -37,8 +37,9 @@ class WorkflowBroker(models.TransientModel):
             ("model_id", "=", self.env["ir.model"]._get_id(record._name),),
         ]
 
-        # Get empty recordset to accumulate wf_ctx_event that will pass to done
+        # Get empty recordset to accumulate done wf_ctx_event
         done_ctx_event = self.env["crapo.workflow.context.event"]
+
         # Looking for event concerned
         for rec_event in self.env["crapo.workflow.event"].search(domain):
             # If event belongs to an init trigger, and its condition
