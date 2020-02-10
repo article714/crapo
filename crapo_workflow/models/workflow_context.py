@@ -1,12 +1,14 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-import logging
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
 class WorkflowContext(models.Model):
+    """
+        Workflow context is an instance of a worklow a time
+    """
 
     _name = "crapo.workflow.context"
 
@@ -21,18 +23,29 @@ class WorkflowContext(models.Model):
     )
 
     def set_context_entry(self, key, value):
+        """
+            Save value to context associate with key
+        """
         data = {"key": key, "value": value}
+        # Id it's a record we save the id in the value and the
+        # model where the record come from
         if isinstance(value, models.Model):
             data["value"] = ",".join(map(str, value.ids))
             data["model_id"] = self.env["ir.model"]._get_id(value._name)
 
+        # Update if exists
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
         if entry:
             entry.write(data)
+        # Else create
         else:
             self.write({"context_entry_ids": [(0, False, data)]})
 
     def get_context_entry(self, key, convert=True):
+        """
+            Read key from context and return value. If key refer to a
+            record, we return the record directly if convert is True
+        """
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
 
         if not entry:
@@ -47,6 +60,9 @@ class WorkflowContext(models.Model):
 
 
 class WorkflowContextEntry(models.Model):
+    """
+        Model key/value to save nearly everything
+    """
 
     _name = "crapo.workflow.context.entry"
 
@@ -94,11 +110,16 @@ class WorkflowContextEvent(models.Model):
 
     event_id = fields.Many2one("crapo.workflow.event", required=True)
 
+    # Shortcut for convenience
     trigger_id = fields.Many2one(
         "crapo.workflow.trigger", related="event_id.trigger_id",
     )
 
     record_id = fields.Integer()
+
+    # ==================
+    # Write / Create
+    # ==================
 
     @api.model
     def create(self, values):
@@ -111,7 +132,7 @@ class WorkflowContextEvent(models.Model):
                 )
             )
         elif rec.event_id.event_type == "activity_ended":
-            rec.record_id == rec.event_id.activity_id.id
+            rec.record_id = rec.event_id.activity_id.id
         return rec
 
     @api.multi

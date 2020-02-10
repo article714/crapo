@@ -7,6 +7,11 @@ from odoo.addons.queue_job.job import job
 
 
 class IrActionsServer(models.Model):
+    """
+        Inerhit from ir.actions.server to add
+        some usage and object to eval context
+    """
+
     _inherit = "ir.actions.server"
 
     DEFAULT_PYTHON_CODE = """# Available variables:
@@ -29,6 +34,9 @@ class IrActionsServer(models.Model):
 
     @api.model
     def _get_eval_context(self, action=None):
+        """
+            Add wf_context to eval context
+        """
         eval_context = super(IrActionsServer, self)._get_eval_context(
             action=action
         )
@@ -44,7 +52,8 @@ class IrActionsServer(models.Model):
 
 class WorkflowActivity(models.Model):
     """
-    An activity step in a Workflow, i.e. a step where something must be done
+        An activity step in a Workflow, all of what is done in ir.server.actions
+        can be done in WorkflowActivity
     """
 
     _name = "crapo.workflow.activity"
@@ -80,7 +89,9 @@ class WorkflowActivity(models.Model):
                 context["active_model"] = active_record._name
 
             res = rec.with_context(**context).action_server_id.run()
-            rec.wf_event("on_activity_ended")
+            rec.wf_event(
+                "activity_ended", {"activity_wf_ctx_id": wf_context_id}
+            )
         return res
 
     # ==============================

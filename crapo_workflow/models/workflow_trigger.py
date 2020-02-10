@@ -12,8 +12,8 @@ from odoo.addons.queue_job.job import job
 
 class WorkflowTrigger(models.Model):
     """
-        A trigger is the logical brick between activities. It will trigger all of it activities
-        when event_logical_condition is True.
+        A trigger is the logical brick between activities. It will trigger all
+        of its activities when triggered.
 
         - Initial trigger:  this is the first trigger of the workflow it will
           initiate a crapo.workflow.context when triggered
@@ -58,6 +58,7 @@ class WorkflowTrigger(models.Model):
     init_record_key = fields.Char()
 
     @job
+    @api.multi
     def check_and_run(self, wf_context_id):
         """
             Evaluate event_logical_condition in the context passer in parameter
@@ -140,6 +141,7 @@ class WorkflowTrigger(models.Model):
                         "model_id": self.env["ir.model"]._get_id(
                             activity_id._name
                         ),
+                        "condition": "activity_wf_ctx_id == wf_context",
                     },
                 )
             )

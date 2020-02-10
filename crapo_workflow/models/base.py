@@ -5,16 +5,22 @@ from odoo import models
 
 
 class Base(models.AbstractModel):
-    """The base model, which is implicitly inherited by all models.
+    """
+        The base model, which is implicitly inherited by all models.
 
-    A new :meth:`~wf_event` method is added on all Odoo Models, allowing to
-    notify an event to crapo_warkflow
+        A new :meth:`wf_event` method is added on all Odoo Models, allowing to
+        notify an event to crapo_warkflow
     """
 
     _inherit = "base"
 
-    def wf_event(self, name, values={}):
+    def wf_event(self, name, values=None):
+        """
+            Notify event to worflow broker
+        """
         broker = self.env["crapo.workflow.broker"]
         for rec in self:
+            if values is None:
+                values = {}
             values["record"] = rec
             broker.with_delay().notify(name, values)
