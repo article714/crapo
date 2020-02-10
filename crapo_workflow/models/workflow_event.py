@@ -54,7 +54,9 @@ class WorkflowEvent(models.Model):
 
     @api.model
     def create(self, values):
-
+        """
+            Automaticaly add a default name if not defined
+        """
         rec = super(WorkflowEvent, self).create(values)
 
         if not rec.name:
