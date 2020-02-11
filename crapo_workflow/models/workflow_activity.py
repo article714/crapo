@@ -41,12 +41,13 @@ class IrActionsServer(models.Model):
             action=action
         )
 
-        eval_context.update(
-            {
-                "logging": logging,
-                "wf_context": self.env.context["wf_context_id"],
-            }
-        )
+        if self.env.context.get("wf_context_id"):
+            eval_context.update(
+                {
+                    "logging": logging,
+                    "wf_context": self.env.context["wf_context_id"],
+                }
+            )
         return eval_context
 
 
