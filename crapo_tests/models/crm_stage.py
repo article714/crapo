@@ -19,13 +19,16 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
 
     def write(self, values):
         if len(self) == 1:
-            if "crapo_state" not in values and not self.crapo_state:
+            if (
+                "crapo_automaton_state" not in values
+                and not self.crapo_automaton_state
+            ):
                 if "name" in values:
                     vals = {"name": values["name"]}
                 else:
                     vals = {"name": self.name}
                 mystate = self._compute_related_state(vals)
-                values["crapo_state"] = mystate.id
+                values["crapo_automaton_state"] = mystate.id
 
         return super(CrmStageWithMixin, self).write(values)
 
@@ -33,11 +36,14 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
     def create(self, values):
         """ Create a new crapo_stage for each crm_stage
         """
-        if "crapo_state" not in values and not self.crapo_state:
+        if (
+            "crapo_automaton_state" not in values
+            and not self.crapo_automaton_state
+        ):
             if "name" in values:
                 vals = {"name": values["name"]}
             mystate = self._compute_related_state(vals)
-            values["crapo_state"] = mystate.id
+            values["crapo_automaton_state"] = mystate.id
 
         return super(CrmStageWithMixin, self).create(values)
 
@@ -45,9 +51,9 @@ class CrmStageWithMixin(crapo_automata_mixins.WrappedStateMixin, models.Model):
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows.
             Overridden here because we need to wrap existing stages in
-            a new crapo_state for each stage (including a default automaton)
+            a new crapo_automaton_state for each stage (including a default automaton)
         """
-        if column_name not in ["crapo_state"]:
+        if column_name not in ["crapo_automaton_state"]:
             return super(CrmStageWithMixin, self)._init_column(column_name)
         else:
             default_compute = self._compute_related_state

@@ -37,7 +37,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
     )
 
     state = fields.Many2one(
-        comodel_name="crapo.state",
+        comodel_name="crapo.automaton.state",
         help="""State in which this object is""",
         track_visibility="onchange",
         domain=lambda self: self._get_state_domain(),
@@ -98,7 +98,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
 
     def _get_default_state(self):
         domain = self._get_state_domain()
-        state_model = self.env["crapo.state"]
+        state_model = self.env["crapo.automaton.state"]
         automaton = self._get_model_automaton()
 
         if automaton:
@@ -135,11 +135,11 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
             if target_ids:
                 domain.append(("id", "in", target_ids))
 
-                next_states = self.env["crapo.state"].search(domain)
+                next_states = self.env["crapo.automaton.state"].search(domain)
 
         else:
             domain.append(("sequence", ">", self.state.sequence))
-            next_states = self.env["crapo.state"].search(domain, limit=1)
+            next_states = self.env["crapo.automaton.state"].search(domain, limit=1)
 
         return next_states
 
@@ -225,7 +225,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
             elif target_state_id not in next_states.ids:
                 raise exceptions.ValidationError(
                     _('State "{}" is not in eligible target states').format(
-                        self.env["crapo.state"]
+                        self.env["crapo.automaton.state"]
                         .browse(target_state_id)
                         .display_name
                         if target_state_id
@@ -254,7 +254,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
         """
             Execute Pre/Postconditions.
 
-            condition_ids: must be a crapo.condition object
+            condition_ids: must be a crapo.automaton.condition object
             prefix: a string to indicate if it's pre or post conditions
         """
 
@@ -307,7 +307,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
 class StateObjectMixin(object):
     """
     Mixin class that can be used to define a state object
-    that can be used as a crapo_state
+    that can be used as a crapo_automaton_state
 
     Should be use as a mixin class in existing objects
     """
@@ -404,15 +404,15 @@ class WrappedStateMixin(StateObjectMixin):
     Mixin class that can be used to define a state object that
     wraps an existing model defining a state for another model
 
-    The wrapped object can be used as a crapo_state
+    The wrapped object can be used as a crapo_automaton_state
 
     Should be use as a mixin class in existing objects
     """
 
-    _inherits = {"crapo.state": "crapo_state"}
+    _inherits = {"crapo.automaton.state": "crapo_automaton_state"}
 
-    crapo_state = fields.Many2one(
-        comodel_name="crapo.state",
+    crapo_automaton_state = fields.Many2one(
+        comodel_name="crapo.automaton.state",
         string="Related Crapo State",
         store=True,
         index=True,
@@ -442,15 +442,15 @@ class WrappedStateMixin(StateObjectMixin):
         self, values={}
     ):  # pylint: disable=dangerous-default-value
         """
-        Create a new crapo_state for an existing record of the WrappedState
+        Create a new crapo_automaton_state for an existing record of the WrappedState
         """
         my_automaton = self._do_search_default_automaton()
 
-        if not self.crapo_state:
+        if not self.crapo_automaton_state:
             if not my_automaton:
                 return False
             else:
                 if "name" not in values:
                     values["name"] = "Default State for %s" % self.id
                 values["automaton"] = my_automaton.id
-                return self.env["crapo.state"].create(values)
+                return self.env["crapo.automaton.state"].create(values)

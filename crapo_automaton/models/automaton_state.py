@@ -13,7 +13,7 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
     A state used in the context of an automaton
     """
 
-    _name = "crapo.state"
+    _name = "crapo.automaton.state"
     _description = u"State in a workflow, specific to a given model"
     _order = "sequence, name"
 

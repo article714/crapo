@@ -2,9 +2,9 @@
 <odoo>
 
     <record model="ir.ui.view" 
-        id="view_crapo_condition_tree">
+        id="view_crapo_automaton_condition_tree">
         <field name="name">Automaton conditions</field>
-        <field name="model">crapo.condition</field>
+        <field name="model">crapo.automaton.condition</field>
         <field name="mode">primary</field>
         <field name="type">tree</field>
         <field name="arch" 
@@ -21,9 +21,9 @@
     </record>
 
     <record model="ir.ui.view" 
-        id="view_crapo_condition_form">
+        id="view_crapo_automaton_condition_form">
         <field name="name">Automaton conditions</field>
-        <field name="model">crapo.condition</field>
+        <field name="model">crapo.automaton.condition</field>
         <field name="mode">primary</field>
         <field name="type">form</field>
         <field name="arch" 
