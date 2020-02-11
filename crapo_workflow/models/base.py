@@ -16,7 +16,7 @@ class Base(models.AbstractModel):
 
     def wf_event(self, name, values=None):
         """
-            Notify event to worflow broker
+            Notify event to workflow broker
         """
         broker = self.env["crapo.workflow.broker"]
         for rec in self:

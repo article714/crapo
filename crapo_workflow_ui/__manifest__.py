@@ -20,6 +20,7 @@
         "views/crapo_workflow_event_views.xml",
         "views/crapo_workflow_trigger_views.xml",
         "views/crapo_workflow_context_views.xml",
+        "security/workflow_diagram.xml",
     ],
     "installable": True,
     "images": [],
