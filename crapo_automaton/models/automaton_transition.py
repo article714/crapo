@@ -38,21 +38,21 @@ class StateMachineTransition(models.Model):
     )
 
     from_state = fields.Many2one(
-        comodel_name="crapo.state",
+        comodel_name="crapo.automaton.state",
         ondelete="cascade",
         required=True,
         index=True,
     )
 
     to_state = fields.Many2one(
-        comodel_name="crapo.state",
+        comodel_name="crapo.automaton.state",
         ondelete="cascade",
         required=True,
         index=True,
     )
 
     precondition_ids = fields.One2many(
-        "crapo.condition",
+        "crapo.automaton.condition",
         "transition_id",
         string="Pre-conditions",
         help=(
@@ -67,7 +67,7 @@ class StateMachineTransition(models.Model):
     )
 
     postcondition_ids = fields.One2many(
-        "crapo.condition",
+        "crapo.automaton.condition",
         "transition_id",
         string="Post-conditions",
         help=(

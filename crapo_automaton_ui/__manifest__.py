@@ -15,11 +15,11 @@
     "data": [
         "actions/window_actions.xml",
         "views/crapo_menus.xml",
-        "views/crapo_state_views.xml",
+        "views/crapo_automaton_state_views.xml",
         "views/crapo_transition_views.xml",
         "views/crapo_automaton_action_views.xml",
         "views/crapo_automaton_views.xml",
-        "views/crapo_condition_views.xml",
+        "views/crapo_automaton_condition_views.xml",
     ],
     "installable": True,
     "images": [],

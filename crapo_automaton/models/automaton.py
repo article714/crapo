@@ -45,7 +45,9 @@ class Automaton(models.Model):
     )
 
     states = fields.One2many(
-        string="States", comodel_name="crapo.state", inverse_name="automaton"
+        string="States",
+        comodel_name="crapo.automaton.state",
+        inverse_name="automaton",
     )
 
     # State Management

@@ -57,7 +57,7 @@
         <field name="arch" 
             type="xml">
             <diagram string="Automaton Editor">
-                <node object="crapo.state" 
+                <node object="crapo.automaton.state" 
                     shape="rectangle:is_start_state or is_end_state">
                     <field name="name" />
                 </node>

@@ -2,9 +2,9 @@
 <odoo>
 
     <record model="ir.ui.view" 
-        id="view_crapo_state_tree">
+        id="view_crapo_automaton_state_tree">
         <field name="name">Automaton states</field>
-        <field name="model">crapo.state</field>
+        <field name="model">crapo.automaton.state</field>
         <field name="priority" 
             eval="16" />
         <field name="mode">primary</field>
@@ -22,9 +22,9 @@
     </record>
 
     <record model="ir.ui.view" 
-        id="view_crapo_state_form">
+        id="view_crapo_automaton_state_form">
         <field name="name">Automaton states</field>
-        <field name="model">crapo.state</field>
+        <field name="model">crapo.automaton.state</field>
         <field name="priority" 
             eval="16" />
         <field name="mode">primary</field>

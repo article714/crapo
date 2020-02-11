@@ -9,7 +9,7 @@ class Condition(models.Model):
     Condition definition
     """
 
-    _name = "crapo.condition"
+    _name = "crapo.automaton.condition"
     _description = "Condition description"
     _order = "sequence, name"
 

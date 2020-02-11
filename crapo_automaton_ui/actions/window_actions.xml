@@ -6,7 +6,7 @@
         model="ir.actions.act_window">
         <field name="name">Workflow states</field>
         <field name="target">current</field>
-        <field name="res_model">crapo.state</field>
+        <field name="res_model">crapo.automaton.state</field>
         <field name="limit">100</field>
         <field name="auto_search" 
             eval="True" />
