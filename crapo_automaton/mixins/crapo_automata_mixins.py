@@ -139,7 +139,9 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
 
         else:
             domain.append(("sequence", ">", self.state.sequence))
-            next_states = self.env["crapo.automaton.state"].search(domain, limit=1)
+            next_states = self.env["crapo.automaton.state"].search(
+                domain, limit=1
+            )
 
         return next_states
 
