@@ -47,4 +47,24 @@
             </form>
         </field>
     </record>
+
+    <record id="view_workflow_diagram" 
+        model="ir.ui.view">
+        <field name="name">Workflow diagram</field>
+        <field name="model">crapo.workflow</field>
+        <field name="arch" 
+            type="xml">
+            <diagram string="Automaton Editor">
+                <node object="crapo.workflow.diagram.node">
+                    <field name="name" />
+                </node>
+                <arrow object="crapo.workflow.diagram.arrow" 
+                    source="from_node" 
+                    destination="to_node">
+                    <field name="from_node" />
+                    <field name="to_node" />
+                </arrow>
+            </diagram>
+        </field>
+    </record>
 </odoo>

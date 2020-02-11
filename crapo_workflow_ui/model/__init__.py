@@ -7,3 +7,4 @@ Created on 16 july 2018
 """
 
 from . import workflow
+from . import workflow_diagram
