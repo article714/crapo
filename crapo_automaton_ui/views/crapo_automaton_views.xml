@@ -61,7 +61,7 @@
                     shape="rectangle:is_start_state or is_end_state">
                     <field name="name" />
                 </node>
-                <arrow object="crapo.transition" 
+                <arrow object="crapo.automaton.transition" 
                     source="from_state" 
                     destination="to_state" 
                     label="['name']">

@@ -2,9 +2,9 @@
 <odoo>
 
     <record model="ir.ui.view" 
-        id="view_crapo_transition_tree">
+        id="view_crapo_automaton_transition_tree">
         <field name="name">Automaton transitions</field>
-        <field name="model">crapo.transition</field>
+        <field name="model">crapo.automaton.transition</field>
         <field name="priority" 
             eval="16" />
         <field name="mode">primary</field>
@@ -21,9 +21,9 @@
     </record>
 
     <record model="ir.ui.view" 
-        id="view_crapo_transition_form">
+        id="view_crapo_automaton_transition_form">
         <field name="name">Automaton transitions</field>
-        <field name="model">crapo.transition</field>
+        <field name="model">crapo.automaton.transition</field>
         <field name="priority" 
             eval="16" />
         <field name="mode">primary</field>

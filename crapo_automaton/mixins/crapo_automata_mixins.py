@@ -123,7 +123,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
 
         next_states = False
         if self.automaton:
-            eligible_transitions = self.env["crapo.transition"].search(
+            eligible_transitions = self.env["crapo.automaton.transition"].search(
                 [
                     ("automaton", "=", self.automaton.id),
                     ("from_state", "=", self.state.id),
@@ -242,7 +242,7 @@ class ObjectWithStateMixin(ReadonlyViewMixin):
                 current_state = rec.state
 
         # Search for elected transition
-        transition = self.env["crapo.transition"].search(
+        transition = self.env["crapo.automaton.transition"].search(
             [
                 ("from_state", "=", current_state.id),
                 ("to_state", "=", target_state_id),
@@ -330,13 +330,13 @@ class StateObjectMixin(object):
 
     transitions_to = fields.One2many(
         string="Incomint transitions",
-        comodel_name="crapo.transition",
+        comodel_name="crapo.automaton.transition",
         inverse_name="to_state",
     )
 
     transitions_from = fields.One2many(
         string="Outgoing transitions",
-        comodel_name="crapo.transition",
+        comodel_name="crapo.automaton.transition",
         inverse_name="from_state",
     )
 

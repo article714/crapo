@@ -40,7 +40,7 @@ class Automaton(models.Model):
 
     transitions = fields.One2many(
         string="Transitions",
-        comodel_name="crapo.transition",
+        comodel_name="crapo.automaton.transition",
         inverse_name="automaton",
     )
 

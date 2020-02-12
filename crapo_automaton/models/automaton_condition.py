@@ -24,7 +24,7 @@ class Condition(models.Model):
 
     transition_id = fields.Many2one(
         string="Transition",
-        comodel_name="crapo.transition",
+        comodel_name="crapo.automaton.transition",
         ondelete="cascade",
         required=True,
     )

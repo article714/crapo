@@ -9,7 +9,7 @@ class StateMachineTransition(models.Model):
     A transition between two states
     """
 
-    _name = "crapo.transition"
+    _name = "crapo.automaton.transition"
     _description = "Transition between two states"
 
     @api.constrains("postconditions", "async_action")
