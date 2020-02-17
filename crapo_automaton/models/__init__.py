@@ -9,7 +9,7 @@ Created on 16 july 2018
 
 from . import automaton
 from . import automaton_transition
-from . import business_object
+from . import automaton_mixin
 from . import automaton_condition
 from . import automaton_state
 from . import automaton_action

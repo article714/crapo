@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class Condition(models.Model):
+class CrapoAutomatonCondition(models.Model):
     """
     Condition definition
     """
@@ -23,8 +23,8 @@ class Condition(models.Model):
     sequence = fields.Integer(required=True, default=1)
 
     transition_id = fields.Many2one(
+        "crapo.automaton.transition",
         string="Transition",
-        comodel_name="crapo.automaton.transition",
         ondelete="cascade",
         required=True,
     )

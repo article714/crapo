@@ -4,7 +4,7 @@
 from odoo import fields, models, exceptions, api, _
 
 
-class StateMachineTransition(models.Model):
+class CrapoAutomatonTransition(models.Model):
     """
     A transition between two states
     """
@@ -23,32 +23,20 @@ class StateMachineTransition(models.Model):
                     _("Transition can't have async action and postcontitions")
                 )
 
-    name = fields.Char(
-        help="Transition's name", required=True, translate=True, size=32
+    name = fields.Char(help="Transition's name", required=True)
+
+    description = fields.Text()
+
+    automaton_id = fields.Many2one("crapo.automaton", required=True,)
+
+    model_id = fields.Many2one("ir.model", related="automaton.model_id")
+
+    from_state_id = fields.Many2one(
+        "crapo.automaton.state", ondelete="cascade", required=True,
     )
 
-    description = fields.Text(required=False, translate=True, size=256)
-
-    automaton = fields.Many2one(
-        comodel_name="crapo.automaton", store=True, required=True, index=True,
-    )
-
-    model_id = fields.Many2one(
-        string="Model", comodel_name="ir.model", related="automaton.model_id"
-    )
-
-    from_state = fields.Many2one(
-        comodel_name="crapo.automaton.state",
-        ondelete="cascade",
-        required=True,
-        index=True,
-    )
-
-    to_state = fields.Many2one(
-        comodel_name="crapo.automaton.state",
-        ondelete="cascade",
-        required=True,
-        index=True,
+    to_state_id = fields.Many2one(
+        "crapo.automaton.state", ondelete="cascade", required=True,
     )
 
     precondition_ids = fields.One2many(
@@ -62,7 +50,6 @@ class StateMachineTransition(models.Model):
             " the object to be checked, and 'env' which is a reference to "
             "odoo environment"
         ),
-        required=False,
         domain=[("is_precondition", "=", True)],
     )
 
@@ -76,19 +63,15 @@ class StateMachineTransition(models.Model):
             "reference to the object to be checked, and 'env' which "
             "is a reference to odoo environment"
         ),
-        required=False,
         domain=[("is_postcondition", "=", True)],
     )
 
-    action = fields.Many2one(
-        string="Action to be executed",
-        comodel_name="crapo.automaton.action",
-        required=False,
+    action_id = fields.Many2one(
+        "crapo.automaton.action", string="Action to be executed",
     )
 
     async_action = fields.Boolean(
-        help="""Action will be run asynchronously, after transition
-                                  is completed""",
+        help="""Action will be run asynchronously, after transition is completed""",
         default=False,
     )
 
@@ -110,7 +93,7 @@ change or during the write process (computed fields) """,
         """
         if values.get("async_action"):
             values["postcondition_ids"] = False
-        return super(StateMachineTransition, self).create(values)
+        return super(CrapoAutomatonTransition, self).create(values)
 
     @api.multi
     def write(self, values):
@@ -120,4 +103,4 @@ change or during the write process (computed fields) """,
         if values.get("async_action"):
             values["postcondition_ids"] = False
 
-        return super(StateMachineTransition, self).write(values)
+        return super(CrapoAutomatonTransition, self).write(values)

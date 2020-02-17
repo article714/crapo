@@ -3,39 +3,106 @@
 
 from odoo import fields, models, _, api, exceptions
 
-from ..mixins import (
-    crapo_automata_mixins,
-)  # pylint: disable=odoo-addons-relative-import
 
-
-class State(crapo_automata_mixins.StateObjectMixin, models.Model):
+class CrapoAutomatonState(models.Model):
     """
     A state used in the context of an automaton
     """
 
     _name = "crapo.automaton.state"
-    _description = u"State in a workflow, specific to a given model"
+    _description = "State in a workflow, specific to a given model"
     _order = "sequence, name"
 
-    name = fields.Char(
-        help="State's name", required=True, translate=True, size=32
-    )
+    name = fields.Char(help="State's name", required=True)
 
-    description = fields.Char(required=False, translate=True, size=256)
+    description = fields.Text()
+
+    automaton_id = fields.Many2one(
+        "crapo.automaton",
+        default=lambda self: self._get_default_automaton(),
+        required=True,
+    )
 
     sequence = fields.Integer(
         default=1,
         help="Sequence gives the order in which states are displayed",
     )
 
-    fold = fields.Boolean(
-        string="Folded in kanban",
-        help=(
-            "This stage is folded in the kanban view "
-            "when there are no records in that stage to display."
-        ),
+    default_state = fields.Boolean(
+        help="Might be use as default state.", default=False, store=True
+    )
+
+    transitions_to_ids = fields.One2many(
+        "crapo.automaton.transition",
+        "to_state",
+        string="Incoming transitions",
+    )
+
+    transitions_from_ids = fields.One2many(
+        "crapo.automaton.transition",
+        "from_state",
+        string="Outgoing transitions",
+    )
+
+    # computed field to identify start and end states
+    is_start_state = fields.Boolean(
+        "Start State",
+        compute="_compute_is_start_state",
+        store=True,
+        index=True,
+    )
+
+    is_end_state = fields.Boolean(
+        "End State", compute="_compute_is_end_state", store=True, index=True
+    )
+
+    is_creation_state = fields.Boolean(
+        help="""Indicate if this state is a possible state to create a record.
+        This value is not take in account if it's a start state""",
         default=False,
     )
+
+    readonly_fields = fields.Char(
+        help="List of model's fields name separated by comma"
+    )
+
+    @api.depends("transitions_to_ids", "automaton_id")
+    def _compute_is_start_state(self):
+        for record in self:
+            if (
+                len(record.transitions_to_ids) == 0
+                or record.transitions_to_ids is False
+            ):
+                record.is_start_state = True
+            else:
+                record.is_start_state = False
+
+    @api.depends("transitions_from_ids", "automaton_id")
+    def _compute_is_end_state(self):
+        for record in self:
+            if (
+                len(record.transitions_to_ids) == 0
+                or record.transitions_to_ids is False
+            ):
+                record.is_end_state = True
+            else:
+                record.is_end_state = False
+
+    def _do_search_default_automaton(self):
+        return False
+
+    @api.model
+    def _get_default_automaton(self):
+        default_value = 0
+        if "current_automaton" in self.env.context:
+            try:
+                default_value = int(self.env.context.get("current_automaton"))
+            except Exception:
+                default_value = 0
+        else:
+            return self._do_search_default_automaton()
+
+        return self.env["crapo.automaton"].browse(default_value)
 
     @api.multi
     def write(self, values):
@@ -52,11 +119,11 @@ class State(crapo_automata_mixins.StateObjectMixin, models.Model):
                     found = self.search(
                         [
                             ("default_state", "=", True),
-                            ("automaton", "=", self.automaton.id),
+                            ("automaton_id", "=", self.automaton_id.id),
                             ("id", "!=", self.id),
                         ]
                     )
                     for s in found:
                         s.write({"default_state": False})
 
-        return super(State, self).write(values)
+        return super(CrapoAutomatonState, self).write(values)

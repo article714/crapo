@@ -16,6 +16,7 @@ class Automaton(models.Model):
     _name = "crapo.automaton"
     _description = "An automaton is a state machine for a given Odoo Model"
     _order = "name, id"
+
     _record_name = "name"
 
     _sql_constraints = [
@@ -26,51 +27,26 @@ class Automaton(models.Model):
         )
     ]
 
-    name = fields.Char(
-        string="Name", help="Automaton's name", required=True, translate=True
-    )
+    name = fields.Char(help="Automaton's name", required=True, translate=True)
 
     model_id = fields.Many2one(
+        "ir.model",
         string="Model",
-        help=""""
-                               Model for which this state is relevant""",
-        comodel_name="ir.model",
+        help="""Model for which this automaton is relevant""",
         required=True,
     )
 
-    transitions = fields.One2many(
-        string="Transitions",
-        comodel_name="crapo.automaton.transition",
-        inverse_name="automaton",
+    transition_ids = fields.One2many(
+        "crapo.automaton.transition", "automaton",
     )
 
-    states = fields.One2many(
-        string="States",
-        comodel_name="crapo.automaton.state",
-        inverse_name="automaton",
-    )
+    state_ids = fields.One2many("crapo.automaton.state", "automaton",)
 
-    # State Management
+    # # State Management
 
-    def get_default_state(self):
-        self.ensure_one()
-        for s in self.states:
-            if s.default_state:
-                return s
-        return False
-
-    @api.model
-    def create(self, values):
-        if "model_id" in values and values["model_id"]:
-            found = self.search([("model_id", "=", values["model_id"])])
-            if found:
-                raise exceptions.ValidationError(
-                    _(
-                        """
-                There should be a single autmaton per model"""
-                    )
-                )
-        else:
-            raise exceptions.ValidationError(_("A target model is mandatory"))
-
-        return super(Automaton, self).create(values)
+    # def get_default_state(self):
+    #     self.ensure_one()
+    #     for s in self.states:
+    #         if s.default_state:
+    #             return s
+    #     return False
