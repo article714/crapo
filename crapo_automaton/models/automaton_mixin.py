@@ -49,13 +49,13 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
         compute="_compute_crapo_readonly_fields", default=",0,"
     )
 
-    @api.depends("state")
-    @api.onchange("state")
+    @api.depends("crapo_state_id")
+    @api.onchange("crapo_state_id")
     def _compute_crapo_readonly_fields(self):
         for rec in self:
-            if rec.state.readonly_fields:
+            if rec.crapo_state_id.readonly_fields:
                 rec.crapo_readonly_fields = ",{},".format(
-                    rec.state.readonly_fields
+                    rec.crapo_state_id.readonly_fields
                 )
             else:
                 rec.crapo_readonly_fields = ",0,"
@@ -87,12 +87,10 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
         result = []
 
         if self.crapo_automaton_id:
-            result.append(
-                ("crapo_automaton_id", "=", self.crapo_automaton_id.id)
-            )
+            result.append(("automaton_id", "=", self.crapo_automaton_id.id))
         else:
             result.append(
-                ("crapo_automaton_id", "=", self._get_model_automaton().id)
+                ("automaton_id", "=", self._get_model_automaton().id)
             )
 
         return result
@@ -129,11 +127,13 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
             ].search(
                 [
                     ("automaton_id", "=", self.crapo_automaton_id.id),
-                    ("from_state", "=", self.state.id),
+                    ("from_state_id", "=", self.crapo_state_id.id),
                 ]
             )
 
-            target_ids = eligible_transitions.mapped(lambda x: x.to_state.id)
+            target_ids = eligible_transitions.mapped(
+                lambda x: x.to_state_id.id
+            )
 
             if target_ids:
                 domain.append(("id", "in", target_ids))
@@ -141,7 +141,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
                 next_states = self.env["crapo.automaton.state"].search(domain)
 
         else:
-            domain.append(("sequence", ">", self.state.sequence))
+            domain.append(("sequence", ">", self.crapo_state_id.sequence))
             next_states = self.env["crapo.automaton.state"].search(
                 domain, limit=1
             )
@@ -163,7 +163,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
         rec = super(CrapoAutomatonMixin, self).create(values)
 
         if not self.env.context.get("crapo_no_creation_state_validation"):
-            state_id = rec.state
+            state_id = rec.crapo_state_id
             if not (state_id.is_start_state or state_id.is_creation_state):
                 ir_model = self.env["ir.model"]
                 raise ValidationError(
@@ -188,8 +188,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
         target_state_id = None
         result = True
 
-        if "state" in values:
-            target_state_id = values["state"]
+        if "crapo_state_id" in values:
+            target_state_id = values["crapo_state_id"]
 
         # check if there is a change state needed
         if target_state_id is not None:
@@ -220,8 +220,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
         current_state = False
         for rec in self:
             next_states = rec._next_states()
-            if rec.state.id == target_state_id:
-                current_state = rec.state
+            if rec.crapo_state_id.id == target_state_id:
+                current_state = rec.crapo_state_id
                 continue
             elif not next_states:
                 raise ValidationError(
@@ -237,18 +237,21 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.Model):
                         else target_state_id
                     )
                 )
-            elif current_state is not False and current_state != rec.state:
+            elif (
+                current_state is not False
+                and current_state != rec.crapo_state_id
+            ):
                 raise ValidationError(
                     _("Transitionning is not possible from differents states")
                 )
             else:
-                current_state = rec.state
+                current_state = rec.crapo_state_id
 
         # Search for elected transition
         transition = self.env["crapo.automaton.transition"].search(
             [
-                ("from_state", "=", current_state.id),
-                ("to_state", "=", target_state_id),
+                ("from_state_id", "=", current_state.id),
+                ("to_state_id", "=", target_state_id),
             ],
             limit=1,
         )

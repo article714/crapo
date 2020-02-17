@@ -14,7 +14,7 @@
     "depends": ["queue_job", "crapo_base"],
     "data": [
         "security/automaton_action.xml",
-        "security/crapo_business_object.xml",
+        "security/crapo_automaton_mixin.xml",
         "security/automaton.xml",
         "security/automaton_transition.xml",
         "security/automaton_condition.xml",

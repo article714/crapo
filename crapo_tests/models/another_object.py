@@ -6,7 +6,7 @@ from odoo import models, fields
 
 class AnObject(models.Model):
     _name = "crapo.test.another"
-    _inherit = "crapo.business.object"
+    _inherit = "crapo.automaton.mixin"
     _description = u"Another sample business Object"
 
     name = fields.Char(string="A Name")

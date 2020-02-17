@@ -34,13 +34,13 @@ class CrapoAutomatonState(models.Model):
 
     transitions_to_ids = fields.One2many(
         "crapo.automaton.transition",
-        "to_state",
+        "to_state_id",
         string="Incoming transitions",
     )
 
     transitions_from_ids = fields.One2many(
         "crapo.automaton.transition",
-        "from_state",
+        "from_state_id",
         string="Outgoing transitions",
     )
 

@@ -71,5 +71,5 @@ class WrappedStateMixin(StateObjectMixin):
             else:
                 if "name" not in values:
                     values["name"] = "Default State for %s" % self.id
-                values["automaton"] = my_automaton.id
+                values["automaton_id"] = my_automaton.id
                 return self.env["crapo.automaton.state"].create(values)

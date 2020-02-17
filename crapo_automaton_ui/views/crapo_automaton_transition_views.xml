@@ -13,9 +13,9 @@
             type="xml">
             <tree string="Transitions">
                 <field name="name" />
-                <field name="from_state" />
-                <field name="to_state" />
-                <field name="action" />
+                <field name="from_state_id" />
+                <field name="to_state_id" />
+                <field name="action_id" />
             </tree>
         </field>
     </record>
@@ -34,7 +34,7 @@
                 <group name="transition" 
                     string="transition definition">
                     <field name="name" />
-                    <field name="automaton" 
+                    <field name="automaton_id" 
                         invisible="1" />
                     <field name="model_id" 
                         invisible="1" />
@@ -42,16 +42,16 @@
                 </group>
                 <group name="states" 
                     string="States">
-                    <field name="from_state" 
-                        domain="[('automaton', '=', automaton)]" />
-                    <field name="to_state" 
-                        domain="[('automaton', '=', automaton)]" />
+                    <field name="from_state_id" 
+                        domain="[('automaton_id', '=', automaton_id)]" />
+                    <field name="to_state_id" 
+                        domain="[('automaton_id', '=', automaton_id)]" />
                 </group>
                 <group name="action" 
                     string="Action">
                     <field name="write_before" />
                     <field name="precondition_ids" />
-                    <field name="action" 
+                    <field name="action_id" 
                         domain="[('model_id', '=', model_id)]" />
                     <field name="async_action" />
                     <field name="postcondition_ids" 

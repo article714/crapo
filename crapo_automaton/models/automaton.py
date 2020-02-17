@@ -37,10 +37,10 @@ class Automaton(models.Model):
     )
 
     transition_ids = fields.One2many(
-        "crapo.automaton.transition", "automaton",
+        "crapo.automaton.transition", "automaton_id",
     )
 
-    state_ids = fields.One2many("crapo.automaton.state", "automaton",)
+    state_ids = fields.One2many("crapo.automaton.state", "automaton_id",)
 
     # # State Management
 

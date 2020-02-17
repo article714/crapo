@@ -38,12 +38,12 @@
                 </group>
                 <notebook>
                     <page string="States">
-                        <field name="states" 
-                            context="{'default_automaton':active_id,'current_automaton':active_id}" />
+                        <field name="state_ids" 
+                            context="{'default_automaton_id':active_id,'current_automaton':active_id}" />
                     </page>
                     <page string="Transitions">
-                        <field name="transitions" 
-                            context="{'default_automaton':active_id,'current_automaton':active_id}" />
+                        <field name="transition_ids" 
+                            context="{'default_automaton_id':active_id,'current_automaton':active_id}" />
                     </page>
                 </notebook>
             </form>
@@ -62,12 +62,12 @@
                     <field name="name" />
                 </node>
                 <arrow object="crapo.automaton.transition" 
-                    source="from_state" 
-                    destination="to_state" 
+                    source="from_state_id" 
+                    destination="to_state_id" 
                     label="['name']">
-                    <field name="from_state" />
-                    <field name="to_state" />
-                    <field name="action" />
+                    <field name="from_state_id" />
+                    <field name="to_state_id" />
+                    <field name="action_id" />
                 </arrow>
             </diagram>
         </field>

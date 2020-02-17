@@ -36,7 +36,7 @@
                 <group name="state" 
                     string="State definition">
                     <field name="name" />
-                    <field name="automaton" 
+                    <field name="automaton_id" 
                         invisible="1" />
                     <field name="description" />
                     <field name="default_state" />
@@ -45,7 +45,6 @@
                 <group name="ordering" 
                     string="State ordering">
                     <field name="sequence" />
-                    <field name="fold" />
                 </group>
                 <group string="State rules">
                     <field name="readonly_fields" />

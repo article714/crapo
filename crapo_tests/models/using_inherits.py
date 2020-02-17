@@ -13,11 +13,11 @@ from odoo import models, fields
 class CrapoObjectWithInherits(models.Model):
     _name = "crapo.test.withinherits"
 
-    _inherits = {"crapo.business.object": "wf_object_id"}
+    _inherits = {"crapo.automaton.mixin": "wf_object_id"}
 
     wf_object_id = fields.Many2one(
         string="Workflow Object",
-        comodel_name="crapo.business.object",
+        comodel_name="crapo.automaton.mixin",
         ondelete="cascade",
         required=True,
     )

@@ -5,16 +5,13 @@ License: AGPL-3
 @author: C. Guychard (Article 714)
 
 """
-import logging
 
 from odoo import models, api
-from odoo.addons.crapo_automaton.mixins import crapo_automata_mixins
 
 
-class ResPartnerWithMixin(
-    crapo_automata_mixins.ObjectWithStateMixin, models.Model
-):
-    _inherit = "res.partner"
+class ResPartnerWithMixin(models.Model):
+    _inherit = ["res.partner", "crapo.automaton.mixin"]
+    _name = "res.partner"
 
     @api.multi
     def write(self, values):
