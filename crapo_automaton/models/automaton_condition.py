@@ -17,7 +17,6 @@ class CrapoAutomatonCondition(models.Model):
     description = fields.Text(required=True)
     condition = fields.Char(required=True)
 
-    is_precondition = fields.Boolean(required=True, default=True)
     is_postcondition = fields.Boolean(required=True, default=False)
 
     sequence = fields.Integer(required=True, default=1)

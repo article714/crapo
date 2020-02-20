@@ -66,6 +66,8 @@ class CrapoAutomatonState(models.Model):
         help="List of model's fields name separated by comma"
     )
 
+    sync_state_id = fields.Integer()
+
     @api.depends("transitions_to_ids", "automaton_id")
     def _compute_is_start_state(self):
         for record in self:
@@ -113,7 +115,7 @@ class CrapoAutomatonState(models.Model):
             if values["default_state"]:
                 if len(self) > 1:
                     raise exceptions.ValidationError(
-                        _(u"There should only one default state per model")
+                        _("There should only one default state per model")
                     )
                 else:
                     found = self.search(

@@ -50,11 +50,13 @@
                 <group name="action" 
                     string="Action">
                     <field name="write_before" />
-                    <field name="precondition_ids" />
+                    <field name="precondition_ids" 
+                        context="{'default_is_postcondition': False}" />
                     <field name="action_id" 
                         domain="[('model_id', '=', model_id)]" />
                     <field name="async_action" />
                     <field name="postcondition_ids" 
+                        context="{'default_is_postcondition': True}" 
                         attrs="{'invisible':[('async_action','=',True)]}" />
                 </group>
             </form>

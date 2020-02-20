@@ -42,11 +42,19 @@ class Automaton(models.Model):
 
     state_ids = fields.One2many("crapo.automaton.state", "automaton_id",)
 
-    # # State Management
+    default_state_id = fields.Many2one(
+        "crapo.automaton.state", compute="_compute_default_state"
+    )
 
-    # def get_default_state(self):
-    #     self.ensure_one()
-    #     for s in self.states:
-    #         if s.default_state:
-    #             return s
-    #     return False
+    sync_state_field = fields.Char()
+
+    # =========================
+    # Compute
+    # =========================
+
+    @api.depends("state_ids")
+    def _compute_default_state(self):
+        for rec in self:
+            rec.default_state_id = rec.state_ids.filtered(
+                lambda state: state.default_state
+            )

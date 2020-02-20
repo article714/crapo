@@ -78,8 +78,6 @@
     </field>
   </record>
 
-
-
   <record model="ir.ui.view" 
     id="view_another_object_basic_form">
     <field name="name">view_another_object_basic_form</field>

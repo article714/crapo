@@ -50,7 +50,7 @@ class CrapoAutomatonTransition(models.Model):
             " the object to be checked, and 'env' which is a reference to "
             "odoo environment"
         ),
-        domain=[("is_precondition", "=", True)],
+        domain=[("is_postcondition", "=", False)],
     )
 
     postcondition_ids = fields.One2many(

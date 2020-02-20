@@ -35,7 +35,6 @@
                         <field name="description" />
                         <field name="condition" />
                         <field name="sequence" />
-                        <field name="is_precondition" />
                         <field name="is_postcondition" />
                     </group>
                 </sheet>
