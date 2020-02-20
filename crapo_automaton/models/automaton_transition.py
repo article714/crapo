@@ -46,8 +46,8 @@ class CrapoAutomatonTransition(models.Model):
         help=(
             "Conditions to be checked before "
             "initiating this transition. "
-            "Evaluation environment contains 'object' which is a reference to"
-            " the object to be checked, and 'env' which is a reference to "
+            "Evaluation environment contains 'record' which is a reference to"
+            " the record to be checked, and 'env' which is a reference to "
             "odoo environment"
         ),
         domain=[("is_postcondition", "=", False)],
@@ -59,8 +59,8 @@ class CrapoAutomatonTransition(models.Model):
         string="Post-conditions",
         help=(
             "Conditions to be checked before ending this transition. "
-            "Evaluation environment contains 'object' which is a "
-            "reference to the object to be checked, and 'env' which "
+            "Evaluation environment contains 'record' which is a "
+            "reference to the record to be checked, and 'env' which "
             "is a reference to odoo environment"
         ),
         domain=[("is_postcondition", "=", True)],

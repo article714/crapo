@@ -17,11 +17,7 @@ class CrapoAutomatonState(models.Model):
 
     description = fields.Text()
 
-    automaton_id = fields.Many2one(
-        "crapo.automaton",
-        default=lambda self: self._get_default_automaton(),
-        required=True,
-    )
+    automaton_id = fields.Many2one("crapo.automaton", required=True,)
 
     sequence = fields.Integer(
         default=1,
@@ -47,13 +43,16 @@ class CrapoAutomatonState(models.Model):
     # computed field to identify start and end states
     is_start_state = fields.Boolean(
         "Start State",
-        compute="_compute_is_start_state",
+        compute="_compute_is_start_end_state",
         store=True,
         index=True,
     )
 
     is_end_state = fields.Boolean(
-        "End State", compute="_compute_is_end_state", store=True, index=True
+        "End State",
+        compute="_compute_is_start_end_state",
+        store=True,
+        index=True,
     )
 
     is_creation_state = fields.Boolean(
@@ -63,69 +62,41 @@ class CrapoAutomatonState(models.Model):
     )
 
     readonly_fields = fields.Char(
-        help="List of model's fields name separated by comma"
+        help="""List of model's fields name separated by comma that
+                will be readonly when records are in this state"""
     )
 
-    sync_state_id = fields.Integer()
+    sync_state_id = fields.Integer(
+        help="sync state field id that is link to this state"
+    )
 
-    @api.depends("transitions_to_ids", "automaton_id")
-    def _compute_is_start_state(self):
+    # =================================
+    # Compute
+    # =================================
+
+    @api.depends("transitions_to_ids", "transitions_from_ids")
+    def _compute_is_start_end_state(self):
         for record in self:
-            if (
-                len(record.transitions_to_ids) == 0
-                or record.transitions_to_ids is False
-            ):
-                record.is_start_state = True
-            else:
-                record.is_start_state = False
+            record.is_start_state = not record.transitions_from_ids
+            record.is_end_state = not record.transitions_to_ids
 
-    @api.depends("transitions_from_ids", "automaton_id")
-    def _compute_is_end_state(self):
-        for record in self:
-            if (
-                len(record.transitions_to_ids) == 0
-                or record.transitions_to_ids is False
-            ):
-                record.is_end_state = True
-            else:
-                record.is_end_state = False
-
-    def _do_search_default_automaton(self):
-        return False
-
-    @api.model
-    def _get_default_automaton(self):
-        default_value = 0
-        if "current_automaton" in self.env.context:
-            try:
-                default_value = int(self.env.context.get("current_automaton"))
-            except Exception:
-                default_value = 0
-        else:
-            return self._do_search_default_automaton()
-
-        return self.env["crapo.automaton"].browse(default_value)
+    # ====================================
+    # Write / Create
+    # ====================================
 
     @api.multi
     def write(self, values):
         """
-        Override default method to check if there is a valid default_state
+            Override default method to prevent multi default state
         """
         if "default_state" in values:
             if values["default_state"]:
                 if len(self) > 1:
                     raise exceptions.ValidationError(
-                        _("There should only one default state per model")
+                        _("There should be only one default state per model")
                     )
                 else:
-                    found = self.search(
-                        [
-                            ("default_state", "=", True),
-                            ("automaton_id", "=", self.automaton_id.id),
-                            ("id", "!=", self.id),
-                        ]
-                    )
-                    for s in found:
-                        s.write({"default_state": False})
+                    # Reset previous default value
+                    self.automaton_id.default_state_id.default_state = False
 
         return super(CrapoAutomatonState, self).write(values)

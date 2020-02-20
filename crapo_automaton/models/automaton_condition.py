@@ -14,12 +14,22 @@ class CrapoAutomatonCondition(models.Model):
     _order = "sequence, name"
 
     name = fields.Char(required=True)
-    description = fields.Text(required=True)
-    condition = fields.Char(required=True)
+    description = fields.Text(
+        help="Message that will be show to user when this conditions is not met",
+        required=True,
+    )
+
+    condition = fields.Char(
+        help="Available object: env, record", required=True
+    )
 
     is_postcondition = fields.Boolean(required=True, default=False)
 
-    sequence = fields.Integer(required=True, default=1)
+    sequence = fields.Integer(
+        help="Sequence define in which order condition will be evaluated",
+        required=True,
+        default=1,
+    )
 
     transition_id = fields.Many2one(
         "crapo.automaton.transition",
