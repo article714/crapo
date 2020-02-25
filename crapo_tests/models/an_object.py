@@ -7,12 +7,8 @@ from odoo import models, fields
 class AnObject(models.Model):
     _name = "crapo.test.object"
     _inherit = ["crapo.automaton.mixin"]
-    _description = u"A sample business Object"
+    _description = "A sample business Object"
 
-    name = fields.Char(string="A Name")
+    name = fields.Char()
 
-    some_value = fields.Boolean("Some Value")
-
-    some_objects = fields.One2many(
-        comodel_name="crapo.test.another", inverse_name="to_object"
-    )
+    some_value = fields.Boolean()

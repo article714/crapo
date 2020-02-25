@@ -3,24 +3,35 @@
 License: AGPL-3
 
 @author: C. Guychard (Article 714)
-
+@author: D. Couppé (Article 714)
 """
 
 from odoo import models, api
 
 
-class ResPartnerWithMixin(models.Model):
+class ResPartner(models.Model):
+    """
+        Add crapo.automaton.mixin to res.partner and emit wf_event
+        on event and create
+    """
+
     _inherit = ["res.partner", "crapo.automaton.mixin"]
     _name = "res.partner"
 
-    @api.multi
-    def write(self, values):
-        res = super(ResPartnerWithMixin, self).write(values)
-        self.wf_event("record_write")
-        return res
-
     @api.model
     def create(self, values):
-        rec = super(ResPartnerWithMixin, self).create(values)
+        """
+            Emit wf_event on create
+        """
+        rec = super(ResPartner, self).create(values)
         rec.wf_event("record_create")
         return rec
+
+    @api.multi
+    def write(self, values):
+        """
+            Emit wf_event on write
+        """
+        res = super(ResPartner, self).write(values)
+        self.wf_event("record_write")
+        return res

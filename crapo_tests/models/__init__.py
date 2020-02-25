@@ -7,7 +7,5 @@ Created on 25 july 2018
 """
 
 from . import an_object
-from . import another_object
-from . import using_inherits
 from . import res_partner
 from . import crm_lead

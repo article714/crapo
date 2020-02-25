@@ -58,3 +58,20 @@ class Automaton(models.Model):
             rec.default_state_id = rec.state_ids.filtered(
                 lambda state: state.default_state
             )
+
+    # =========================
+    # Create
+    # =========================
+
+    @api.model
+    def create(self, values):
+        """
+            Write automaton_id on automaton.model_id existing records
+        """
+        rec = super(Automaton, self).create(values)
+
+        self.env[rec.model_id.model].search([]).write(
+            {"crapo_automaton_id": rec.id}
+        )
+
+        return rec

@@ -27,7 +27,9 @@ class CrapoAutomatonTransition(models.Model):
 
     description = fields.Text()
 
-    automaton_id = fields.Many2one("crapo.automaton", required=True,)
+    automaton_id = fields.Many2one(
+        "crapo.automaton", required=True, ondelete="cascade"
+    )
 
     model_id = fields.Many2one("ir.model", related="automaton_id.model_id")
 

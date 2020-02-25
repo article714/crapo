@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Automaton -->
+    <record id="test_object_automaton" 
+        model="crapo.automaton">
+        <field name="name">An object automaton</field>
+        <field name="model_id" 
+            ref="model_crapo_test_object" />
+    </record>
+
+    <!-- State -->
+
+    <record id="test_object_state_0" 
+        model="crapo.automaton.state">
+        <field name="name">State 0</field>
+        <field name="automaton_id" 
+            ref="test_object_automaton" />
+        <field name="sequence">0</field>
+        <field name="default_state">True</field>
+    </record>
+
+    <record id="test_object_state_1" 
+        model="crapo.automaton.state">
+        <field name="name">State 1</field>
+        <field name="automaton_id" 
+            ref="test_object_automaton" />
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="test_object_state_2" 
+        model="crapo.automaton.state">
+        <field name="name">State 2</field>
+        <field name="automaton_id" 
+            ref="test_object_automaton" />
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="test_object_state_3" 
+        model="crapo.automaton.state">
+        <field name="name">State 3</field>
+        <field name="automaton_id" 
+            ref="test_object_automaton" />
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- Crapo action -->
+
+    <record id="test_object_action_rename_toto" 
+        model="crapo.automaton.action">
+        <field name="name">Rename Toto</field>
+        <field name="state">object_write</field>
+        <field name="model_id" 
+            ref="model_crapo_test_object" />
+        <field name="fields_lines" 
+            eval="[(0,0,{
+                'col1': ref('field_crapo_test_object__name'),
+                'value': 'toto'
+            })]" />
+        <field name="type">value</field>
+    </record>
+
+    <!-- Transition -->
+
+    <record id="test_object_transition_state_0_state_1" 
+        model="crapo.automaton.transition">
+        <field name="name">New -> Qualified</field>
+        <field name="automaton_id" 
+            ref="test_object_automaton" />
+        <field name="from_state_id" 
+            ref="test_object_state_0" />
+        <field name="to_state_id" 
+            ref="test_object_state_1" />
+        <field name="sequence">0</field>
+        <field name="precondition_ids" 
+            eval="[(0,0,
+                {'name': 'Toto',
+                 'description': 'Object name must be Toto',
+                 'condition': 'record.name == \'Toto\''
+                })]" />
+    </record>
+
+    <record id="test_object_transition_state_1_state_2" 
+        model="crapo.automaton.transition">
+        <field name="name">Qualified -> Proposed</field>
+        <field name="automaton_id" 
+            ref="test_object_automaton" />
+        <field name="from_state_id" 
+            ref="test_object_state_1" />
+        <field name="to_state_id" 
+            ref="test_object_state_2" />
+        <field name="sequence">1</field>
+        <field name="action_id" 
+            ref="test_object_action_rename_toto" />
+    </record>
+
+</odoo>

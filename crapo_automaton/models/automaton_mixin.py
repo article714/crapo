@@ -38,6 +38,16 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
         "crapo.automaton.state",
         help="""State in which this object is""",
         default=lambda self: self._crapo_get_model_automaton().default_state_id,
+        domain=lambda self: [
+            (
+                "automaton_id",
+                "=",
+                (
+                    self.crapo_automaton_id
+                    or self._crapo_get_model_automaton()
+                ).id,
+            )
+        ],
     )
 
     crapo_readonly_fields = fields.Char(

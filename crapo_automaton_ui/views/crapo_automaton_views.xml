@@ -52,27 +52,4 @@
         </field>
     </record>
 
-    <record id="view_automaton_diagram" 
-        model="ir.ui.view">
-        <field name="name">automaton.diagram</field>
-        <field name="model">crapo.automaton</field>
-        <field name="arch" 
-            type="xml">
-            <diagram string="Automaton Editor">
-                <node object="crapo.automaton.state" 
-                    shape="rectangle:is_start_state or is_end_state">
-                    <field name="name" />
-                </node>
-                <arrow object="crapo.automaton.transition" 
-                    source="from_state_id" 
-                    destination="to_state_id" 
-                    label="['name']">
-                    <field name="from_state_id" />
-                    <field name="to_state_id" />
-                    <field name="action_id" />
-                </arrow>
-            </diagram>
-        </field>
-    </record>
-
 </odoo>

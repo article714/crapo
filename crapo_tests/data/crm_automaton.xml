@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Automaton -->
+    <record id="crm_automaton" 
+        model="crapo.automaton">
+        <field name="name">Automaton CRM</field>
+        <field name="model_id" 
+            ref="crm.model_crm_lead" />
+        <field name="sync_state_field">stage_id</field>
+    </record>
+
+    <!-- State -->
+
+    <record id="crm_state_new" 
+        model="crapo.automaton.state">
+        <field name="name">New</field>
+        <field name="automaton_id" 
+            ref="crm_automaton" />
+        <field name="sync_state_id" 
+            ref="crm.stage_lead1" />
+        <field name="sequence">0</field>
+    </record>
+
+    <record id="crm_state_qualified" 
+        model="crapo.automaton.state">
+        <field name="name">Qualified</field>
+        <field name="automaton_id" 
+            ref="crm_automaton" />
+        <field name="sync_state_id" 
+            ref="crm.stage_lead2" />
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="crm_state_proposition" 
+        model="crapo.automaton.state">
+        <field name="name">Proposition</field>
+        <field name="automaton_id" 
+            ref="crm_automaton" />
+        <field name="sync_state_id" 
+            ref="crm.stage_lead3" />
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="crm_state_won" 
+        model="crapo.automaton.state">
+        <field name="name">Won</field>
+        <field name="automaton_id" 
+            ref="crm_automaton" />
+        <field name="sync_state_id" 
+            ref="crm.stage_lead4" />
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- Crapo action -->
+
+    <record id="crm_action_rename_tutu" 
+        model="crapo.automaton.action">
+        <field name="name">Rename Tutu</field>
+        <field name="state">object_write</field>
+        <field name="model_id" 
+            ref="crm.model_crm_lead" />
+        <field name="fields_lines" 
+            eval="[(0,0,{
+                'col1': ref('crm.field_crm_lead__name'),
+                'value': 'Tutu'
+            })]" />
+        <field name="type">value</field>
+    </record>
+
+    <!-- Transition -->
+
+    <record id="crm_transition_new_qualified" 
+        model="crapo.automaton.transition">
+        <field name="name">New -> Qualified</field>
+        <field name="automaton_id" 
+            ref="crm_automaton" />
+        <field name="from_state_id" 
+            ref="crm_state_new" />
+        <field name="to_state_id" 
+            ref="crm_state_qualified" />
+        <field name="sequence">0</field>
+        <field name="precondition_ids" 
+            eval="[(0,0,
+                {'name': 'Toto',
+                 'description': 'Opportunity name must be Toto',
+                 'condition': 'record.name == \'Toto\''
+                })]" />
+    </record>
+
+    <record id="crm_transition_qualified_proposed" 
+        model="crapo.automaton.transition">
+        <field name="name">Qualified -> Proposed</field>
+        <field name="automaton_id" 
+            ref="crm_automaton" />
+        <field name="from_state_id" 
+            ref="crm_state_qualified" />
+        <field name="to_state_id" 
+            ref="crm_state_proposition" />
+        <field name="sequence">1</field>
+        <field name="action_id" 
+            ref="crm_action_rename_tutu" />
+    </record>
+
+</odoo>

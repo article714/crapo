@@ -17,7 +17,9 @@ class CrapoAutomatonState(models.Model):
 
     description = fields.Text()
 
-    automaton_id = fields.Many2one("crapo.automaton", required=True,)
+    automaton_id = fields.Many2one(
+        "crapo.automaton", required=True, ondelete="cascade"
+    )
 
     sequence = fields.Integer(
         default=1,
@@ -77,12 +79,33 @@ class CrapoAutomatonState(models.Model):
     @api.depends("transitions_to_ids", "transitions_from_ids")
     def _compute_is_start_end_state(self):
         for record in self:
-            record.is_start_state = not record.transitions_from_ids
-            record.is_end_state = not record.transitions_to_ids
+            record.is_start_state = not record.transitions_to_ids
+            record.is_end_state = not record.transitions_from_ids
 
     # ====================================
     # Write / Create
     # ====================================
+
+    @api.model
+    def create(self, values):
+        """
+            Write crapo_state_id on automaton.model_id existing records if
+            there a sync_state_field on automaton
+        """
+        rec = super(CrapoAutomatonState, self).create(values)
+
+        automaton = rec.automaton_id
+        model = self.env[automaton.model_id.model]
+
+        # Synchronize existing automaton.model_id records
+        if automaton.sync_state_field:
+            model.search(
+                [(automaton.sync_state_field, "=", rec.sync_state_id)]
+            ).with_context({"crapo_no_transition": True}).write(
+                {"crapo_state_id": rec.id}
+            )
+
+        return rec
 
     @api.multi
     def write(self, values):
@@ -96,7 +119,10 @@ class CrapoAutomatonState(models.Model):
                         _("There should be only one default state per model")
                     )
                 else:
-                    # Reset previous default value
-                    self.automaton_id.default_state_id.default_state = False
+                    # Reset previous default value if there is one
+                    if self.automaton_id.default_state_id:
+                        self.automaton_id.default_state_id.default_state = (
+                            False
+                        )
 
         return super(CrapoAutomatonState, self).write(values)
