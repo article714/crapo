@@ -11,7 +11,7 @@
     "website": u"https://www.article714.org",
     "summary": u""" Fexible tool to manage automata & workflows
      for your odoo objects""",
-    "depends": ["crapo_workflow", "web_tree_dynamic_colored_field",],
+    "depends": ["crapo_workflow", "web_tree_dynamic_colored_field"],
     "data": [
         "actions/window_actions.xml",
         "views/crapo_menus.xml",
