@@ -44,4 +44,3 @@ class CrapoAutomatonAction(models.Model):
     def create(self, values):
         values["usage"] = "crapo_automaton_action"
         return super(CrapoAutomatonAction, self).create(values)
-

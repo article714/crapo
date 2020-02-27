@@ -13,7 +13,7 @@ class WorkflowListener(Component):
     _name = "crapo.workflow.listener"
     _inherit = "base.event.listener"
 
-    def wf_event(self, name, values={}):
+    def wf_event(self, name, values):
         try:
             mdl_broker = self.env["crapo.workflow.broker"]
         except KeyError:

@@ -169,7 +169,7 @@ class WorkflowTrigger(models.Model):
                     # Regexp to extract all word (and so all variable) from
                     # event_logical_condition
                     variables = re.findall(r"\w+", rec.event_logical_condition)
-                    if not event_name in variables:
+                    if event_name not in variables:
                         raise ValidationError(
                             _("Event ({}) is not used in {}").format(
                                 event_name,

@@ -1,14 +1,11 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-import logging
 
-from odoo import models, fields, api, SUPERUSER_ID, _
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.crapo_automaton.mixins.crapo_readonly_view_mixin import (
-    ReadonlyViewMixin,
-)
+from ..mixins.crapo_readonly_view_mixin import ReadonlyViewMixin
 
 
 class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
@@ -131,7 +128,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
             ) and not (state_id.is_start_state or state_id.is_creation_state):
                 raise ValidationError(
                     _(
-                        """ "{}" is not a possible crapo state to create a record of "{}" """
+                        ' "{}" is not a possible crapo state '
+                        ' to create a record of "{}" '
                     ).format(
                         state_id.display_name, rec._name,
                     )
@@ -174,7 +172,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
                         raise ValidationError(
                             _(
-                                'State "{}" is not in eligible target state from state "{}"'
+                                'State "{}" is not in eligible '
+                                'target state from state "{}"'
                             ).format(
                                 target_state_id.display_name,
                                 rec.crapo_state_id.display_name,

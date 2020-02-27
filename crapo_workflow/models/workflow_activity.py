@@ -16,11 +16,14 @@ class IrActionsServer(models.Model):
 
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment on which the activity is triggered
-#  - model: Odoo Model of the record on which the activity is triggered; is a void recordset
+#  - model: Odoo Model of the record on which
+#           the activity is triggered; is a void recordset
 #  - record: record linked to active record context key; may be void
-#  - records: recordset of all records on which the activity is triggered in multi-mode; may be void
+#  - records: recordset of all records on which
+#             the activity is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
-#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - log: log(message, level='info'): logging function to record
+#         debug information in ir.logging table
 #  - Warning: Warning Exception to use with raise
 #  - wf_context: record of crapo workflow context that triggered this activity
 #  - logging: python logging module helpfull to debug

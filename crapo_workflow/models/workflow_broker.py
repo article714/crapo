@@ -1,7 +1,6 @@
 # ©2018-2019 Article 714
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import logging
 
 from odoo import models, api
 from odoo.addons.queue_job.job import job
@@ -52,7 +51,7 @@ class WorkflowBroker(models.TransientModel):
                     {
                         "workflow_id": rec_event.trigger_id.workflow_id.id,
                         "context_event_ids": [
-                            (0, False, {"event_id": rec_event.id,},)
+                            (0, False, {"event_id": rec_event.id})
                         ],
                     }
                 )

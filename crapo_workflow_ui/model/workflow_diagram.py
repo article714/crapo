@@ -97,7 +97,8 @@ class WorkflowDiagramArrow(models.Model):
                         '2' || tj.crapo_workflow_trigger_id to_node
                     FROM
                         crapo_workflow_tj_activity_trigger tj
-                        JOIN crapo_workflow_trigger trg ON tj.crapo_workflow_trigger_id = trg.id
+                        JOIN crapo_workflow_trigger trg ON (
+                            tj.crapo_workflow_trigger_id = trg.id)
                     UNION ALL
                     SELECT
                         act.workflow_id,
@@ -106,7 +107,8 @@ class WorkflowDiagramArrow(models.Model):
 
                     FROM
                         crapo_workflow_tj_trigger_activity tj
-                        JOIN crapo_workflow_activity act ON tj.crapo_workflow_activity_id = act.id
+                        JOIN crapo_workflow_activity act ON (
+                            tj.crapo_workflow_activity_id = act.id)
                     UNION ALL
                     SELECT
                         trg.workflow_id,
