@@ -5,16 +5,6 @@ from odoo import tools
 from odoo import models, fields, api
 
 
-class Workflow(models.Model):
-    """
-        Added some One2many to crapo.wokrflow for UI convenience
-    """
-
-    _inherit = "crapo.workflow"
-
-    node_ids = fields.One2many("crapo.workflow.diagram.node", "workflow_id")
-
-
 class WorkflowDiagramNode(models.Model):
 
     _name = "crapo.workflow.diagram.node"

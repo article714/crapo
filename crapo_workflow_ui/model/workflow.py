@@ -16,3 +16,5 @@ class Workflow(models.Model):
     trigger_ids = fields.One2many("crapo.workflow.trigger", "workflow_id")
 
     context_ids = fields.One2many("crapo.workflow.context", "workflow_id")
+
+    node_ids = fields.One2many("crapo.workflow.diagram.node", "workflow_id")

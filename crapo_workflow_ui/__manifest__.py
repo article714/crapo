@@ -3,13 +3,13 @@
 # @license: AGPL v3
 
 {
-    "name": u"Crapo: Workflow UI",
-    "version": u"12.0.2.0.0",
-    "category": u"Crapo Workflows",
-    "author": u"Article714",
-    "license": u"AGPL-3",
-    "website": u"https://www.article714.org",
-    "summary": u""" Fexible tool to manage automata & workflows
+    "name": "Crapo: Workflow UI",
+    "version": "12.0.2.0.0",
+    "category": "Crapo Workflows",
+    "author": "Article714",
+    "license": "AGPL-3",
+    "website": "https://www.article714.org",
+    "summary": """ Fexible tool to manage automata & workflows
      for your odoo objects""",
     "depends": ["crapo_workflow", "web_tree_dynamic_colored_field"],
     "data": [
