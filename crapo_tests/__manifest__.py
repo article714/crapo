@@ -1,7 +1,7 @@
 {
     "name": "Crapo: Test Module for workflow management",
     "version": "12.0.3.0.0",
-    "category": "Crapo Automata & Workflows",,
+    "category": "Crapo Automata & Workflows",
     "author": "Article714",
     "license": "LGPL-3",
     "website": "https://www.article714.org",
