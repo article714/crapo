@@ -1,10 +1,3 @@
-"""
-©2019-2020
-License: AGPL-3
-
-@author: D. Couppé (Article 714)
-
-"""
 from odoo.addons.component.core import Component
 from odoo.addons.component_event.components.event import skip_if
 

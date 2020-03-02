@@ -1,7 +1,3 @@
-# ©2018-2019 Article 714
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
-
 from odoo import models, api
 from odoo.addons.queue_job.job import job
 from odoo.tools.safe_eval import safe_eval

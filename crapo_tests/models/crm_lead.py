@@ -1,12 +1,3 @@
-"""
-©2019
-License: AGPL-3
-
-@author: C. Guychard (Article 714)
-@author: D. Couppé (Article 714)
-
-"""
-
 from odoo import models
 
 

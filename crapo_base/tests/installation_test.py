@@ -1,7 +1,3 @@
-# ©2019 Article 714
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
-
 from odoo.tests import common
 
 
@@ -18,7 +14,7 @@ class IntegrationTestSuite(common.TransactionCase):
         self.assertIsNotNone(module_model)
 
         found_modules = module_model.search(
-            [("name", "=", "base_crapo_workflow"), ("state", "=", "installed")]
+            [("name", "=", "crapo_base"), ("state", "=", "installed")]
         )
 
         self.assertEqual(len(found_modules), 1, "Module not installed")
