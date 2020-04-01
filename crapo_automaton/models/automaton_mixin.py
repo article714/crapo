@@ -52,7 +52,9 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
     def _read_group_crapo_states(self, states, domain, order):
         state_ids = states._search(
-            domain, order=order, access_rights_uid=SUPERUSER_ID
+            self._fields["crapo_state_id"].domain(self),
+            order=order,
+            access_rights_uid=SUPERUSER_ID,
         )
         return states.browse(state_ids)
 
