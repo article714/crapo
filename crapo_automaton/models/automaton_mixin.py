@@ -42,11 +42,18 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                 ).id,
             )
         ],
+        group_expand="_read_group_crapo_states",
     )
 
     crapo_readonly_fields = fields.Char(
         compute="_compute_crapo_readonly_fields", default=",0,"
     )
+
+    def _read_group_crapo_states(self, states, domain, order):
+        state_ids = states._search(
+            domain, order=order, access_rights_uid=SUPERUSER_ID
+        )
+        return states.browse(state_ids)
 
     @api.depends("crapo_state_id")
     @api.onchange("crapo_state_id")
