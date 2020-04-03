@@ -132,6 +132,24 @@ class WorkflowContextEvent(models.Model):
                 rec.done,
             )
 
+    def get_record_id(self):
+        """
+            Return record_id if set, if not set try to get it from
+            context and set it.
+        """
+        if not self.record_id:
+            try:
+                self.record_id = int(
+                    self.wf_context_id.get_context_entry(
+                        self.event_id.record_id_context_key, convert=False
+                    )
+                )
+            except KeyError:
+                # If we have a key error it means that record_id_context_key
+                # doesn't exists wet in context
+                pass
+        return self.record_id
+
     # ==================
     # Write / Create
     # ==================
@@ -141,11 +159,7 @@ class WorkflowContextEvent(models.Model):
         rec = super(WorkflowContextEvent, self).create(values)
 
         if rec.event_id.record_id_context_key:
-            rec.record_id = int(
-                rec.wf_context_id.get_context_entry(
-                    rec.event_id.record_id_context_key, convert=False
-                )
-            )
+            rec.get_record_id()
         elif rec.event_id.event_type == "activity_ended":
             rec.record_id = rec.event_id.activity_id.id
         return rec

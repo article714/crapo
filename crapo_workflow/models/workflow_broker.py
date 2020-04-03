@@ -63,9 +63,10 @@ class WorkflowBroker(models.TransientModel):
                 # condition is met the event_context are set to done
                 for rec_ctx_event in rec_event.context_event_ids:
                     context["wf_context"] = rec_ctx_event.wf_context_id
+
                     if (
                         not rec_event.record_id_context_key
-                        or rec_ctx_event.record_id == record.id
+                        or rec_ctx_event.get_record_id() == record.id
                     ) and (
                         not rec_event.condition
                         or safe_eval(rec_event.condition, context,)
