@@ -171,7 +171,10 @@ class WorkflowContextEvent(models.Model):
 
         if values.get("done"):
             for wf_context_id in self.mapped("wf_context_id"):
-                self.mapped("trigger_id").with_delay().check_and_run(
+                filtered_rec = self.filtered(
+                    lambda rec: rec.wf_context_id == wf_context_id
+                )
+                filtered_rec.mapped("trigger_id").with_delay().check_and_run(
                     wf_context_id=wf_context_id
                 )
 
