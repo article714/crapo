@@ -24,7 +24,10 @@ class ReadonlyViewMixin(object):
             view_id, view_type, toolbar, submenu
         )
         if view_type in ("form", "tree"):
-            readonly_fields = self.fields_get(attributes=["readonly"])
+            readonly_fields = [
+                name for name, field in self._fields.items() if field.readonly
+            ]
+
             node = etree.fromstring(result["arch"])
             for field in self._readonly_fields_to_add:
                 node.append(E.field(name=field, invisible="1"))
@@ -59,7 +62,7 @@ class ReadonlyViewMixin(object):
                 return
             # If there is no domain define and fields is already in readonly
             # we skip too
-            elif readonly is None and readonly_fields[field_name]["readonly"]:
+            elif readonly is None and field_name in readonly_fields:
                 return
 
             _readonly_domain = expression.OR(
