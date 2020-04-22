@@ -58,9 +58,11 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
         )
         return states.browse(state_ids)
 
-    @api.depends("crapo_state_id")
-    @api.onchange("crapo_state_id")
     def _compute_crapo_readonly_fields(self):
+        """
+            Do not add api.depends or api.onchange to not recompute
+            crapo_readonly_fields before effective write
+        """
         for rec in self:
             if rec.crapo_state_id.readonly_fields:
                 rec.crapo_readonly_fields = ",{},".format(
