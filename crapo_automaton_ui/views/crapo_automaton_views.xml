@@ -41,7 +41,6 @@
                     <page string="States">
                         <field name="state_ids" 
                             context="{'default_automaton_id':active_id}" />
- />
                     </page>
                     <page string="Transitions">
                         <field name="transition_ids" 
