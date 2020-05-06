@@ -18,10 +18,11 @@ class WorkflowBroker(models.TransientModel):
     @api.model
     def notify(self, event_type, values):
         """
-            Call by method wf_event from base model to receive and evaluate event.
+            Call by method wf_event from base model to receive and
+            evaluate event.
 
-            * values must content a key 'record' that contain the record that throw
-            the event
+            * values must content a key 'record' that contain the record
+            that throws the event
         """
         # Record asssociate with this event
         record = values["record"]
@@ -32,7 +33,15 @@ class WorkflowBroker(models.TransientModel):
 
         domain = [
             ("event_type", "=", event_type),
-            ("model_id", "=", self.env["ir.model"]._get_id(record._name),),
+            (
+                "model_id",
+                "=",
+                self.env[
+                    "ir.model"
+                ]._get_id(  # pylint: disable=protected-access
+                    record._name  # pylint: disable=protected-access
+                ),
+            ),
         ]
 
         # Get empty recordset to accumulate done wf_ctx_event

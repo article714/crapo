@@ -1,3 +1,4 @@
+# pylint: disable=missing-docstring
 {
     "name": "Crapo: base",
     "version": "12.0.3.0.0",
