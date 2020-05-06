@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 from odoo.tests import common
 
 

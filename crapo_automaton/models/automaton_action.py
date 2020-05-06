@@ -32,6 +32,9 @@ class CrapoAutomatonAction(models.Model):
     )
 
     def run(self):
+        """
+        Execute action
+        """
         self.action_server_id.run()
 
     @api.multi

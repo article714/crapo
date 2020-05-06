@@ -90,7 +90,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
             (
                 "model_id",
                 "=",
-                self.env[
+                self.env[  # pylint: disable=protected-access
                     "ir.model"
                 ]._get_id(  # pylint: disable=protected-access
                     self._name  # pylint: disable=protected-access
@@ -164,7 +164,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                         ' "{}" is not a possible crapo state '
                         ' to create a record of "{}" '
                     ).format(
-                        state_id.display_name, rec._name,
+                        state_id.display_name,
+                        rec._name,  # pylint: disable=protected-access
                     )
                 )
         return rec
@@ -198,7 +199,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                 # Search for elected transition
                 for rec in self:  # pylint: disable=cell-var-from-loop
                     transition = automaton.transition_ids.filtered(
-                        lambda trans: trans.from_state_id == rec.crapo_state_id
+                        lambda trans: trans.from_state_id
+                        == rec.crapo_state_id  # pylint: disable=cell-var-from-loop
                         and trans.to_state_id == target_state_id
                     )
                     if not transition:

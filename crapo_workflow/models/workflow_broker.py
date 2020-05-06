@@ -36,11 +36,9 @@ class WorkflowBroker(models.TransientModel):
             (
                 "model_id",
                 "=",
-                self.env[
+                self.env[  # pylint: disable=protected-access
                     "ir.model"
-                ]._get_id(  # pylint: disable=protected-access
-                    record._name  # pylint: disable=protected-access
-                ),
+                ]._get_id(record._name),
             ),
         ]
 

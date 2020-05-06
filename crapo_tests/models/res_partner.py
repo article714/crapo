@@ -1,3 +1,6 @@
+"""
+See README for details
+"""
 from odoo import models, api
 
 

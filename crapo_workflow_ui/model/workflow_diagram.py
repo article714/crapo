@@ -6,6 +6,9 @@ from odoo import models, fields, api
 
 
 class WorkflowDiagramNode(models.Model):
+    """
+    A node in the diagram
+    """
 
     _name = "crapo.workflow.diagram.node"
     _auto = False
@@ -56,6 +59,9 @@ class WorkflowDiagramNode(models.Model):
 
 
 class WorkflowDiagramArrow(models.Model):
+    """
+    A link (arrow: directed link) in the diagram
+    """
 
     _name = "crapo.workflow.diagram.arrow"
     _auto = False
@@ -70,6 +76,10 @@ class WorkflowDiagramArrow(models.Model):
 
     @api.model_cr
     def init(self):
+        """
+        actions to take when creating tables on module initialization or
+        installation
+        """
         tools.drop_view_if_exists(self.env.cr, self._table)
         query = """
             CREATE OR REPLACE VIEW crapo_workflow_diagram_arrow AS (
