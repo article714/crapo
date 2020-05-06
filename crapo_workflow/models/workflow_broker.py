@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 from odoo import models, api
 from odoo.addons.queue_job.job import job
 from odoo.tools.safe_eval import safe_eval

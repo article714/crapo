@@ -1,3 +1,7 @@
+"""
+See README for details
+"""
+
 from lxml import etree
 from lxml.builder import E
 
@@ -5,7 +9,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.osv import expression
 
 
-class ReadonlyViewMixin(object):
+class ReadonlyViewMixin():
     """
         Mixin class that can be used to set a whole view readonly with domains
     """
@@ -62,7 +66,8 @@ class ReadonlyViewMixin(object):
                 return
             # If there is no domain define and fields is already in readonly
             # we skip too
-            elif readonly is None and field_name in readonly_fields:
+
+            if readonly is None and field_name in readonly_fields:
                 return
 
             _readonly_domain = expression.OR(

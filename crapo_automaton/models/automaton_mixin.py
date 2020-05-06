@@ -1,3 +1,7 @@
+"""
+See README for details
+"""
+
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
@@ -26,20 +30,24 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
     crapo_automaton_id = fields.Many2one(
         "crapo.automaton",
         help="Automaton link to this model",
-        default=lambda self: self._crapo_get_model_automaton(),
+        default=lambda self: (
+            self._crapo_get_model_automaton()  # pylint: disable=protected-access
+        ),
     )
 
     crapo_state_id = fields.Many2one(
         "crapo.automaton.state",
         help="""State in which this object is""",
-        default=lambda self: self._crapo_get_model_automaton().default_state_id,
+        default=lambda self: (
+            self._crapo_get_model_automaton().default_state_id  # pylint: disable=protected-access
+        ),
         domain=lambda self: [
             (
                 "automaton_id",
                 "=",
                 (
                     self.crapo_automaton_id
-                    or self._crapo_get_model_automaton()
+                    or self._crapo_get_model_automaton()  # pylint: disable=protected-access
                 ).id,
             )
         ],
@@ -97,7 +105,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
             raise ValidationError(
                 _(
-                    "No crapo state is linked to: {} ({}) on crapo automaton: {}"
+                    "No crapo state is linked to: {} ({}) "
+                    "on crapo automaton: {}"
                 ).format(
                     sync_rec, sync_rec.display_name, automaton.display_name,
                 )
@@ -109,6 +118,9 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
     # =================
     @api.model
     def create(self, values):
+        """
+        Override the default create method
+        """
         rec = super(CrapoAutomatonMixin, self).create(values)
 
         automaton = rec.crapo_automaton_id
@@ -118,7 +130,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
             if automaton.sync_state_field:
                 rec.with_context(
                     {"crapo_no_transition": True}
-                ).crapo_state_id = rec._crapo_get_sync_state(
+                ).crapo_state_id = rec._crapo_get_sync_state(  # pylint: disable=protected-access
                     rec[automaton.sync_state_field].id
                 ).id
 
@@ -160,7 +172,9 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
         if automaton:
             # Sync crapo state with sync_state_field if needed
             if automaton.sync_state_field in values:
-                values["crapo_state_id"] = self._crapo_get_sync_state(
+                values[
+                    "crapo_state_id"
+                ] = self._crapo_get_sync_state(  # pylint: disable=protected-access
                     values[automaton.sync_state_field]
                 ).id
 
@@ -192,13 +206,13 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                     if transition.write_before:
                         result = super(CrapoAutomatonMixin, rec).write(values)
 
-                    rec._crapo_exec_conditions(
+                    rec._crapo_exec_conditions(  # pylint: disable=protected-access
                         transition.precondition_ids, "Pre"
                     )
-                    rec._crapo_exec_action(
+                    rec._crapo_exec_action(  # pylint: disable=protected-access
                         transition.action_id, transition.async_action
                     )
-                    rec._crapo_exec_conditions(
+                    rec._crapo_exec_conditions(  # pylint: disable=protected-access
                         transition.postcondition_ids, "Post"
                     )
 
@@ -241,6 +255,9 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                 )
 
     def _crapo_exec_action(self, action, async_action):
+        """
+        Execute action on automaton transition
+        """
         if action:
             context = {
                 "active_model": self._name,
