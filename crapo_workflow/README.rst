@@ -12,9 +12,6 @@ Crapo is a flexible tool to manage states for your odoo models, and also provide
 **Credits:** .
 Article714
 
-This module include customized source code and resources from odoo
-source code (https://github.com/odoo/odoo)
-
 
 Installation
 ============

@@ -1,0 +1,2 @@
+# List the external dependencies used in CI pipelines
+# one per line (pip format)
