@@ -7,7 +7,7 @@ from odoo.addons.component_event.components.event import skip_if
 
 class WorkflowListener(Component):
     """
-    The part of Crapo that listens for events on records and put them in 
+    The part of Crapo that listens for events on records and put them in
     queues for later consumption by workflows
     """
 
