@@ -67,8 +67,8 @@ class WorkflowTrigger(models.Model):
         """
         for rec in self:
             context_event_ids = wf_context_id.context_event_ids.filtered(
-                lambda context_event: context_event.trigger_id  # pylint: disable=cell-var-from-loop
-                == rec
+                lambda context_event: context_event.trigger_id
+                == rec  # pylint: disable=cell-var-from-loop
             )
             # Evaluate event_logical_condition if there is one
             if rec.event_logical_condition:
@@ -143,7 +143,7 @@ class WorkflowTrigger(models.Model):
                         "model_id": self.env[  # pylint: disable=protected-access
                             "ir.model"
                         ]._get_id(
-                            activity_id._name
+                            activity_id._name  # pylint: disable=protected-access
                         ),
                         "condition": "activity_wf_ctx_id == wf_context",
                     },

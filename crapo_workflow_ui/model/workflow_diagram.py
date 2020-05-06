@@ -26,6 +26,9 @@ class WorkflowDiagramNode(models.Model):
 
     @api.model_cr
     def init(self):
+        """
+        Actions to be taken on module installation
+        """
         tools.drop_view_if_exists(self.env.cr, self._table)
         query = """
             CREATE OR REPLACE VIEW crapo_workflow_diagram_node AS (

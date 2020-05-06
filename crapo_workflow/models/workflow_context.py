@@ -33,7 +33,9 @@ class WorkflowContext(models.Model):
             data["value"] = ",".join(map(str, value.ids))
             data["model_id"] = self.env[  # pylint: disable=protected-access
                 "ir.model"
-            ]._get_id(value._name)
+            ]._get_id(
+                value._name  # pylint: disable=protected-access
+            )
 
         # Update if exists
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
@@ -153,10 +155,10 @@ class WorkflowContextEvent(models.Model):
                         self.event_id.record_id_context_key, convert=False
                     )
                 )
-            except KeyError:
+            except KeyError:  # pylint: disable=except-pass
                 # If we have a key error it means that record_id_context_key
                 # doesn't exists wet in context
-                pass  # pylint: disable=except-pass
+                pass
         return self.record_id
 
     # ==================
@@ -187,8 +189,8 @@ class WorkflowContextEvent(models.Model):
         if values.get("done"):
             for wf_context_id in self.mapped("wf_context_id"):
                 filtered_rec = self.filtered(
-                    lambda rec: rec.wf_context_id  # pylint: disable=cell-var-from-loop
-                    == wf_context_id
+                    lambda rec: rec.wf_context_id
+                    == wf_context_id  # pylint: disable=cell-var-from-loop
                 )
                 filtered_rec.mapped("trigger_id").with_delay().check_and_run(
                     wf_context_id=wf_context_id

@@ -6,6 +6,11 @@ from odoo.addons.component_event.components.event import skip_if
 
 
 class WorkflowListener(Component):
+    """
+    The part of Crapo that listens for events on records and put them in 
+    queues for later consumption by workflows
+    """
+
     _name = "crapo.workflow.listener"
     _inherit = "base.event.listener"
 
@@ -24,7 +29,8 @@ class WorkflowListener(Component):
 
     @skip_if(
         lambda self, record, fields: self.env.context.get("notify_event")
-        or record._module in ("queue", "connector")
+        or record._module  # pylint: disable=protected-access
+        in ("queue", "connector")
     )
     def on_record_create(self, record, fields):
         """
