@@ -11,8 +11,7 @@
         <field name="type">tree</field>
         <field name="arch" 
             type="xml">
-            <tree string="Automata" 
-                default_order="name asc" 
+            <tree default_order="name asc" 
                 create="false">
                 <field name="model_id" />
                 <field name="name" />

@@ -118,11 +118,9 @@ class CrapoAutomatonState(models.Model):
                     raise exceptions.ValidationError(
                         _("There should be only one default state per model")
                     )
-                else:
-                    # Reset previous default value if there is one
-                    if self.automaton_id.default_state_id:
-                        self.automaton_id.default_state_id.default_state = (
-                            False
-                        )
+
+                # Reset previous default value if there is one
+                if self.automaton_id.default_state_id:
+                    self.automaton_id.default_state_id.default_state = False
 
         return super(CrapoAutomatonState, self).write(values)

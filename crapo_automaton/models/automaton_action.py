@@ -6,6 +6,10 @@ from odoo.addons.queue_job.job import job
 
 
 class IrActionsServer(models.Model):
+    """
+    Crapo specific version of ir.actions.server
+    """
+
     _inherit = "ir.actions.server"
 
     usage = fields.Selection(
@@ -33,6 +37,9 @@ class CrapoAutomatonAction(models.Model):
     @api.multi
     @job
     def run_async(self):
+        """
+        run action asynchronously
+        """
         self.action_server_id.run()
 
     # ==============================
@@ -41,5 +48,8 @@ class CrapoAutomatonAction(models.Model):
 
     @api.model
     def create(self, values):
+        """
+        Override default creation : fixes value for 'usage'
+        """
         values["usage"] = "crapo_automaton_action"
         return super(CrapoAutomatonAction, self).create(values)

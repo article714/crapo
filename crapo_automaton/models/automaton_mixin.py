@@ -58,8 +58,10 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
         compute="_compute_crapo_readonly_fields", default=",0,"
     )
 
-    def _read_group_crapo_states(self, states, domain, order):
-        state_ids = states._search(
+    def _read_group_crapo_states(  # pylint: disable=unused-argument
+        self, states, domain, order
+    ):
+        state_ids = states._search(  # pylint: disable=protected-access
             self._fields["crapo_state_id"].domain(self),
             order=order,
             access_rights_uid=SUPERUSER_ID,
@@ -84,7 +86,17 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
         """
             Get automaton linked to this model if there is one
         """
-        domain = [("model_id", "=", self.env["ir.model"]._get_id(self._name))]
+        domain = [
+            (
+                "model_id",
+                "=",
+                self.env[
+                    "ir.model"
+                ]._get_id(  # pylint: disable=protected-access
+                    self._name  # pylint: disable=protected-access
+                ),
+            )
+        ]
         return self.env["crapo.automaton"].search(domain, limit=1)
 
     def _crapo_get_sync_state(self, id_sync_field):
@@ -184,7 +196,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                     values["crapo_state_id"]
                 )
                 # Search for elected transition
-                for rec in self:
+                for rec in self:  # pylint: disable=cell-var-from-loop
                     transition = automaton.transition_ids.filtered(
                         lambda trans: trans.from_state_id == rec.crapo_state_id
                         and trans.to_state_id == target_state_id

@@ -1,2 +1,1 @@
 # List the external dependencies one per line (pip format)
-lxml

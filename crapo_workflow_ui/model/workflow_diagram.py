@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 from odoo import tools
 from odoo import models, fields, api
 
@@ -103,7 +106,8 @@ class WorkflowDiagramArrow(models.Model):
                         '2' || evt.trigger_id to_node
                     FROM
                         crapo_workflow_event evt
-                        JOIN crapo_workflow_trigger trg ON trg.id = evt.trigger_id
+                        JOIN crapo_workflow_trigger trg
+                             ON trg.id = evt.trigger_id
                     WHERE
                         evt.event_type != 'activity_ended'
 

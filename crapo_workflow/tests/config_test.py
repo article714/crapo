@@ -6,7 +6,10 @@ class ConfigTestSuite(common.TransactionCase):
     Test the configuration of Crapo base module
     """
 
-    def setUp(self):
+    def setUp(self):  # pylint: disable=invalid-name
+        """
+        bring everything to life before testing
+        """
         super(ConfigTestSuite, self).setUp()
         self.res_config = self.env["res.config.settings"]
         self.ir_config_param = self.env["ir.config_parameter"]
