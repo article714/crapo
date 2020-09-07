@@ -1,3 +1,4 @@
+# pylint: disable=missing-docstring
 {
     "name": "Crapo: Test Module for workflow management",
     "version": "12.0.3.0.0",

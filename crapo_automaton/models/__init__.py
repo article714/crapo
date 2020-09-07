@@ -1,3 +1,6 @@
+"""
+See README for details
+"""
 from . import automaton
 from . import automaton_transition
 from . import automaton_mixin

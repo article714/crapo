@@ -2,19 +2,18 @@
    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
    :alt: License: LGPL-3
 
-===========================================
-Crapo: Base Module for workflow management
-===========================================
+====================
+Crapo: Base Module
+====================
 
 Crapo is a flexible tool to manage states for your odoo models, and also provide a workflow engine.
 
+This module provides only basic groups/menu entries that are used by other Crapo modules.
+
+*This module does not/should not contain any technical of functional code*
 
 **Credits:** .
 Article714
-
-This module include customized source code and resources from odoo
-source code (https://github.com/odoo/odoo)
-
 
 Installation
 ============
@@ -24,11 +23,12 @@ TODO
 Configuration
 =============
 
-TODO
+*Not applicable*
 
 Usage
 =====
 
+*Not applicable*
 
 Known issues / Roadmap
 ======================
@@ -47,7 +47,10 @@ Images
 Contributors
 ------------
 
-*
+* Julien Carette
+* Christophe Guychard
+* Damien Couppé
 
 Maintainer
 ----------
+Article714

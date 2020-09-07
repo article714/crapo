@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 from . import workflow
 from . import workflow_activity
 from . import workflow_trigger

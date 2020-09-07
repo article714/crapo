@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 import re
 
 from odoo import models, fields, api, _
@@ -59,12 +62,13 @@ class WorkflowTrigger(models.Model):
     def check_and_run(self, wf_context_id):
         """
             Evaluate event_logical_condition in the context passer in parameter
-            to see if trigger is triggered. If so run activities or destroy wf context
-            in case of end trigger type.
+            to see if trigger is triggered. If so run activities or destroy wf
+            context in case of end trigger type.
         """
         for rec in self:
             context_event_ids = wf_context_id.context_event_ids.filtered(
-                lambda context_event: context_event.trigger_id == rec
+                lambda context_event: context_event.trigger_id
+                == rec  # pylint: disable=cell-var-from-loop
             )
             # Evaluate event_logical_condition if there is one
             if rec.event_logical_condition:
@@ -89,7 +93,8 @@ class WorkflowTrigger(models.Model):
 
     def run_activity(self, activity_id, wf_context_id):
         """
-            Run activity passed in parameter with the context passed in parameter
+            Run activity passed in parameter with the context passed in
+            parameter
         """
         self.ensure_one()
 
@@ -135,8 +140,10 @@ class WorkflowTrigger(models.Model):
                     {
                         "event_type": "activity_ended",
                         "activity_id": activity_id.id,
-                        "model_id": self.env["ir.model"]._get_id(
-                            activity_id._name
+                        "model_id": self.env[  # pylint: disable=protected-access
+                            "ir.model"
+                        ]._get_id(
+                            activity_id._name  # pylint: disable=protected-access
                         ),
                         "condition": "activity_wf_ctx_id == wf_context",
                     },
@@ -192,6 +199,9 @@ class WorkflowTrigger(models.Model):
 
     @api.model
     def create(self, values):
+        """
+        Override default creation method
+        """
         rec = super(WorkflowTrigger, self).create(values)
         if values.get("event_logical_condition"):
             rec.check_event_logical_condition()
@@ -202,6 +212,9 @@ class WorkflowTrigger(models.Model):
 
     @api.multi
     def write(self, values):
+        """
+        Check conditions before writing record
+        """
         res = super(WorkflowTrigger, self).write(values)
         if values.get("event_logical_condition"):
             self.check_event_logical_condition()

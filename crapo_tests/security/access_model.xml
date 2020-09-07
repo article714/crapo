@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data>
-    <record id="access_test_object_all" 
-      model="ir.model.access">
-      <field name="name">access.workflow.test.object.all</field>
-      <field name="model_id" 
-        ref="model_crapo_test_object" />
-      <field name="group_id" 
-        eval="ref('base.group_user')" />
-      <field name="perm_read">1</field>
-      <field name="perm_write">1</field>
-      <field name="perm_create">1</field>
-      <field name="perm_unlink">1</field>
-    </record>
-  </data>
+  <record id="access_test_object_all" 
+    model="ir.model.access">
+    <field name="name">access.workflow.test.object.all</field>
+    <field name="model_id" 
+      ref="model_crapo_test_object" />
+    <field name="group_id" 
+      eval="ref('base.group_user')" />
+    <field name="perm_read">1</field>
+    <field name="perm_write">1</field>
+    <field name="perm_create">1</field>
+    <field name="perm_unlink">1</field>
+  </record>
 </odoo>

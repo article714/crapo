@@ -1,11 +1,15 @@
+"""
+See README for details
+"""
+
 from lxml import etree
-from lxml.builder import E
+from lxml.builder import E  # pylint: disable=no-name-in-module
 
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv import expression
 
 
-class ReadonlyViewMixin(object):
+class ReadonlyViewMixin:
     """
         Mixin class that can be used to set a whole view readonly with domains
     """
@@ -28,7 +32,9 @@ class ReadonlyViewMixin(object):
                 name for name, field in self._fields.items() if field.readonly
             ]
 
-            node = etree.fromstring(result["arch"])
+            node = etree.fromstring(  # pylint: disable=c-extension-no-member
+                result["arch"]
+            )
             for field in self._readonly_fields_to_add:
                 node.append(E.field(name=field, invisible="1"))
 
@@ -38,7 +44,11 @@ class ReadonlyViewMixin(object):
                 lst_domain = self._readonly_domain
 
             self._process_field(node, readonly_fields, lst_domain)
-            result["arch"] = etree.tostring(node)
+            result[
+                "arch"
+            ] = etree.tostring(  # pylint: disable=c-extension-no-member
+                node
+            )
         return result
 
     def _process_field(self, node, readonly_fields, lst_domain):
@@ -62,7 +72,8 @@ class ReadonlyViewMixin(object):
                 return
             # If there is no domain define and fields is already in readonly
             # we skip too
-            elif readonly is None and field_name in readonly_fields:
+
+            if readonly is None and field_name in readonly_fields:
                 return
 
             _readonly_domain = expression.OR(

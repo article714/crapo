@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 import logging
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job
@@ -53,8 +56,8 @@ class IrActionsServer(models.Model):
 
 class WorkflowActivity(models.Model):
     """
-        An activity step in a Workflow, all of what is done in ir.server.actions
-        can be done in WorkflowActivity
+        An activity step in a Workflow, all of what is done in
+        ir.server.actions can be done in WorkflowActivity
     """
 
     _name = "crapo.workflow.activity"
@@ -75,7 +78,8 @@ class WorkflowActivity(models.Model):
     @api.multi
     def run(self, wf_context_id):
         """
-            Runs the server action, possibly in async and add some values to context
+            Runs the server action, possibly in async and add some values
+            to context
         """
 
         context = {"wf_context_id": wf_context_id}
@@ -87,7 +91,9 @@ class WorkflowActivity(models.Model):
                     rec.active_record_context_key
                 )
                 context["active_id"] = active_record.id
-                context["active_model"] = active_record._name
+                context[
+                    "active_model"
+                ] = active_record._name  # pylint: disable=protected-access
 
             res = rec.with_context(**context).action_server_id.run()
             rec.wf_event(
@@ -101,5 +107,8 @@ class WorkflowActivity(models.Model):
 
     @api.model
     def create(self, values):
+        """
+        Override default create to setup usage
+        """
         values["usage"] = "crapo_workflow_activity"
         return super(WorkflowActivity, self).create(values)

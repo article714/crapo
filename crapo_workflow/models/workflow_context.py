@@ -1,3 +1,6 @@
+"""
+see README for details
+"""
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
@@ -28,7 +31,11 @@ class WorkflowContext(models.Model):
         # model where the record come from
         if isinstance(value, models.Model):
             data["value"] = ",".join(map(str, value.ids))
-            data["model_id"] = self.env["ir.model"]._get_id(value._name)
+            data["model_id"] = self.env[  # pylint: disable=protected-access
+                "ir.model"
+            ]._get_id(
+                value._name  # pylint: disable=protected-access
+            )
 
         # Update if exists
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
@@ -105,6 +112,10 @@ class WorkflowContextEntry(models.Model):
 
 
 class WorkflowContextEvent(models.Model):
+    """
+    A class to store values/env var relative to a specific event
+    e.g. contains the record_id of the record concerned by the event
+    """
 
     _name = "crapo.workflow.context.event"
 
@@ -144,7 +155,7 @@ class WorkflowContextEvent(models.Model):
                         self.event_id.record_id_context_key, convert=False
                     )
                 )
-            except KeyError:
+            except KeyError:  # pylint: disable=except-pass
                 # If we have a key error it means that record_id_context_key
                 # doesn't exists wet in context
                 pass
@@ -156,6 +167,9 @@ class WorkflowContextEvent(models.Model):
 
     @api.model
     def create(self, values):
+        """
+        Override default create to set record_id on event creation
+        """
         rec = super(WorkflowContextEvent, self).create(values)
 
         if rec.event_id.record_id_context_key:
@@ -166,13 +180,17 @@ class WorkflowContextEvent(models.Model):
 
     @api.multi
     def write(self, values):
+        """
+        Override default write to add relative context for event
+        """
 
         res = super(WorkflowContextEvent, self).write(values)
 
         if values.get("done"):
             for wf_context_id in self.mapped("wf_context_id"):
                 filtered_rec = self.filtered(
-                    lambda rec: rec.wf_context_id == wf_context_id
+                    lambda rec: rec.wf_context_id
+                    == wf_context_id  # pylint: disable=cell-var-from-loop
                 )
                 filtered_rec.mapped("trigger_id").with_delay().check_and_run(
                     wf_context_id=wf_context_id

@@ -11,8 +11,7 @@
         <field name="type">tree</field>
         <field name="arch" 
             type="xml">
-            <tree string="States definitions" 
-                default_order="sequence asc">
+            <tree default_order="sequence asc">
                 <field name="sequence" 
                     widget="handle" />
                 <field name="name" />

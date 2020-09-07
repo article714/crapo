@@ -1,3 +1,7 @@
+"""
+See README for details
+"""
+
 from odoo import fields, models, exceptions, api, _
 
 
@@ -70,7 +74,8 @@ class CrapoAutomatonTransition(models.Model):
     )
 
     async_action = fields.Boolean(
-        help="""Action will be run asynchronously, after transition is completed""",
+        help="Action will be run asynchronously, "
+        "after transition is completed",
         default=False,
     )
 

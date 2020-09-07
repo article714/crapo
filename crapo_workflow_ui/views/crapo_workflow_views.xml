@@ -11,8 +11,7 @@
         <field name="type">tree</field>
         <field name="arch" 
             type="xml">
-            <tree string="Workflow" 
-                default_order="name asc">
+            <tree default_order="name asc">
                 <field name="name" />
             </tree>
         </field>

@@ -1,3 +1,6 @@
+"""
+See README for details
+"""
 from odoo import fields, models
 
 
@@ -12,7 +15,8 @@ class CrapoAutomatonCondition(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Text(
-        help="Message that will be show to user when this conditions is not met",
+        help="Message that will be show to user"
+        " when this conditions is not met",
         required=True,
     )
 
