@@ -67,7 +67,9 @@ class ReadonlyViewMixin(object):
 
             _readonly_domain = expression.OR(
                 [
-                    safe_eval(domain, {"field_name": field_name})
+                    safe_eval(
+                        domain, {"field_name": field_name, "ref": self.env.ref}
+                    )
                     for domain in lst_domain
                 ]
             )
