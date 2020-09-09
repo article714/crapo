@@ -12,7 +12,12 @@ class CrapoWorkflowAutomatonMixin(models.AbstractModel):
     _inherit = "crapo.automaton.mixin"
 
     def write(self, values):
-        if "crapo_state_id" in values:
+
+        for rec in self:
+            sync_state_field = rec.automaton_id.sync_state_field
+            break
+
+        if "crapo_state_id" in values or sync_state_field in values:
             records_pre_write_crapo_state = (
                 self._get_current_crapo_state_for_records()
             )
@@ -21,7 +26,7 @@ class CrapoWorkflowAutomatonMixin(models.AbstractModel):
         res = super(CrapoWorkflowAutomatonMixin, self).write(values)
 
         logging.info("FFFFFFFFFFFFF %s", values)
-        if "crapo_state_id" in values:
+        if "crapo_state_id" in values or sync_state_field in values:
             self._emit_transtion_event_for_records(
                 records_pre_write_crapo_state
             )
