@@ -14,7 +14,7 @@ class CrapoWorkflowAutomatonMixin(models.AbstractModel):
     def write(self, values):
 
         for rec in self:
-            sync_state_field = rec.automaton_id.sync_state_field
+            sync_state_field = rec.crapo_automaton_id.sync_state_field
             break
 
         if "crapo_state_id" in values or sync_state_field in values:
