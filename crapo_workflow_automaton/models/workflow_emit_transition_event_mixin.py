@@ -1,4 +1,5 @@
 from odoo import models
+import logging
 
 
 class CrapoWorkflowAutomatonMixin(models.AbstractModel):
@@ -15,9 +16,11 @@ class CrapoWorkflowAutomatonMixin(models.AbstractModel):
             records_pre_write_crapo_state = (
                 self._get_current_crapo_state_for_records()
             )
+        logging.info("RRRRRRRRRRRRR %s", values)
 
         res = super(CrapoWorkflowAutomatonMixin, self).write(values)
 
+        logging.info("FFFFFFFFFFFFF %s", values)
         if "crapo_state_id" in values:
             self._emit_transtion_event_for_records(
                 records_pre_write_crapo_state
