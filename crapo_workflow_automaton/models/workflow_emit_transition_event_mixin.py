@@ -13,9 +13,7 @@ class CrapoWorkflowAutomatonMixin(models.AbstractModel):
 
     def write(self, values):
 
-        for rec in self:
-            sync_state_field = rec.crapo_automaton_id.sync_state_field
-            break
+        sync_state_field = self[:1].crapo_automaton_id.sync_state_field
 
         if "crapo_state_id" in values or sync_state_field in values:
             records_pre_write_crapo_state = (
