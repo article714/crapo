@@ -8,8 +8,8 @@ from odoo.addons.queue_job.job import job
 
 class IrActionsServer(models.Model):
     """
-        Inerhit from ir.actions.server to add
-        some usage and object to eval context
+    Inerhit from ir.actions.server to add
+    some usage and object to eval context
     """
 
     _inherit = "ir.actions.server"
@@ -26,6 +26,7 @@ class IrActionsServer(models.Model):
 #         debug information in ir.logging table
 #  - Warning: Warning Exception to use with raise
 #  - wf_context: record of crapo workflow context that triggered this activity
+#  - wf_trigger: record of crapo workflow trigger that been triggered
 #  - logging: python logging module helpfull to debug
 # To return an action, assign: action = {...}\n\n\n\n"""
 
@@ -38,17 +39,20 @@ class IrActionsServer(models.Model):
     @api.model
     def _get_eval_context(self, action=None):
         """
-            Add wf_context to eval context
+        Add wf_context to eval context
         """
         eval_context = super(IrActionsServer, self)._get_eval_context(
             action=action
         )
 
-        if self.env.context.get("wf_context_id"):
+        if self.env.context.get("wf_context_id") and self.env.context.get(
+            "wf_trigger_id"
+        ):
             eval_context.update(
                 {
                     "logging": logging,
                     "wf_context": self.env.context["wf_context_id"],
+                    "wf_trigger": self.env.context["wf_trigger_id"],
                 }
             )
         return eval_context
@@ -56,8 +60,8 @@ class IrActionsServer(models.Model):
 
 class WorkflowActivity(models.Model):
     """
-        An activity step in a Workflow, all of what is done in
-        ir.server.actions can be done in WorkflowActivity
+    An activity step in a Workflow, all of what is done in
+    ir.server.actions can be done in WorkflowActivity
     """
 
     _name = "crapo.workflow.activity"
@@ -76,13 +80,16 @@ class WorkflowActivity(models.Model):
 
     @job
     @api.multi
-    def run(self, wf_context_id):
+    def run(self, wf_context_id, wf_trigger_id):
         """
-            Runs the server action, possibly in async and add some values
-            to context
+        Runs the server action, possibly in async and add some values
+        to context
         """
 
-        context = {"wf_context_id": wf_context_id}
+        context = {
+            "wf_context_id": wf_context_id,
+            "wf_trigger_id": wf_trigger_id,
+        }
 
         res = False
         for rec in self:

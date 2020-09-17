@@ -12,14 +12,14 @@ from odoo.addons.queue_job.job import job
 
 class WorkflowTrigger(models.Model):
     """
-        A trigger is the logical brick between activities. It will trigger all
-        of its activities when triggered.
+    A trigger is the logical brick between activities. It will trigger all
+    of its activities when triggered.
 
-        - Initial trigger:  this is the first trigger of the workflow it will
-          initiate a crapo.workflow.context when triggered
+    - Initial trigger:  this is the first trigger of the workflow it will
+      initiate a crapo.workflow.context when triggered
 
-        - End trigger: this is the last trigger of the workflow it will distroy
-          the crapo.workflow.context that triggered it
+    - End trigger: this is the last trigger of the workflow it will distroy
+      the crapo.workflow.context that triggered it
     """
 
     _name = "crapo.workflow.trigger"
@@ -61,9 +61,9 @@ class WorkflowTrigger(models.Model):
     @api.multi
     def check_and_run(self, wf_context_id):
         """
-            Evaluate event_logical_condition in the context passer in parameter
-            to see if trigger is triggered. If so run activities or destroy wf
-            context in case of end trigger type.
+        Evaluate event_logical_condition in the context passer in parameter
+        to see if trigger is triggered. If so run activities or destroy wf
+        context in case of end trigger type.
         """
         for rec in self:
             context_event_ids = wf_context_id.context_event_ids.filtered(
@@ -93,8 +93,8 @@ class WorkflowTrigger(models.Model):
 
     def run_activity(self, activity_id, wf_context_id):
         """
-            Run activity passed in parameter with the context passed in
-            parameter
+        Run activity passed in parameter with the context passed in
+        parameter
         """
         self.ensure_one()
 
@@ -113,13 +113,13 @@ class WorkflowTrigger(models.Model):
                 }
             )
 
-        activity_id.with_delay().run(wf_context_id)
+        activity_id.with_delay().run(wf_context_id, self)
 
     @api.onchange("from_activity_ids")
     def activity_ended_event_consistency(self):
         """
-            Automaticaly add or remove activity_ended event based on
-            from activity_ids field
+        Automaticaly add or remove activity_ended event based on
+        from activity_ids field
         """
         self.ensure_one()
         values = []
@@ -129,9 +129,10 @@ class WorkflowTrigger(models.Model):
         )
 
         # Add missing acitivy_ended event
-        for activity_id in (
-            self.from_activity_ids
-            - event_activity_ended_ids.mapped("activity_id")
+        for (
+            activity_id
+        ) in self.from_activity_ids - event_activity_ended_ids.mapped(
+            "activity_id"
         ):
             values.append(
                 (
@@ -161,7 +162,7 @@ class WorkflowTrigger(models.Model):
 
     def check_event_logical_condition(self):
         """
-            Validate that all event are used in the condition
+        Validate that all event are used in the condition
         """
         for rec in self:
             if rec.event_logical_condition:
@@ -185,7 +186,7 @@ class WorkflowTrigger(models.Model):
 
     def check_init_trigger(self):
         """
-            Test if an init trigger has at most 1 trigger event
+        Test if an init trigger has at most 1 trigger event
         """
         for rec in self:
             if rec.trigger_type == "init" and len(rec.event_ids) > 1:
