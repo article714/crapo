@@ -3,7 +3,7 @@ see README for details
 """
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-import loggging
+import logging
 
 
 class WorkflowContext(models.Model):
