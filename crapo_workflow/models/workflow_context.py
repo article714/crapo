@@ -3,11 +3,12 @@ see README for details
 """
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+import loggging
 
 
 class WorkflowContext(models.Model):
     """
-        Workflow context is an instance of a worklow a time
+    Workflow context is an instance of a worklow a time
     """
 
     _name = "crapo.workflow.context"
@@ -24,7 +25,7 @@ class WorkflowContext(models.Model):
 
     def set_context_entry(self, key, value):
         """
-            Save value to context associate with key
+        Save value to context associate with key
         """
         data = {"key": key, "value": value}
         # Id it's a record we save the id in the value and the
@@ -47,8 +48,8 @@ class WorkflowContext(models.Model):
 
     def get_context_entry(self, key, convert=True):
         """
-            Read key from context and return value. If key refer to a
-            record, we return the record directly if convert is True
+        Read key from context and return value. If key refer to a
+        record, we return the record directly if convert is True
         """
         entry = self.context_entry_ids.filtered(lambda rec: rec.key == key)
 
@@ -65,7 +66,7 @@ class WorkflowContext(models.Model):
 
 class WorkflowContextEntry(models.Model):
     """
-        Model key/value to save nearly everything
+    Model key/value to save nearly everything
     """
 
     _name = "crapo.workflow.context.entry"
@@ -90,7 +91,7 @@ class WorkflowContextEntry(models.Model):
 
     def get_recordset(self):
         """
-            Return recordset stored in this context entry
+        Return recordset stored in this context entry
         """
         self.ensure_one()
 
@@ -129,7 +130,8 @@ class WorkflowContextEvent(models.Model):
 
     # Shortcut for convenience
     trigger_id = fields.Many2one(
-        "crapo.workflow.trigger", related="event_id.trigger_id",
+        "crapo.workflow.trigger",
+        related="event_id.trigger_id",
     )
 
     record_id = fields.Integer()
@@ -145,8 +147,8 @@ class WorkflowContextEvent(models.Model):
 
     def get_record_id(self):
         """
-            Return record_id if set, if not set try to get it from
-            context and set it.
+        Return record_id if set, if not set try to get it from
+        context and set it.
         """
         if not self.record_id:
             try:
@@ -187,11 +189,15 @@ class WorkflowContextEvent(models.Model):
         res = super(WorkflowContextEvent, self).write(values)
 
         if values.get("done"):
+            loggging.info("========DEBUG=====WorkflowContextEvent==========")
             for wf_context_id in self.mapped("wf_context_id"):
+                loggging.info(wf_context_id)
                 filtered_rec = self.filtered(
                     lambda rec: rec.wf_context_id
                     == wf_context_id  # pylint: disable=cell-var-from-loop
                 )
+                loggging.info(filtered_rec)
+                loggging.info(filtered_rec.mapped("trigger_id"))
                 filtered_rec.mapped("trigger_id").with_delay().check_and_run(
                     wf_context_id=wf_context_id
                 )
