@@ -189,15 +189,15 @@ class WorkflowContextEvent(models.Model):
         res = super(WorkflowContextEvent, self).write(values)
 
         if values.get("done"):
-            loggging.info("========DEBUG=====WorkflowContextEvent==========")
+            logging.info("========DEBUG=====WorkflowContextEvent==========")
             for wf_context_id in self.mapped("wf_context_id"):
-                loggging.info(wf_context_id)
+                logging.info(wf_context_id)
                 filtered_rec = self.filtered(
                     lambda rec: rec.wf_context_id
                     == wf_context_id  # pylint: disable=cell-var-from-loop
                 )
-                loggging.info(filtered_rec)
-                loggging.info(filtered_rec.mapped("trigger_id"))
+                logging.info(filtered_rec)
+                logging.info(filtered_rec.mapped("trigger_id"))
                 filtered_rec.mapped("trigger_id").with_delay().check_and_run(
                     wf_context_id=wf_context_id
                 )
