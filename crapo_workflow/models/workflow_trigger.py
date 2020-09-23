@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.queue_job.job import job
-import logging
 
 
 class WorkflowTrigger(models.Model):
@@ -76,11 +75,6 @@ class WorkflowTrigger(models.Model):
                 context = {"wf": wf_context_id}
                 for context_event in context_event_ids:
                     context[context_event.event_id.name] = context_event.done
-                logging.info("==============check_and_run==============")
-                logging.info(rec)
-                logging.info(wf_context_id)
-                logging.info(context)
-                logging.info("============================")
                 run = safe_eval(rec.event_logical_condition, context)
             # Else we considerate that all event must be done
             else:

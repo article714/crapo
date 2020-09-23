@@ -3,7 +3,6 @@ see README for details
 """
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-import logging
 
 
 class WorkflowContext(models.Model):
@@ -185,10 +184,7 @@ class WorkflowContextEvent(models.Model):
         """
         Override default write to add relative context for event
         """
-        logging.info("=====================write===============")
         res = super(WorkflowContextEvent, self).write(values)
-        logging.info(self)
-        logging.info("================")
         if values.get("done"):
             for wf_context_id in self.mapped("wf_context_id"):
                 filtered_rec = self.filtered(
