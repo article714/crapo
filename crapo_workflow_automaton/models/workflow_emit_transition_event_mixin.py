@@ -1,18 +1,22 @@
+"""
+see README for details
+"""
 from odoo import models
-import logging
 
 
 class CrapoWorkflowAutomatonMixin(models.AbstractModel):
     """
-        Do at least the same things as the mixin crapo.automaton.mixin
-        and in addition emit the transition event for crapo_state_id changes
+    Do at least the same things as the mixin crapo.automaton.mixin
+    and in addition emit the transition event for crapo_state_id changes
     """
 
     _name = "crapo.workflow.automaton.mixin"
     _inherit = "crapo.automaton.mixin"
 
     def write(self, values):
-
+        """
+        Emit transition event if needed
+        """
         sync_state_field = self[:1].crapo_automaton_id.sync_state_field
 
         if "crapo_state_id" in values or sync_state_field in values:
