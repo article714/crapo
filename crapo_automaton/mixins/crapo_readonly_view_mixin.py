@@ -11,7 +11,7 @@ from odoo.osv import expression
 
 class ReadonlyViewMixin:
     """
-        Mixin class that can be used to set a whole view readonly with domains
+    Mixin class that can be used to set a whole view readonly with domains
     """
 
     _readonly_domain = []
@@ -21,15 +21,17 @@ class ReadonlyViewMixin:
         self, view_id=None, view_type="form", toolbar=False, submenu=False
     ):
         """
-            Override to add crapo_readonly_fields to arch and attrs readonly
-            on fields that could be editable
+        Override to add crapo_readonly_fields to arch and attrs readonly
+        on fields that could be editable
         """
         result = super(ReadonlyViewMixin, self)._fields_view_get(
             view_id, view_type, toolbar, submenu
         )
         if view_type in ("form", "tree"):
-            readonly_fields = [
-                name for name, field in self._fields.items() if field.readonly
+            skip_fields = [
+                name
+                for name, field in self._fields.items()
+                if field.skip_readonly_domain or field.readonly
             ]
 
             node = etree.fromstring(  # pylint: disable=c-extension-no-member
@@ -43,7 +45,7 @@ class ReadonlyViewMixin:
             else:
                 lst_domain = self._readonly_domain
 
-            self._process_field(node, readonly_fields, lst_domain)
+            self._process_field(node, skip_fields, lst_domain)
             result[
                 "arch"
             ] = etree.tostring(  # pylint: disable=c-extension-no-member
@@ -51,9 +53,9 @@ class ReadonlyViewMixin:
             )
         return result
 
-    def _process_field(self, node, readonly_fields, lst_domain):
+    def _process_field(self, node, skip_fields, lst_domain):
         """
-            Add readnoly attrs if needed
+        Add readnoly attrs if needed
         """
         if node.get("readonly_global_domain"):
             lst_domain = lst_domain + [node.get("readonly_global_domain")]
@@ -70,10 +72,8 @@ class ReadonlyViewMixin:
             # readonly we skip
             if not isinstance(readonly, (list, tuple)) and readonly:
                 return
-            # If there is no domain define and fields is already in readonly
-            # we skip too
 
-            if readonly is None and field_name in readonly_fields:
+            if field_name in skip_fields:
                 return
 
             _readonly_domain = expression.OR(
@@ -92,4 +92,4 @@ class ReadonlyViewMixin:
 
         else:
             for child_node in node:
-                self._process_field(child_node, readonly_fields, lst_domain)
+                self._process_field(child_node, skip_fields, lst_domain)
