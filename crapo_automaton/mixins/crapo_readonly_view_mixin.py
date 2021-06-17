@@ -31,7 +31,11 @@ class ReadonlyViewMixin:
             skip_fields = [
                 name
                 for name, field in self._fields.items()
-                if field.skip_readonly_domain or field.readonly
+                if (
+                    hasattr(field, "skip_readonly_domain")
+                    and field.skip_readonly_domain
+                )
+                or field.readonly
             ]
 
             node = etree.fromstring(  # pylint: disable=c-extension-no-member
@@ -63,6 +67,9 @@ class ReadonlyViewMixin:
         if node.tag == "field":
             field_name = node.get("name")
 
+            if field_name in skip_fields:
+                return
+
             attrs = safe_eval(node.get("attrs", "{}"))
             readonly = attrs.get("readonly") or node.get("readonly")
             if isinstance(readonly, str):
@@ -71,9 +78,6 @@ class ReadonlyViewMixin:
             # Deal with none domain value, if field is explicitly in
             # readonly we skip
             if not isinstance(readonly, (list, tuple)) and readonly:
-                return
-
-            if field_name in skip_fields:
                 return
 
             _readonly_domain = expression.OR(
