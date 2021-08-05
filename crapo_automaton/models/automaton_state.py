@@ -13,7 +13,7 @@ class CrapoAutomatonState(models.Model):
     _description = "State in a workflow, specific to a given model"
     _order = "sequence, name"
 
-    name = fields.Char(help="State's name", required=True)
+    name = fields.Char(help="State's name", required=True, translate=True)
 
     description = fields.Text()
 
@@ -89,8 +89,8 @@ class CrapoAutomatonState(models.Model):
     @api.model
     def create(self, values):
         """
-            Write crapo_state_id on automaton.model_id existing records if
-            there a sync_state_field on automaton
+        Write crapo_state_id on automaton.model_id existing records if
+        there a sync_state_field on automaton
         """
         rec = super(CrapoAutomatonState, self).create(values)
 
@@ -110,7 +110,7 @@ class CrapoAutomatonState(models.Model):
     @api.multi
     def write(self, values):
         """
-            Override default method to prevent multi default state
+        Override default method to prevent multi default state
         """
         if "default_state" in values:
             if values["default_state"]:
