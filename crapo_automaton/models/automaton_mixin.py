@@ -12,10 +12,10 @@ from ..mixins.crapo_readonly_view_mixin import ReadonlyViewMixin
 
 class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
     """
-        Mixin class that can be used to define an Odoo Model eligible
-        to be managed by a Crapo Automaton
+    Mixin class that can be used to define an Odoo Model eligible
+    to be managed by a Crapo Automaton
 
-        Should be use as a mixin class in existing objects
+    Should be use as a mixin class in existing objects
     """
 
     _name = "crapo.automaton.mixin"
@@ -52,6 +52,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
             )
         ],
         group_expand="_read_group_crapo_states",
+        copy=False,
     )
 
     crapo_readonly_fields = fields.Char(
@@ -70,8 +71,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
     def _compute_crapo_readonly_fields(self):
         """
-            Do not add api.depends or api.onchange to not recompute
-            crapo_readonly_fields before effective write
+        Do not add api.depends or api.onchange to not recompute
+        crapo_readonly_fields before effective write
         """
         for rec in self:
             if rec.crapo_state_id.readonly_fields:
@@ -84,7 +85,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
     @api.model
     def _crapo_get_model_automaton(self):
         """
-            Get automaton linked to this model if there is one
+        Get automaton linked to this model if there is one
         """
         domain = [
             (
@@ -101,7 +102,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
     def _crapo_get_sync_state(self, id_sync_field):
         """
-            Return crapo.state linked to id_sync_field
+        Return crapo.state linked to id_sync_field
         """
         automaton = self.mapped("crapo_automaton_id")
         sync_state = automaton.state_ids.filtered(
@@ -120,7 +121,9 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
                     "No crapo state is linked to: {} ({}) "
                     "on crapo automaton: {}"
                 ).format(
-                    sync_rec, sync_rec.display_name, automaton.display_name,
+                    sync_rec,
+                    sync_rec.display_name,
+                    automaton.display_name,
                 )
             )
         return sync_state
@@ -173,8 +176,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
     @api.multi
     def write(self, values):
         """
-            Override write method in order to preventing transitioning
-            to a non eligible state
+        Override write method in order to preventing transitioning
+        to a non eligible state
         """
 
         # Skip transition process
@@ -238,10 +241,10 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
     def _crapo_exec_conditions(self, condition_ids, prefix):
         """
-            Execute Pre/Postconditions.
+        Execute Pre/Postconditions.
 
-            condition_ids: must be a crapo.automaton.condition object
-            prefix: a string to indicate if it's pre or post conditions
+        condition_ids: must be a crapo.automaton.condition object
+        prefix: a string to indicate if it's pre or post conditions
         """
 
         if not condition_ids:
@@ -249,7 +252,8 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
 
         for condition_id in condition_ids:
             is_valid = safe_eval(
-                condition_id.condition, {"record": self, "env": self.env},
+                condition_id.condition,
+                {"record": self, "env": self.env},
             )
 
             # Raise an error if not valid
