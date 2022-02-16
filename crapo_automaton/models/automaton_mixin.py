@@ -53,6 +53,7 @@ class CrapoAutomatonMixin(ReadonlyViewMixin, models.AbstractModel):
         ],
         group_expand="_read_group_crapo_states",
         copy=False,
+        track_visibility=True,
     )
 
     crapo_readonly_fields = fields.Char(
